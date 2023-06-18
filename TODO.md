@@ -5,6 +5,7 @@
 - [ ] Make default webhook look nicer
 - [ ] Reason presets
 - [ ] Prefix option
+- [ ] Command cooldown
 
 Maybe some other things idk
 
