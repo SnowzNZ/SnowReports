@@ -2,7 +2,6 @@ package me.snowznz.snowreports;
 
 import me.snowznz.snowreports.commands.Report;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -22,10 +21,6 @@ public class SnowReports extends JavaPlugin {
         }
 
         getCommand("report").setExecutor(new Report(config));
-
-
-        Permission receiveReport = new Permission("snowreports.report.receive");
-        getServer().getPluginManager().addPermission(receiveReport);
 
     }
 }
