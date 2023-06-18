@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,9 +16,6 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-
-import static org.bukkit.Bukkit.getOnlinePlayers;
-import static org.bukkit.Bukkit.getPlayer;
 
 public class Report implements CommandExecutor {
     private final FileConfiguration config;
@@ -38,7 +36,7 @@ public class Report implements CommandExecutor {
             return true;
         }
 
-        Player reportedPlayer = getPlayer(args[0]);
+        Player reportedPlayer = Bukkit.getPlayer(args[0]);
         if (reportedPlayer == null) {
             sender.sendMessage("Player not found!");
             return true;
@@ -63,7 +61,7 @@ public class Report implements CommandExecutor {
 
             reporter.sendMessage(ChatColor.GREEN + "Your report has been sent!");
 
-            for (Player admin : getOnlinePlayers()) {
+            for (Player admin : Bukkit.getOnlinePlayers()) {
                 if (admin.hasPermission("snowreports.report.receive")) {
                     TextComponent message = new TextComponent(ChatColor.RED + reportedPlayer.getName() + " has been reported for: " + reason);
                     message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Reported by " + reporter.getName() + ". Click to teleport to " + reportedPlayer.getName())));
