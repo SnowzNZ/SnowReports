@@ -53,11 +53,7 @@ public class Report implements CommandExecutor {
                         .setImage("https://crafatar.com/renders/body/" + reportedPlayer.getUniqueId() + "?overlay=true"));
                 webhook.setUsername("SnowReports");
 
-                try {
-                    webhook.execute();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                webhook.execute();
             }
 
             reporter.sendMessage(ChatColor.GREEN + "Your report has been sent!");
