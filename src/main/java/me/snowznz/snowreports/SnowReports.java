@@ -21,7 +21,7 @@ public class SnowReports extends JavaPlugin {
             getLogger().warning("discord-webhook-url is not set, reports wont be sent to discord!");
         }
 
-        Objects.requireNonNull(getCommand("report")).setExecutor(new Report(config));
+        getCommand("report").setExecutor(new Report(config));
 
 
         Permission receiveReport = new Permission("snowreports.report.receive");
