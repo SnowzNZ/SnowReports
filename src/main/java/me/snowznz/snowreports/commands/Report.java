@@ -49,7 +49,8 @@ public class Report implements CommandExecutor {
                 DiscordWebhook webhook = new DiscordWebhook(config.getString("discord-webhook-url"));
                 webhook.addEmbed(new DiscordWebhook.EmbedObject()
                         .setDescription("**" + reportedPlayer.getName() + "** has been reported for: " + reason)
-                        .setFooter("Reported by: " + reporter.getName(), "https://mc-heads.net/avatar/" + reporter.getUniqueId()));
+                        .setFooter("Reported by: " + reporter.getName(), "https://crafatar.com/avatars/" + reporter.getUniqueId())
+                        .setImage("https://crafatar.com/renders/body/" + reportedPlayer.getUniqueId() + "?overlay=true"));
                 webhook.setUsername("SnowReports");
 
                 try {
