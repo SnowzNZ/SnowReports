@@ -13,6 +13,7 @@ public class SnowReports extends JavaPlugin {
     public void onEnable() {
 
         config.addDefault("discord-webhook-url", "");
+        config.addDefault("report-cooldown", 15);
         config.options().copyDefaults(true);
         saveConfig();
 

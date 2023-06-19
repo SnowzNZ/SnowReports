@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class Report implements CommandExecutor {
 
-    private static final int COOLDOWN = 15;
+
     private final FileConfiguration config;
     private final CooldownManager cooldownManager = new CooldownManager();
 
@@ -77,7 +77,7 @@ public class Report implements CommandExecutor {
         }
 
         reporter.sendMessage(ChatColors.translate("&aYour report has been sent!"));
-        cooldownManager.setCooldown(reporter.getUniqueId(), Duration.ofSeconds(COOLDOWN));
+        cooldownManager.setCooldown(reporter.getUniqueId(), Duration.ofSeconds(config.getInt("report-cooldown")));
 
         for (Player admin : Bukkit.getOnlinePlayers()) {
             if (admin.hasPermission("snowreports.report.receive")) {
