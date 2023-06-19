@@ -6,9 +6,10 @@
 - [ ] Add customizable reason presets
 - [ ] Custom prefix option
 - [ ] Make all messages customizable
-- [ ] Make cooldown customizable
+
 
 
 ### Done
 - [x] Command cooldown
 - [x] Add cooldown bypass permission
+- [x] Make cooldown customizable
