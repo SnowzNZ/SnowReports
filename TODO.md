@@ -7,7 +7,8 @@
 - [ ] Custom prefix option
 - [ ] Make all messages customizable
 - [ ] Make cooldown customizable
-- [ ] Add cooldown bypass permission
+
 
 ### Done
 - [x] Command cooldown
+- [x] Add cooldown bypass permission
