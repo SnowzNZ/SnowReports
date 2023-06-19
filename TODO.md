@@ -1,13 +1,13 @@
 # SnowReports
 
 ### To-do
-- [ ] Add webhook customization in the config
+- [ ] Add webhook customization in the config (username, icon, etc)
 - [ ] Make default webhook look nicer
-- [ ] Reason presets
-- [ ] Prefix option
-- [ ] Command cooldown
-
-Maybe some other things idk
+- [ ] Add customizable reason presets
+- [ ] Custom prefix option
+- [ ] Make all messages customizable
+- [ ] Make cooldown customizable
+- [ ] Add cooldown bypass permission
 
 ### Done
-Nothing...
+- [x] Command cooldown
