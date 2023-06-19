@@ -6,8 +6,7 @@
 - [ ] Add customizable reason presets
 - [ ] Custom prefix option
 - [ ] Make all messages customizable
-
-
+- [ ] Add config reload command
 
 ### Done
 - [x] Command cooldown
