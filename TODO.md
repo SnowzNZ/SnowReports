@@ -6,9 +6,11 @@
 - [ ] Add customizable reason presets
 - [ ] Custom prefix option
 - [ ] Make all messages customizable
-- [ ] Add config reload command
 
 ### Done
 - [x] Command cooldown
 - [x] Add cooldown bypass permission
 - [x] Make cooldown customizable
+- [x] Add config reload command
+- [x] Add command to change cooldown
+- [x] Tab-completion for "main" command
