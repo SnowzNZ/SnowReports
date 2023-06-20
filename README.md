@@ -1,4 +1,5 @@
-<img alt="Smoothie" src="https://cdn.discordapp.com/attachments/1119864613685702667/1120515231328780308/logo_no_bg.png" width="200" />
+<img alt="Logo" src="https://cdn.discordapp.com/attachments/1119864613685702667/1120515231328780308/logo_no_bg.png" width="200" />
+
 # SnowReports
 ![Build Status](https://img.shields.io/github/actions/workflow/status/SnowzNZ/SnowReports/build.yml)
 
