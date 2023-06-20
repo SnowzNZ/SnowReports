@@ -26,5 +26,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: standalone-binary
+        name: SnowReports JAR
         path: target/SnowReports-*.jar
