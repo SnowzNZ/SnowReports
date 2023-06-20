@@ -1,6 +1,6 @@
 package me.snowznz.snowreports.commands;
 
-import me.snowznz.snowreports.utils.ChatColors;
+import me.snowznz.snowreports.SnowReports;
 import me.snowznz.snowreports.utils.CooldownManager;
 import me.snowznz.snowreports.utils.DiscordWebhook;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -20,13 +20,8 @@ import java.util.Objects;
 
 public class Report implements CommandExecutor {
 
-
-    private final FileConfiguration config;
+    private final FileConfiguration config = SnowReports.getInstance().getConfig();
     private final CooldownManager cooldownManager = new CooldownManager();
-
-    public Report(FileConfiguration config) {
-        this.config = config;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -42,7 +37,7 @@ public class Report implements CommandExecutor {
         Player reportedPlayer = Bukkit.getPlayer(args[0]);
 
         if (reportedPlayer == null) {
-            sender.sendMessage(ChatColors.translate("&c&l(!) Player not found!"));
+            sender.sendMessage("§c§l(!) Player not found!");
             return true;
         }
 
@@ -56,7 +51,7 @@ public class Report implements CommandExecutor {
             if (timeLeft.isZero() || timeLeft.isNegative()) {
                 sendReport(reporter, reportedPlayer, reason);
             } else {
-                reporter.sendMessage(ChatColors.translate("&c&l(!) &cYou cannot run this command for another " + timeLeft.toSeconds() + " seconds!"));
+                reporter.sendMessage("§c§l(!) §cYou cannot run this command for another " + timeLeft.toSeconds() + " seconds!");
             }
         }
 
@@ -76,12 +71,12 @@ public class Report implements CommandExecutor {
             webhook.execute();
         }
 
-        reporter.sendMessage(ChatColors.translate("&aYour report has been sent!"));
+        reporter.sendMessage("§aYour report has been sent!");
         cooldownManager.setCooldown(reporter.getUniqueId(), Duration.ofSeconds(config.getInt("report-cooldown")));
 
         for (Player admin : Bukkit.getOnlinePlayers()) {
             if (admin.hasPermission("snowreports.report.receive")) {
-                TextComponent message = new TextComponent(ChatColors.translate("&4&l&n" + reportedPlayer.getName() + "&4 has been reported for: " + reason));
+                TextComponent message = new TextComponent("§4§l§n" + reportedPlayer.getName() + "§4 has been reported for: " + reason);
                 message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Reported by " + reporter.getName() + ". Click to teleport to " + reportedPlayer.getName())));
                 message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp " + reportedPlayer.getName()));
                 admin.spigot().sendMessage(message);
