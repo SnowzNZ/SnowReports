@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.awt.*;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
@@ -65,7 +66,8 @@ public class Report implements CommandExecutor {
                     .setTitle("Report")
                     .setDescription("**" + reportedPlayer.getName() + "** has been reported for: " + reason)
                     .setFooter("Reported by: " + reporter.getName(), "https://crafatar.com/avatars/" + reporter.getUniqueId())
-                    .setThumbnail("https://crafatar.com/renders/head/" + reportedPlayer.getUniqueId() + "?overlay"));
+                    .setThumbnail("https://crafatar.com/renders/head/" + reportedPlayer.getUniqueId() + "?overlay")
+                    .setColor(new Color(0, 255, 255)));
             webhook.setUsername("SnowReports");
 
             webhook.execute();
