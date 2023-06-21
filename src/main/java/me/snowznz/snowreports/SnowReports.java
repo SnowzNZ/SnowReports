@@ -1,6 +1,6 @@
 package me.snowznz.snowreports;
 
-import me.snowznz.snowreports.commands.Reload;
+import me.snowznz.snowreports.commands.SnowReportsCommand;
 import me.snowznz.snowreports.commands.Report;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,9 +28,12 @@ public final class SnowReports extends JavaPlugin {
             getLogger().warning("discord-webhook-url is not set, reports wont be sent to discord!");
         }
 
+        // Initialize commands
         getCommand("report").setExecutor(new Report());
-        getCommand("snowreports").setExecutor(new Reload());
-        getCommand("snowreports").setTabCompleter(new Reload());
+        getCommand("snowreports").setExecutor(new SnowReportsCommand());
+
+        // Tab Completion
+        getCommand("snowreports").setTabCompleter(new SnowReportsCommand());
 
     }
 

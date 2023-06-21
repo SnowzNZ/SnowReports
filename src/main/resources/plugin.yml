@@ -9,5 +9,4 @@ commands:
     usage: /<command> <player> <reason>
     permission: snowreports.report
   snowreports:
-    description: Reload the config
-    usage: /<command>
+    description: Main command
