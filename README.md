@@ -2,6 +2,7 @@
 
 # SnowReports
 ![Build Status](https://img.shields.io/github/actions/workflow/status/SnowzNZ/SnowReports/build.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/snowznz/snowreports/badge)](https://www.codefactor.io/repository/github/snowznz/snowreports)
 
 SnowReports is a report system plugin for Spigot Minecraft servers.
 
