@@ -20,13 +20,13 @@ import java.util.Arrays;
 
 public class Report implements CommandExecutor {
 
-    private final FileConfiguration config = SnowReports.getInstance().config;
+    private final FileConfiguration config = SnowReports.getInstance().getConfig();
     private final CooldownManager cooldownManager = new CooldownManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player reporter)) {
-            sender.sendMessage("Only players can run this command!");
+            sender.sendMessage("§c§l(!) §cOnly players can run this command!");
             return true;
         }
 
@@ -34,10 +34,10 @@ public class Report implements CommandExecutor {
             return false;
         }
 
-        Player reportedPlayer = Bukkit.getPlayer(args[0]);
+        Player reportedPlayer = Bukkit.getPlayerExact(args[0]);
 
         if (reportedPlayer == null) {
-            sender.sendMessage("§c§l(!) Player not found!");
+            sender.sendMessage("§c§l(!) §cPlayer not found!");
             return true;
         }
 
@@ -59,8 +59,10 @@ public class Report implements CommandExecutor {
     }
 
     private void sendReport(Player reporter, Player reportedPlayer, String reason) {
-        if (!(config.getString("discord-webhook-url").isEmpty())) {
-            DiscordWebhook webhook = new DiscordWebhook(config.getString("discord-webhook-url"));
+        String webhookUrl = config.getString("discord-webhook-url");
+
+        if (!webhookUrl.isEmpty()) {
+            DiscordWebhook webhook = new DiscordWebhook(webhookUrl);
             webhook.addEmbed(new DiscordWebhook.EmbedObject()
                     .setTitle("Report")
                     .setDescription("**" + reportedPlayer.getName() + "** has been reported for: " + reason)
@@ -84,6 +86,4 @@ public class Report implements CommandExecutor {
             }
         }
     }
-
-
 }

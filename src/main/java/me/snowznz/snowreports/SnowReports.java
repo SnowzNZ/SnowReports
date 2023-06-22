@@ -5,10 +5,10 @@ import me.snowznz.snowreports.commands.SnowReportsCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class SnowReports extends JavaPlugin {
-    public FileConfiguration config = this.getConfig();
+public class SnowReports extends JavaPlugin {
 
     private static SnowReports instance;
+    FileConfiguration config = this.getConfig();
 
     public static SnowReports getInstance() {
         return instance;
@@ -27,17 +27,12 @@ public final class SnowReports extends JavaPlugin {
 
         // Warnings
         if (config.getString("discord-webhook-url").isEmpty()) {
-            getLogger().warning("discord-webhook-url is not set, reports wont be sent to discord!");
+            getLogger().warning("discord-webhook-url is not set, reports won't be sent to discord!");
         }
 
         // Commands
         getCommand("report").setExecutor(new Report());
         getCommand("snowreports").setExecutor(new SnowReportsCommand());
-
-        // Tab Completion
         getCommand("snowreports").setTabCompleter(new SnowReportsCommand());
-
     }
-
-
 }

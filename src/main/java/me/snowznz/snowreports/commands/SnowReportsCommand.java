@@ -1,7 +1,10 @@
 package me.snowznz.snowreports.commands;
 
 import me.snowznz.snowreports.SnowReports;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +13,6 @@ public class SnowReportsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
         if (args.length == 0) {
             return false;
         }
@@ -30,29 +32,27 @@ public class SnowReportsCommand implements CommandExecutor, TabCompleter {
                 if (sender.hasPermission("snowreports.admin")) {
                     if (args.length == 2) {
                         try {
-                            SnowReports.getInstance().getConfig().set("report-cooldown", Integer.parseInt(args[1]));
+                            int cooldown = Integer.parseInt(args[1]);
+                            SnowReports.getInstance().getConfig().set("report-cooldown", cooldown);
                             SnowReports.getInstance().saveConfig();
-                            sender.sendMessage("§aCooldown set to " + args[1] + "!");
-                        } catch (CommandException e) {
+                            sender.sendMessage("§aCooldown set to " + cooldown + "!");
+                        } catch (NumberFormatException e) {
                             sender.sendMessage("§cCooldown must be an integer!");
-
                         }
                     }
                     if (args.length == 1) {
-                        sender.sendMessage("§bCurrent cooldown is " + SnowReports.getInstance().getConfig().getInt("report-cooldown") + " seconds.");
+                        int currentCooldown = SnowReports.getInstance().getConfig().getInt("report-cooldown");
+                        sender.sendMessage("§bCurrent cooldown is " + currentCooldown + " seconds.");
                     }
-
                     return true;
                 }
             }
             case "version" -> {
                 String version = SnowReports.getInstance().getDescription().getVersion();
                 sender.sendMessage("§eSnowReports is currently on v" + version + ".");
-
                 return true;
             }
         }
-
         return false;
     }
 
