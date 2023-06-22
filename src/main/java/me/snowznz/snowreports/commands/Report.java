@@ -17,11 +17,10 @@ import org.bukkit.entity.Player;
 import java.awt.*;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Report implements CommandExecutor {
 
-    private final FileConfiguration config = SnowReports.getInstance().getConfig();
+    private final FileConfiguration config = SnowReports.getInstance().config;
     private final CooldownManager cooldownManager = new CooldownManager();
 
     @Override
@@ -60,7 +59,7 @@ public class Report implements CommandExecutor {
     }
 
     private void sendReport(Player reporter, Player reportedPlayer, String reason) {
-        if (!(Objects.equals(config.getString("discord-webhook-url"), ""))) {
+        if (!(config.getString("discord-webhook-url").isEmpty())) {
             DiscordWebhook webhook = new DiscordWebhook(config.getString("discord-webhook-url"));
             webhook.addEmbed(new DiscordWebhook.EmbedObject()
                     .setTitle("Report")
