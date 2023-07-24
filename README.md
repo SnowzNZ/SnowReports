@@ -25,4 +25,4 @@
 - [GitHub Issues](https://github.com/SnowzNZ/SnowReports/issues)
 
 ### Licence
-- SnowReports is licensed under the [GPL-3.0 license](https://github.com/SnowzNZ/SnowReports/blob/main/LICENSE).
+- SnowReports is licensed under the [LGPL-3.0 license](https://github.com/SnowzNZ/SnowReports/blob/main/LICENSE.txt).
