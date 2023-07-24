@@ -26,4 +26,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
+          name: jar
           path: target/SnowReports-*.jar
