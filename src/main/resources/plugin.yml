@@ -1,7 +1,6 @@
 name: SnowReports
 version: '1.0'
 main: me.snowznz.snowreports.SnowReports
-api-version: '1.20'
 author: Snowz
 commands:
   report:

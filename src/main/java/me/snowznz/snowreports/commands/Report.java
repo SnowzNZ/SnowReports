@@ -4,9 +4,9 @@ import me.snowznz.snowreports.SnowReports;
 import me.snowznz.snowreports.utils.CooldownManager;
 import me.snowznz.snowreports.utils.DiscordWebhook;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +25,7 @@ public class Report implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player reporter)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("§c§l(!) §cOnly players can run this command!");
             return true;
         }
@@ -34,6 +34,7 @@ public class Report implements CommandExecutor {
             return false;
         }
 
+        Player reporter = (Player) sender;
         Player reportedPlayer = Bukkit.getPlayerExact(args[0]);
 
         if (reportedPlayer == null) {
@@ -51,7 +52,7 @@ public class Report implements CommandExecutor {
             if (timeLeft.isZero() || timeLeft.isNegative()) {
                 sendReport(reporter, reportedPlayer, reason);
             } else {
-                reporter.sendMessage("§c§l(!) §cYou cannot run this command for another " + timeLeft.toSeconds() + " seconds!");
+                reporter.sendMessage("§c§l(!) §cYou cannot run this command for another " + timeLeft.getSeconds() + " seconds!");
             }
         }
 
@@ -80,7 +81,7 @@ public class Report implements CommandExecutor {
         for (Player admin : Bukkit.getOnlinePlayers()) {
             if (admin.hasPermission("snowreports.report.receive")) {
                 TextComponent message = new TextComponent("§4§l§n" + reportedPlayer.getName() + "§4 has been reported for: " + reason);
-                message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Reported by " + reporter.getName() + ". Click to teleport to " + reportedPlayer.getName())));
+                message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Reported by " + reporter.getName() + ". Click to teleport to " + reportedPlayer.getName()).create()));
                 message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp " + reportedPlayer.getName()));
                 admin.spigot().sendMessage(message);
             }
