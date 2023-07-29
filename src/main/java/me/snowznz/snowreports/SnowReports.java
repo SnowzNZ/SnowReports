@@ -25,11 +25,6 @@ public class SnowReports extends JavaPlugin {
         config.options().copyDefaults(true);
         saveConfig();
 
-        // Warnings
-        if (config.getString("discord-webhook-url").isEmpty()) {
-            getLogger().warning("discord-webhook-url is not set, reports won't be sent to discord!");
-        }
-
         // Commands
         getCommand("report").setExecutor(new Report());
         getCommand("snowreports").setExecutor(new SnowReportsCommand());

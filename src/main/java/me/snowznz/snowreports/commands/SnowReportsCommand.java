@@ -6,8 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SnowReportsCommand implements CommandExecutor, TabCompleter {
 
@@ -17,56 +19,41 @@ public class SnowReportsCommand implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        String subCommand = args[0];
-
-        if ("reload".equalsIgnoreCase(subCommand)) {
+        if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("snowreports.admin")) {
-                long startTime = System.currentTimeMillis();
                 SnowReports.getInstance().reloadConfig();
-                long endTime = System.currentTimeMillis();
-                long executionTime = endTime - startTime;
-                sender.sendMessage("§aConfig reloaded in " + executionTime + " ms!");
-                return true;
+                sender.sendMessage("§aConfig reloaded!");
             }
-        } else if ("cooldown".equalsIgnoreCase(subCommand)) {
+        } else if (args[0].equalsIgnoreCase("cooldown")) {
             if (sender.hasPermission("snowreports.admin")) {
                 if (args.length == 2) {
                     try {
-                        int cooldown = Integer.parseInt(args[1]);
-                        SnowReports.getInstance().getConfig().set("report-cooldown", cooldown);
+                        SnowReports.getInstance().getConfig().set("report-cooldown", Integer.parseInt(args[1]));
                         SnowReports.getInstance().saveConfig();
-                        sender.sendMessage("§aCooldown set to " + cooldown + "!");
+                        sender.sendMessage("§aCooldown set to " + args[1] + "!");
                     } catch (NumberFormatException e) {
                         sender.sendMessage("§cCooldown must be an integer!");
                     }
+                } else if (args.length == 1) {
+                    sender.sendMessage("§bCurrent report cooldown is " + SnowReports.getInstance().getConfig().getInt("report-cooldown") + " seconds.");
                 }
-                if (args.length == 1) {
-                    int currentCooldown = SnowReports.getInstance().getConfig().getInt("report-cooldown");
-                    sender.sendMessage("§bCurrent cooldown is " + currentCooldown + " seconds.");
-                }
-                return true;
             }
-        } else if ("version".equalsIgnoreCase(subCommand)) {
+        } else if (args[0].equalsIgnoreCase("version")) {
             String version = SnowReports.getInstance().getDescription().getVersion();
             sender.sendMessage("§eSnowReports is currently on v" + version + ".");
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        List<String> completions = new ArrayList<>();
-
         if (args.length == 1) {
-            completions.add("reload");
-            completions.add("cooldown");
-            completions.add("version");
-        } else if (args.length == 2) {
-            return null;
+            return Stream.of("reload", "cooldown", "version")
+                    .filter(arg -> arg.startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         }
 
-        return completions;
+        return Collections.emptyList();
     }
 }
