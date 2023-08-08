@@ -1,28 +1,26 @@
-<img alt="Logo" src="https://cdn.discordapp.com/attachments/1119864613685702667/1120515231328780308/logo_no_bg.png" width="200" />
+# SnowReports, a report plugin for versions 1.8.8–1.20.1.
 
-## SnowReports, a report plugin for versions 1.8.8 to 1.20.1.
-![Build Status](https://img.shields.io/github/actions/workflow/status/SnowzNZ/SnowReports/build.yml)
-[![CodeFactor](https://www.codefactor.io/repository/github/snowznz/snowreports/badge)](https://www.codefactor.io/repository/github/snowznz/snowreports)
+[![modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg)](https://modrinth.com/plugin/snowreports)
+![spigot](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/spigot_vector.svg)*
 
-### Key Features:
-- In-game report notification to all with the `snowreports.report.receive` permission
-- Auto-completion of player names
-- Customizable cooldown for the /report command
-- Have reports sent to Discord via webhook
+### Features:
+- In-game report message to all players with the `snowreports.report.receive` permission.
+- Auto-completion of player names.
+- Configurable cooldown for reports.
+- Discord webhook integration
 
 ### Commands:
 - /report
 - /snowreports <reload|version|cooldown>
 
 ### Permissions:
-- snowreports.report (Allows /report)
-- snowreports.report.receive 
-- snowreports.bypass.cooldown (Bypass the report cooldown.)
-- snowreports.admin (Access to /snowreports reload and cooldown subcommands)
-
-### Support:
-- [Discord](https://discord.gg/GCDNm6NWER)
-- [GitHub Issues](https://github.com/SnowzNZ/SnowReports/issues)
+- snowreports.report (Permission to use /report)
+- snowreports.report.receive (Receive report messages)
+- snowreports.bypass.cooldown (Bypass the report cooldown)
+- snowreports.admin (Permission to use /snowreports <reload|cooldown>)
 
 ### Licence
-- SnowReports is licensed under the [LGPL-3.0 license](https://github.com/SnowzNZ/SnowReports/blob/main/LICENSE.txt).
+- SnowReports is licensed under the [GPL-3.0 license](https://github.com/SnowzNZ/SnowReports/blob/main/LICENSE).
+
+
+###### \* and forks, including [Folia](https://github.com/PaperMC/folia)
