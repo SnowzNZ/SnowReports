@@ -1,0 +1,13 @@
+reports:
+  enabled: true
+  cooldown: 15
+  reason-required: true
+  send-to-console: false
+discord-integration:
+  enabled: false
+  webhook-url: ""
+  embed:
+    title: "SnowReports"
+    hex-color: "#03c2fc"
+debug:
+  allow-self-report: false

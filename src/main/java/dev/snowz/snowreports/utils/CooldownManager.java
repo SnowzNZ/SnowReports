@@ -1,4 +1,4 @@
-package me.snowznz.snowreports.utils;
+package dev.snowz.snowreports.utils;
 
 import java.time.Duration;
 import java.time.Instant;

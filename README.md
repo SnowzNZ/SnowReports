@@ -10,14 +10,15 @@
 - Discord webhook integration
 
 ### Commands:
-- /report
-- /snowreports <reload|version|cooldown>
+- /delreport \<Report ID>
+- /report \<player> [reason]
+- /reports \<player>
 
 ### Permissions:
-- snowreports.report (Permission to use /report)
-- snowreports.report.receive (Receive report messages)
+- snowreports.report (Create reports)
+- snowreports.report.receive (Receive reports)
 - snowreports.bypass.cooldown (Bypass the report cooldown)
-- snowreports.admin (Permission to use /snowreports <reload|cooldown>)
+- snowreports.admin (View and delete reports)
 
 ### Licence
 - SnowReports is licensed under the [GPL-3.0 license](https://github.com/SnowzNZ/SnowReports/blob/main/LICENSE).
