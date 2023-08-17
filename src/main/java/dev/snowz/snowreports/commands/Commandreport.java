@@ -25,7 +25,7 @@ public class Commandreport implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§l(!) §cOnly players can run this command!");
+            sender.sendMessage("§c§l(!) §cOnly players can run this command!");
             return true;
         }
 
