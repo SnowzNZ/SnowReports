@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -16,8 +17,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 
-public class Commandreport implements CommandExecutor {
+public class Commandreport implements CommandExecutor, TabCompleter {
 
     public final CooldownManager cooldownManager = new CooldownManager();
     public final FileConfiguration config = SnowReports.getInstance().getConfig();
@@ -105,7 +107,15 @@ public class Commandreport implements CommandExecutor {
         if (!reporter.hasPermission("snowreports.bypass.cooldown")) {
             cooldownManager.setCooldown(reporter.getUniqueId(), Duration.ofSeconds(config.getInt("reports.cooldown"), 15));
         }
+    }
 
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> presets = config.getStringList("reports.presets");
+        if (presets.isEmpty()) {
+            return null;
+        }
 
+        return presets;
     }
 }
