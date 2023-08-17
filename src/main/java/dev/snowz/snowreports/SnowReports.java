@@ -42,6 +42,8 @@ public class SnowReports extends JavaPlugin {
         // Checks
         if (config.getBoolean("discord-integration.enabled") && config.getString("discord-integration.webhook-url").isEmpty()) {
             getLogger().info("Discord Integration is enabled but webhook-url is not set!");
+            config.set("discord-integration.enabled", false);
+            reloadConfig();
         }
 
         // Commands
