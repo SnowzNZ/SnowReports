@@ -3,6 +3,7 @@ package dev.snowz.snowreports;
 import dev.snowz.snowreports.commands.Commanddelreport;
 import dev.snowz.snowreports.commands.Commandreport;
 import dev.snowz.snowreports.commands.Commandreports;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +31,10 @@ public class SnowReports extends JavaPlugin {
     public void onEnable() {
         // Instance
         instance = this;
+
+        // bStats Metrics
+        int pluginId = 19543;
+        Metrics metrics = new Metrics(this, pluginId);
 
         // Config
         saveDefaultConfig();
