@@ -3,7 +3,6 @@ package dev.snowz.snowreports.commands;
 import dev.snowz.snowreports.SnowReports;
 import dev.snowz.snowreports.utils.CooldownManager;
 import dev.snowz.snowreports.utils.DiscordWebhook;
-import dev.snowz.snowreports.utils.ReportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,13 +15,14 @@ import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Commandreport implements CommandExecutor, TabCompleter {
+public class CommandReport implements CommandExecutor, TabCompleter {
 
     public final CooldownManager cooldownManager = new CooldownManager();
-    public final FileConfiguration config = SnowReports.getInstance().getConfig();
+    public final FileConfiguration config = SnowReports.getPlugin().getConfig();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
@@ -75,8 +75,7 @@ public class Commandreport implements CommandExecutor, TabCompleter {
 
         String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a"));
 
-        ReportManager reportManager = new ReportManager();
-        reportManager.createReport(reportedPlayer.getUniqueId().toString(), reporter.getUniqueId().toString(), reason, timeStamp);
+        SnowReports.database().insertReport(reportedPlayer.getUniqueId().toString(), reporter.getUniqueId().toString(), reason, timeStamp);
 
         String webhookURL = config.getString("discord-integration.webhook-url", "");
         if (config.getBoolean("discord-integration.enabled", false) && !webhookURL.isEmpty()) {
@@ -112,10 +111,22 @@ public class Commandreport implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> presets = config.getStringList("reports.presets");
-        if (presets.isEmpty()) {
-            return null;
+        if (args.length == 1) {
+            List<String> onlinePlayers = new ArrayList<>();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!player.hasPermission("snowreports.bypass")) {
+                    onlinePlayers.add(player.getName());
+                }
+            }
+            return onlinePlayers;
         }
-
-        return presets;
+        if (args.length == 2) {
+            if (presets.isEmpty()) {
+                return null;
+            } else {
+                return presets;
+            }
+        }
+        return null;
     }
 }

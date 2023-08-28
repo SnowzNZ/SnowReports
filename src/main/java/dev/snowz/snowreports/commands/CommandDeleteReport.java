@@ -1,13 +1,17 @@
 package dev.snowz.snowreports.commands;
 
-import dev.snowz.snowreports.utils.ReportManager;
+import dev.snowz.snowreports.SnowReports;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 
-public class Commanddelreport implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
 
-    ReportManager reportManager = new ReportManager();
+public class CommandDeleteReport implements CommandExecutor, TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
@@ -17,16 +21,24 @@ public class Commanddelreport implements CommandExecutor {
         }
         try {
             int reportID = Integer.parseInt(args[0]);
-            if (reportManager.doesReportIDExist(reportID)) {
-                reportManager.deleteReport(reportID);
+            boolean removed = SnowReports.database().deleteReport(reportID);
+            if (removed) {
                 sender.sendMessage("§aReport #" + reportID + " deleted!");
             } else {
-                sender.sendMessage("§c§l(!) §c" + reportID + " is not a valid Report ID!");
+                sender.sendMessage("§c§l(!) §cReport #" + reportID + " not found!");
             }
             return true;
         } catch (NumberFormatException e) {
             sender.sendMessage("§c§l(!) §cReport ID must be a integer!");
             return true;
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            return SnowReports.database().getAllReportIDs();
+        }
+        return null;
     }
 }

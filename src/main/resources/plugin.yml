@@ -1,5 +1,5 @@
 name: SnowReports
-version: '2.0.0'
+version: '2.0'
 main: dev.snowz.snowreports.SnowReports
 author: SnowzNZ
 description: SnowReports, a report plugin for versions 1.8.8 to 1.20.1.
@@ -7,7 +7,9 @@ website: https://modrinth.com/plugin/snowreports
 #folia-supported: true
 
 commands:
-  delreport:
+  deletereport:
+    aliases:
+      - delreport
     description: Delete a report
     usage: /<command> <Report ID>
     permission: snowreports.admin
@@ -27,6 +29,9 @@ permissions:
   snowreports.report.receive:
     default: op
     description: Receive reports
+  snowreports.bypass:
+    default: op
+    description: Bypass reports
   snowreports.bypass.cooldown:
     default: op
     description: Bypass the report cooldown

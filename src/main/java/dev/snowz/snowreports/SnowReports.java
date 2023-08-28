@@ -1,68 +1,58 @@
 package dev.snowz.snowreports;
 
-import dev.snowz.snowreports.commands.Commanddelreport;
-import dev.snowz.snowreports.commands.Commandreport;
-import dev.snowz.snowreports.commands.Commandreports;
+import com.samjakob.spigui.SpiGUI;
+import dev.snowz.snowreports.commands.CommandDeleteReport;
+import dev.snowz.snowreports.commands.CommandReport;
+import dev.snowz.snowreports.commands.CommandReports;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class SnowReports extends JavaPlugin {
 
-    private static SnowReports instance;
-    private static Connection connection;
-    private final FileConfiguration config = getConfig();
+    private static SnowReports plugin;
+    private static Database database;
+    private static SpiGUI spiGUI;
 
-    public static SnowReports getInstance() {
-        return instance;
+    public static SnowReports getPlugin() {
+        return plugin;
     }
 
-    public static Connection getConnection() {
-        return connection;
+    public static Database database() {
+        return database;
+    }
+
+    public static SpiGUI gui() {
+        return spiGUI;
     }
 
     @Override
     public void onEnable() {
-        // Instance
-        instance = this;
+        String currentVersion = Bukkit.getPluginManager().getPlugin("SnowReports").getDescription().getVersion();
 
-        // bStats Metrics
-        int pluginId = 19543;
-        Metrics metrics = new Metrics(this, pluginId);
+        // Instance
+        plugin = this;
+
+        // bStats
+        Metrics metrics = new Metrics(this, 19543);
 
         // Config
         saveDefaultConfig();
 
-        // Checks
-        if (config.getBoolean("discord-integration.enabled") && config.getString("discord-integration.webhook-url").isEmpty()) {
-            getLogger().info("Discord Integration is enabled but webhook-url is not set!");
-            config.set("discord-integration.enabled", false);
-            reloadConfig();
-        }
-
         // Commands
-        getCommand("delreport").setExecutor(new Commanddelreport());
-        getCommand("report").setExecutor(new Commandreport());
-        getCommand("reports").setExecutor(new Commandreports());
+        getCommand("delreport").setExecutor(new CommandDeleteReport());
+        getCommand("report").setExecutor(new CommandReport());
+        getCommand("reports").setExecutor(new CommandReports());
 
         // Database
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + File.separator + "data.db");
-            try (Statement statement = connection.createStatement()) {
-                statement.setQueryTimeout(30);
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS Reports (reportID INT, reportedPlayerUUID TEXT, reporterUUID TEXT, reason TEXT, timeStamp TEXT)");
-            } catch (SQLException e) {
-                getLogger().severe("Error executing SQL query: " + e.getMessage());
-            }
-        } catch (SQLException e) {
-            getLogger().severe("Error connecting to the database: " + e.getMessage());
-            getServer().getPluginManager().disablePlugin(this);
-        }
+        database = new Database();
+
+        // GUI
+        spiGUI = new SpiGUI(this);
+    }
+
+    @Override
+    public void onDisable() {
+        database.safeDisconnect();
     }
 }

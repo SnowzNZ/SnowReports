@@ -1,4 +1,4 @@
-package dev.snowz.snowreports.report;
+package dev.snowz.snowreports;
 
 public class Report {
 
