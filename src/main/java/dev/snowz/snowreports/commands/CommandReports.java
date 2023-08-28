@@ -24,6 +24,8 @@ public class CommandReports implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 
         Player player = (Player) sender;
+        ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
 
         if (args.length == 1) {
             Player queriedPlayer = Bukkit.getPlayer(args[0]);
@@ -38,8 +40,6 @@ public class CommandReports implements CommandExecutor {
             SGMenu reportsMenu = SnowReports.gui().create("&c&l" + queriedPlayer.getName() + "'s Reports", 6);
 
             for (Report report : reports) {
-                ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-                SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
                 playerSkullMeta.setOwner(queriedPlayer.getName());
                 playerSkull.setItemMeta(playerSkullMeta);
 
@@ -73,8 +73,6 @@ public class CommandReports implements CommandExecutor {
             for (Report report : reports) {
                 Player reportedPlayer = Bukkit.getPlayer(UUID.fromString(report.getReportedPlayerUUID()));
 
-                ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-                SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
                 playerSkullMeta.setOwner(reportedPlayer.getName());
                 playerSkull.setItemMeta(playerSkullMeta);
 
