@@ -73,9 +73,9 @@ public class CommandReport implements CommandExecutor, TabCompleter {
 
     public void sendReport(Player reporter, Player reportedPlayer, String reason) {
 
-        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a"));
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ssa"));
 
-        SnowReports.database().insertReport(reportedPlayer.getUniqueId().toString(), reporter.getUniqueId().toString(), reason, timeStamp);
+        SnowReports.getDb().insertReport(reportedPlayer.getUniqueId().toString(), reporter.getUniqueId().toString(), reason, timeStamp);
 
         String webhookURL = config.getString("discord-integration.webhook-url", "");
         if (config.getBoolean("discord-integration.enabled", false) && !webhookURL.isEmpty()) {
@@ -93,7 +93,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
         }
         String notifyMessage = "§4" + reportedPlayer.getName() + "§4 has been reported by " + reporter.getName() + " for " + reason;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission("snowreports.report.receive")) {
+            if (player.hasPermission("snowreports.notify")) {
                 player.sendMessage(notifyMessage);
             }
         }
@@ -114,9 +114,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             List<String> onlinePlayers = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (!player.hasPermission("snowreports.bypass")) {
-                    onlinePlayers.add(player.getName());
-                }
+                onlinePlayers.add(player.getName());
             }
             return onlinePlayers;
         }

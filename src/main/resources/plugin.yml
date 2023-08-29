@@ -7,9 +7,7 @@ website: https://modrinth.com/plugin/snowreports
 #folia-supported: true
 
 commands:
-  deletereport:
-    aliases:
-      - delreport
+  delreport:
     description: Delete a report
     usage: /<command> <Report ID>
     permission: snowreports.admin
@@ -20,20 +18,21 @@ commands:
   reports:
     description: Get a player's reports
     usage: /<command> <player>
-    permission: snowreports.admin
+    permission: snowreports.reports
 
 permissions:
   snowreports.report:
     default: true
-    description: Report
-  snowreports.report.receive:
+    description: Report players
+  snowreports.reports:
     default: op
-    description: Receive reports
-  snowreports.bypass:
+    description: View reports
+  snowreports.notify:
     default: op
-    description: Bypass reports
+    description: Get notified when a player is reported
   snowreports.bypass.cooldown:
-    default: op
+    default: false
     description: Bypass the report cooldown
-  snowreports.admin:
-    default: op
+  snowreports.bypass.report:
+    default: false
+    description: Bypass reports

@@ -11,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -24,35 +25,45 @@ public class CommandReports implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 
         Player player = (Player) sender;
-        ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
 
         if (args.length == 1) {
             Player queriedPlayer = Bukkit.getPlayer(args[0]);
-            List<Report> reports = SnowReports.database().getPlayerReports(queriedPlayer.getUniqueId().toString());
+            List<Report> reports = SnowReports.getDb().getPlayerReports(queriedPlayer.getUniqueId().toString());
             reports.sort(Comparator.comparingInt(Report::getReportID).reversed());
 
             if (reports.isEmpty()) {
-                sender.sendMessage("§a" + queriedPlayer.getName() + " has no reports!");
+                sender.sendMessage("§a§l" + queriedPlayer.getName() + " §ahas no reports!");
                 return true;
             }
 
-            SGMenu reportsMenu = SnowReports.gui().create("&c&l" + queriedPlayer.getName() + "'s Reports", 6);
+            SGMenu reportsMenu = SnowReports.getSpiGUI().create(queriedPlayer.getName() + "'s Reports &7(Page {currentPage}/{maxPage})", 6);
 
             for (Report report : reports) {
-                playerSkullMeta.setOwner(queriedPlayer.getName());
-                playerSkull.setItemMeta(playerSkullMeta);
 
                 Player reporter = Bukkit.getPlayer(UUID.fromString(report.getReporterUUID()));
 
                 SGButton button = new SGButton(
-                        new ItemBuilder(playerSkull)
-                                .name(queriedPlayer.getName())
+                        new ItemBuilder(Material.PAPER)
+                                .name("§c" + queriedPlayer.getName() + " §7(ID: " + report.getReportID() + ")")
                                 .lore(
-                                        "Reporter: " + reporter.getName(),
-                                        "Reason: " + report.getReason(),
-                                        "Time: " + report.getTimeStamp()
-                                ).build());
+                                        "",
+                                        "§b‣ §fReported by: §a" + reporter.getName(),
+                                        "§b‣ §fReason: §e" + report.getReason(),
+                                        "",
+                                        "§b‣ §fDatetime: §7" + report.getTimeStamp(),
+                                        "",
+                                        "§7Left-click to teleport to §c" + queriedPlayer.getName(),
+                                        "§7Right-click to §c§ldelete §7this report"
+                                ).build())
+                        .withListener((InventoryClickEvent event) -> {
+                            if (event.isLeftClick()) {
+                                event.getWhoClicked().teleport(queriedPlayer.getLocation());
+                            } else if (event.isRightClick()) {
+                                SnowReports.getDb().deleteReport(report.getReportID());
+                                reportsMenu.removeButton(event.getSlot());
+                                reportsMenu.refreshInventory(event.getWhoClicked());
+                            }
+                        });
 
                 reportsMenu.addButton(button);
             }
@@ -60,7 +71,7 @@ public class CommandReports implements CommandExecutor {
             player.openInventory(reportsMenu.getInventory());
 
         } else if (args.length == 0) {
-            List<Report> reports = SnowReports.database().getAllReports();
+            List<Report> reports = SnowReports.getDb().getAllReports();
             reports.sort(Comparator.comparingInt(Report::getReportID).reversed());
 
             if (reports.isEmpty()) {
@@ -68,11 +79,13 @@ public class CommandReports implements CommandExecutor {
                 return true;
             }
 
-            SGMenu reportsMenu = SnowReports.gui().create("&c&lRecent Reports", 6);
+            SGMenu reportsMenu = SnowReports.getSpiGUI().create("Global Reports &7(Page {currentPage}/{maxPage})", 6);
 
             for (Report report : reports) {
                 Player reportedPlayer = Bukkit.getPlayer(UUID.fromString(report.getReportedPlayerUUID()));
 
+                ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+                SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
                 playerSkullMeta.setOwner(reportedPlayer.getName());
                 playerSkull.setItemMeta(playerSkullMeta);
 
@@ -80,12 +93,26 @@ public class CommandReports implements CommandExecutor {
 
                 SGButton button = new SGButton(
                         new ItemBuilder(playerSkull)
-                                .name(reportedPlayer.getName())
+                                .name("§c" + reportedPlayer.getName() + " §7(ID: " + report.getReportID() + ")")
                                 .lore(
-                                        "Reporter: " + reporter.getName(),
-                                        "Reason: " + report.getReason(),
-                                        "Time: " + report.getTimeStamp()
-                                ).build());
+                                    "",
+                                    "§b‣ §fReported by: §a" + reporter.getName(),
+                                    "§b‣ §fReason: §e" + report.getReason(),
+                                    "",
+                                    "§b‣ §fDatetime: §7" + report.getTimeStamp(),
+                                    "",
+                                    "§7Left-click to teleport to §c" + reportedPlayer.getName(),
+                                    "§7Right-click to §c§ldelete §7this report"
+                                ).build()
+                ).withListener((InventoryClickEvent event) -> {
+                    if (event.isLeftClick()) {
+                        event.getWhoClicked().teleport(reportedPlayer.getLocation());
+                    } else if (event.isRightClick()) {
+                        SnowReports.getDb().deleteReport(report.getReportID());
+                        reportsMenu.removeButton(event.getSlot());
+                        reportsMenu.refreshInventory(event.getWhoClicked());
+                    }
+                });
 
                 reportsMenu.addButton(button);
             }

@@ -1,7 +1,7 @@
 package dev.snowz.snowreports;
 
 import com.samjakob.spigui.SpiGUI;
-import dev.snowz.snowreports.commands.CommandDeleteReport;
+import dev.snowz.snowreports.commands.CommandDelReport;
 import dev.snowz.snowreports.commands.CommandReport;
 import dev.snowz.snowreports.commands.CommandReports;
 import org.bstats.bukkit.Metrics;
@@ -18,11 +18,11 @@ public class SnowReports extends JavaPlugin {
         return plugin;
     }
 
-    public static Database database() {
+    public static Database getDb() {
         return database;
     }
 
-    public static SpiGUI gui() {
+    public static SpiGUI getSpiGUI() {
         return spiGUI;
     }
 
@@ -40,7 +40,7 @@ public class SnowReports extends JavaPlugin {
         saveDefaultConfig();
 
         // Commands
-        getCommand("delreport").setExecutor(new CommandDeleteReport());
+        getCommand("delreport").setExecutor(new CommandDelReport());
         getCommand("report").setExecutor(new CommandReport());
         getCommand("reports").setExecutor(new CommandReports());
 
