@@ -1,27 +1,27 @@
-# SnowReports, a report plugin for versions 1.8.8–1.20.1.
+# SnowReports
 
 [![modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg)](https://modrinth.com/plugin/snowreports)
-![spigot](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/spigot_vector.svg)*
 
 ### Features:
-- In-game report message to all players with the `snowreports.report.receive` permission.
-- Auto-completion of player names.
-- Configurable cooldown for reports.
+- Report reason presets with auto-completion
+- Everything stored in a SQLite database
+- GUI to view global and player specific reports
 - Discord webhook integration
+- Update checker
+- Report cooldown
+- Highly customizable
 
 ### Commands:
-- /delreport \<Report ID>
-- /report \<player> [reason]
-- /reports \<player>
+- /delreport \<reportID>
+- /report \<player> \<reason>
+- /reports [player]
 
 ### Permissions:
 - snowreports.report (Create reports)
-- snowreports.report.receive (Receive reports)
+- snowreports.repors (View reports)
+- snowreports.notify (Get notified when a player is reported)
 - snowreports.bypass.cooldown (Bypass the report cooldown)
-- snowreports.admin (View and delete reports)
+- snowreports.bypass.report (Bypass reports)
 
 ### Licence
-- SnowReports is licensed under the [GPL-3.0 license](https://github.com/SnowzNZ/SnowReports/blob/main/LICENSE).
-
-
-###### \* and forks, including [Folia](https://github.com/PaperMC/folia)
+- SnowReports is licensed under the [GPL-3.0 license](COPYING).
