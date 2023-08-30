@@ -5,17 +5,16 @@ import dev.snowz.snowreports.commands.CommandDelReport;
 import dev.snowz.snowreports.commands.CommandReport;
 import dev.snowz.snowreports.commands.CommandReports;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SnowReports extends JavaPlugin {
 
-    private static SnowReports plugin;
+    private static SnowReports instance;
     private static Database database;
     private static SpiGUI spiGUI;
 
-    public static SnowReports getPlugin() {
-        return plugin;
+    public static SnowReports getInstance() {
+        return instance;
     }
 
     public static Database getDb() {
@@ -28,7 +27,7 @@ public class SnowReports extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        String currentVersion = Bukkit.getPluginManager().getPlugin("SnowReports").getDescription().getVersion();
+        instance = this;
 
         // Instance
         plugin = this;
@@ -36,18 +35,14 @@ public class SnowReports extends JavaPlugin {
         // bStats
         Metrics metrics = new Metrics(this, 19543);
 
-        // Config
         saveDefaultConfig();
 
-        // Commands
         getCommand("delreport").setExecutor(new CommandDelReport());
         getCommand("report").setExecutor(new CommandReport());
         getCommand("reports").setExecutor(new CommandReports());
 
-        // Database
         database = new Database();
 
-        // GUI
         spiGUI = new SpiGUI(this);
     }
 
