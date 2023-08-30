@@ -1,10 +1,9 @@
 reports:
   enabled: true
   cooldown: 15
-  reason-required: true
-  send-to-console: false
-  only-allow-presets: false
-  presets: ["Cheating", "Chat Abuse"]
+  require-reason: true
+  notify-console: true
+  reason-presets: ["Cheating", "Chat Abuse"]
 discord-integration:
   enabled: false
   webhook-url: ""

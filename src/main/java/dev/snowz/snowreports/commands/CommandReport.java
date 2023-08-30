@@ -22,7 +22,7 @@ import java.util.List;
 public class CommandReport implements CommandExecutor, TabCompleter {
 
     public final CooldownManager cooldownManager = new CooldownManager();
-    public final FileConfiguration config = SnowReports.getPlugin().getConfig();
+    public final FileConfiguration config = SnowReports.getInstance().getConfig();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
@@ -57,7 +57,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
 
         Duration timeLeft = cooldownManager.getRemainingCooldown(reporter.getUniqueId());
 
-        if (args.length == 1 && config.getBoolean("reports.reason-required", true)) {
+        if (args.length == 1 && config.getBoolean("reports.require-reason", true)) {
             reporter.sendMessage("§c§l(!) §cYou must specify a reason!");
             return true;
         } else if (timeLeft.isZero() || timeLeft.isNegative()) {
@@ -98,7 +98,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
             }
         }
 
-        if (config.getBoolean("reports.send-to-console")) {
+        if (config.getBoolean("reports.notify-console")) {
             Bukkit.getConsoleSender().sendMessage(notifyMessage);
         }
 
@@ -110,7 +110,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> presets = config.getStringList("reports.presets");
+        List<String> presets = config.getStringList("reports.reason-presets");
         if (args.length == 1) {
             List<String> onlinePlayers = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
