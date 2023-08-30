@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Database {
 
-    private final SnowReports plugin = SnowReports.getPlugin();
+    private final SnowReports plugin = SnowReports.getInstance();
     private Connection connection;
 
     public Database() {
