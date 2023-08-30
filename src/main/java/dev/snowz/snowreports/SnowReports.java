@@ -29,8 +29,7 @@ public class SnowReports extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        // Instance
-        plugin = this;
+        UpdateChecker.checkUpdates(getDescription().getVersion());
 
         if (getConfig().getBoolean("metrics")) {
             Metrics metrics = new Metrics(this, 19543);
