@@ -32,8 +32,9 @@ public class SnowReports extends JavaPlugin {
         // Instance
         plugin = this;
 
-        // bStats
-        Metrics metrics = new Metrics(this, 19543);
+        if (getConfig().getBoolean("metrics")) {
+            Metrics metrics = new Metrics(this, 19543);
+        }
 
         saveDefaultConfig();
 

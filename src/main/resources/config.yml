@@ -13,3 +13,4 @@ discord-integration:
     hex-color: "#03c2fc"
 debug:
   allow-self-report: false
+metrics: true
