@@ -1,8 +1,9 @@
-package dev.snowz.snowreports;
+package dev.snowz.snowreports.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import dev.snowz.snowreports.SnowReports;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
