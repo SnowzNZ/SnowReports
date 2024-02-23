@@ -95,14 +95,14 @@ public class CommandReports implements CommandExecutor {
                         new ItemBuilder(playerSkull)
                                 .name("§c" + reportedPlayer.getName() + " §7(ID: " + report.getReportID() + ")")
                                 .lore(
-                                    "",
-                                    "§b‣ §fReported by: §a" + reporter.getName(),
-                                    "§b‣ §fReason: §e" + report.getReason(),
-                                    "",
-                                    "§b‣ §fDatetime: §7" + report.getTimeStamp(),
-                                    "",
-                                    "§7Left-click to teleport to §c" + reportedPlayer.getName(),
-                                    "§7Right-click to §c§ldelete §7this report"
+                                        "",
+                                        "§b‣ §fReported by: §a" + reporter.getName(),
+                                        "§b‣ §fReason: §e" + report.getReason(),
+                                        "",
+                                        "§b‣ §fDatetime: §7" + report.getTimeStamp(),
+                                        "",
+                                        "§7Left-click to teleport to §c" + reportedPlayer.getName(),
+                                        "§7Right-click to §c§ldelete §7this report"
                                 ).build()
                 ).withListener((InventoryClickEvent event) -> {
                     if (event.isLeftClick()) {
