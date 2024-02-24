@@ -13,6 +13,8 @@ import java.net.URL;
 public class UpdateChecker {
 
     public static void checkUpdates(String currentVersion) {
+        SnowReports.getInstance().getLogger().info("Checking for updates!");
+
         String apiUrl = "https://api.modrinth.com/v2/project/nt3ehUXJ/version";
 
         try {
@@ -29,20 +31,20 @@ public class UpdateChecker {
                     String latestVersion = firstEntry.getAsJsonObject().get("version_number").getAsString();
 
                     if (latestVersion.equals(currentVersion)) {
-                        SnowReports.getInstance().getLogger().warning("You are running the latest version of SnowReports!");
+                        SnowReports.getInstance().getLogger().info("You are running the latest version of SnowReports!");
                     } else {
                         SnowReports.getInstance().getLogger().warning("There is a newer version of SnowReports available!");
                         SnowReports.getInstance().getLogger().warning("You are running version " + currentVersion + " and the latest version is " + latestVersion);
                         SnowReports.getInstance().getLogger().warning("Download the latest version at https://modrinth.com/plugin/snowreports/");
                     }
                 } else {
-                    SnowReports.getInstance().getLogger().warning("Error checking for updates!");
+                    SnowReports.getInstance().getLogger().severe("Error checking for updates!");
                 }
             } else {
-                SnowReports.getInstance().getLogger().warning("Error checking for updates!");
+                SnowReports.getInstance().getLogger().severe("Error checking for updates!");
             }
         } catch (IOException e) {
-            SnowReports.getInstance().getLogger().warning("Error checking for updates!");
+            SnowReports.getInstance().getLogger().severe("Error checking for updates: " + e.getMessage());
         }
     }
 
