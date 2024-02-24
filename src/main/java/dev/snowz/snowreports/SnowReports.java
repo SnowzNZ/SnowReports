@@ -16,11 +16,7 @@ public class SnowReports extends JavaPlugin {
     private static SnowReports instance;
     private static Database database;
     private static SpiGUI spiGUI;
-    private static YamlConfiguration messagesConfig;
-
-    public static YamlConfiguration getMessagesConfig() {
-        return messagesConfig;
-    }
+    private static YamlConfiguration messages;
 
     public static SnowReports getInstance() {
         return instance;
@@ -34,6 +30,10 @@ public class SnowReports extends JavaPlugin {
         return spiGUI;
     }
 
+    public static YamlConfiguration getMessages() {
+        return messages;
+    }
+
     @Override
     public void onEnable() {
         instance = this;
@@ -45,7 +45,7 @@ public class SnowReports extends JavaPlugin {
         }
 
         saveDefaultConfig();
-        loadMessagesConfig();
+        loadMessages();
 
         getCommand("delreport").setExecutor(new CommandDelReport());
         getCommand("report").setExecutor(new CommandReport());
@@ -61,12 +61,12 @@ public class SnowReports extends JavaPlugin {
         database.safeDisconnect();
     }
 
-    private void loadMessagesConfig() {
-        File messagesConfigFile = new File(getDataFolder(), "messages.yml");
+    private void loadMessages() {
+        File messagesConfigFile = new File(getDataFolder(), "messages/en.yml");
         if (!messagesConfigFile.exists()) {
-            saveResource("messages.yml", false);
+            saveResource("messages/en.yml", false);
         }
 
-        messagesConfig = YamlConfiguration.loadConfiguration(messagesConfigFile);
+        messages = YamlConfiguration.loadConfiguration(messagesConfigFile);
     }
 }

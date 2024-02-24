@@ -1,5 +1,0 @@
-reported-by: "§b‣ §fReported by: §a{PLAYER}"
-reason: "§b‣ §fReason: §e{REASON}"
-timestamp: "§b‣ §fTimestamp: §7{TIMESTAMP}"
-left-click-to-teleport: "§7Left-click to teleport to §c{PLAYER}"
-right-click-to-delete-report: "§7Right-click to §c§ldelete §7this report"
