@@ -6,17 +6,13 @@ import dev.snowz.snowreports.commands.CommandReport;
 import dev.snowz.snowreports.commands.CommandReports;
 import dev.snowz.snowreports.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 public class SnowReports extends JavaPlugin {
 
     private static SnowReports instance;
     private static Database database;
     private static SpiGUI spiGUI;
-    private static YamlConfiguration messages;
 
     public static SnowReports getInstance() {
         return instance;
@@ -30,10 +26,6 @@ public class SnowReports extends JavaPlugin {
         return spiGUI;
     }
 
-    public static YamlConfiguration getMessages() {
-        return messages;
-    }
-
     @Override
     public void onEnable() {
         instance = this;
@@ -45,7 +37,6 @@ public class SnowReports extends JavaPlugin {
         }
 
         saveDefaultConfig();
-        loadMessages();
 
         getCommand("delreport").setExecutor(new CommandDelReport());
         getCommand("report").setExecutor(new CommandReport());
@@ -59,14 +50,5 @@ public class SnowReports extends JavaPlugin {
     @Override
     public void onDisable() {
         database.safeDisconnect();
-    }
-
-    private void loadMessages() {
-        File messagesConfigFile = new File(getDataFolder(), "messages/en.yml");
-        if (!messagesConfigFile.exists()) {
-            saveResource("messages/en.yml", false);
-        }
-
-        messages = YamlConfiguration.loadConfiguration(messagesConfigFile);
     }
 }
