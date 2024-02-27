@@ -3,7 +3,7 @@ reports:
   cooldown: 15
   require-reason: true
   notify-console: true
-  reason-presets: ["Cheating", "Chat Abuse"]
+  reason-presets: ["Hacking", "Chat Abuse", "Griefing"]
 discord-integration:
   enabled: false
   webhook-url: ""
