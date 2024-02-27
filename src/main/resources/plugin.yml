@@ -19,7 +19,7 @@ commands:
     permission: snowreports.reports
   snowreports:
     description: SnowReports plugin
-    usage: /<command> [reload]
+    usage: /<command> [enable|disable|reload]
     permission: snowreports.admin
     aliases: [sr]
 permissions:
