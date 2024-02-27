@@ -1,9 +1,9 @@
 package dev.snowz.snowreports.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import dev.snowz.snowreports.SnowReports;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,11 +24,11 @@ public class UpdateChecker {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                JsonArray jsonArray = getJsonArray(connection);
+                JSONArray jsonArray = getJsonArray(connection);
 
                 if (!jsonArray.isEmpty()) {
-                    JsonElement firstEntry = jsonArray.get(0);
-                    String latestVersion = firstEntry.getAsJsonObject().get("version_number").getAsString();
+                    JSONObject firstEntry = (JSONObject) jsonArray.get(0);
+                    String latestVersion = (String) firstEntry.get("version_number");
 
                     if (latestVersion.equals(currentVersion)) {
                         SnowReports.getInstance().getLogger().info("You are running the latest version of SnowReports!");
@@ -48,10 +48,17 @@ public class UpdateChecker {
         }
     }
 
-    private static JsonArray getJsonArray(HttpURLConnection connection) throws IOException {
+    private static JSONArray getJsonArray(HttpURLConnection connection) throws IOException {
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-        JsonArray jsonArray = JsonParser.parseReader(reader).getAsJsonArray();
-        reader.close();
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = (JSONArray) parser.parse(reader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            reader.close();
+        }
         return jsonArray;
     }
 }

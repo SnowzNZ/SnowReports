@@ -12,6 +12,7 @@ public class Database {
 
     public Database() {
         try {
+            Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + File.separator + "data.db");
 
             plugin.getLogger().info("Connected to database.");
@@ -20,6 +21,8 @@ public class Database {
 
         } catch (SQLException e) {
             plugin.getLogger().severe(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
