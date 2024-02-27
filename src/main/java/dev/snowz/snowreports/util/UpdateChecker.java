@@ -1,4 +1,4 @@
-package dev.snowz.snowreports.utils;
+package dev.snowz.snowreports.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

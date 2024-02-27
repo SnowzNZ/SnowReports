@@ -2,11 +2,12 @@ name: SnowReports
 version: '${project.version}'
 main: dev.snowz.snowreports.SnowReports
 author: SnowzNZ
+description: SnowReports, a report plugin for versions 1.8.8–1.20.4
 website: https://modrinth.com/plugin/snowreports
 commands:
   delreport:
     description: Delete a report
-    usage: /<command> <Report ID>
+    usage: /<command> <report_id>
     permission: snowreports.admin
   report:
     description: Report a player
@@ -14,21 +15,31 @@ commands:
     permission: snowreports.report
   reports:
     description: Get a player's reports
-    usage: /<command> <player>
+    usage: /<command> [player]
     permission: snowreports.reports
+  snowreports:
+    description: SnowReports plugin
+    usage: /<command> [reload]
+    permission: snowreports.admin
+    aliases: [sr]
 permissions:
-  snowreports.report:
-    default: true
-    description: Report players
-  snowreports.reports:
+  snowreports.admin:
     default: op
-    description: View reports
-  snowreports.notify:
-    default: op
-    description: Get notified when a player is reported
+    description: Delete reports and configure the plugin
   snowreports.bypass.cooldown:
     default: false
     description: Bypass the report cooldown
   snowreports.bypass.report:
     default: false
     description: Bypass reports
+  snowreports.notify:
+    default: op
+    description: Get notified when a player is reported
+  snowreports.report:
+    default: true
+    description: Report players
+  snowreports.reports:
+    default: op
+    description: View reports
+  snowreports.report.receive:
+    description: Deprecated, use snowreports.notify

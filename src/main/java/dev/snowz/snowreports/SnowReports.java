@@ -4,7 +4,8 @@ import com.samjakob.spigui.SpiGUI;
 import dev.snowz.snowreports.commands.CommandDelReport;
 import dev.snowz.snowreports.commands.CommandReport;
 import dev.snowz.snowreports.commands.CommandReports;
-import dev.snowz.snowreports.utils.UpdateChecker;
+import dev.snowz.snowreports.commands.CommandSnowReports;
+import dev.snowz.snowreports.util.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,6 +42,8 @@ public class SnowReports extends JavaPlugin {
         getCommand("delreport").setExecutor(new CommandDelReport());
         getCommand("report").setExecutor(new CommandReport());
         getCommand("reports").setExecutor(new CommandReports());
+        getCommand("snowreports").setExecutor(new CommandSnowReports());
+
 
         database = new Database();
 

@@ -1,4 +1,4 @@
-package dev.snowz.snowreports.utils;
+package dev.snowz.snowreports.util;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;

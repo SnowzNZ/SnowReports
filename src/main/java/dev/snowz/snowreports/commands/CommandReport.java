@@ -1,8 +1,8 @@
 package dev.snowz.snowreports.commands;
 
 import dev.snowz.snowreports.SnowReports;
-import dev.snowz.snowreports.utils.CooldownManager;
-import dev.snowz.snowreports.utils.DiscordWebhook;
+import dev.snowz.snowreports.util.CooldownManager;
+import dev.snowz.snowreports.util.DiscordWebhook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +22,6 @@ import java.util.List;
 public class CommandReport implements CommandExecutor, TabCompleter {
 
     public final CooldownManager cooldownManager = new CooldownManager();
-    public final FileConfiguration config = SnowReports.getInstance().getConfig();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
@@ -33,7 +32,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
 
         Player reporter = (Player) sender;
 
-        if (!config.getBoolean("reports.enabled", true)) {
+        if (!SnowReports.getInstance().getConfig().getBoolean("reports.enabled", true)) {
             reporter.sendMessage("§c§l(!) §cReports are disabled!");
             return true;
         }
@@ -50,14 +49,14 @@ public class CommandReport implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (reportedPlayer.equals(reporter) && !config.getBoolean("debug.allow-self-report")) {
+        if (reportedPlayer.equals(reporter) && !SnowReports.getInstance().getConfig().getBoolean("debug.allow-self-report")) {
             reporter.sendMessage("§c§l(!) §cYou cannot report yourself!");
             return true;
         }
 
         Duration timeLeft = cooldownManager.getRemainingCooldown(reporter.getUniqueId());
 
-        if (args.length == 1 && config.getBoolean("reports.require-reason", true)) {
+        if (args.length == 1 && SnowReports.getInstance().getConfig().getBoolean("reports.require-reason", true)) {
             reporter.sendMessage("§c§l(!) §cYou must specify a reason!");
             return true;
         } else if (timeLeft.isZero() || timeLeft.isNegative()) {
@@ -77,15 +76,15 @@ public class CommandReport implements CommandExecutor, TabCompleter {
 
         SnowReports.getDb().insertReport(reportedPlayer.getUniqueId().toString(), reporter.getUniqueId().toString(), reason, timeStamp);
 
-        String webhookURL = config.getString("discord-integration.webhook-url", "");
-        if (config.getBoolean("discord-integration.enabled", false) && !webhookURL.isEmpty()) {
+        String webhookURL = SnowReports.getInstance().getConfig().getString("discord-integration.webhook-url", "");
+        if (SnowReports.getInstance().getConfig().getBoolean("discord-integration.enabled", false) && !webhookURL.isEmpty()) {
             DiscordWebhook webhook = new DiscordWebhook(webhookURL);
             DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
-                    .setTitle(config.getString("discord-integration.embed.title", "Report"))
+                    .setTitle(SnowReports.getInstance().getConfig().getString("discord-integration.embed.title", "Report"))
                     .setDescription("**" + reportedPlayer.getName() + "** has been reported for: " + reason)
                     .setFooter("Reported by: " + reporter.getName(), "https://crafatar.com/avatars/" + reporter.getUniqueId())
                     .setThumbnail("https://crafatar.com/renders/head/" + reportedPlayer.getUniqueId() + "?overlay")
-                    .setColor(Color.decode(config.getString("discord-integration.embed.hex-color", "#03c2fc")));
+                    .setColor(Color.decode(SnowReports.getInstance().getConfig().getString("discord-integration.embed.hex-color", "#03c2fc")));
 
             webhook.setUsername("SnowReports");
             webhook.addEmbed(embed);
@@ -93,24 +92,24 @@ public class CommandReport implements CommandExecutor, TabCompleter {
         }
         String notifyMessage = "§4" + reportedPlayer.getName() + "§4 has been reported by " + reporter.getName() + " for " + reason;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission("snowreports.notify")) {
+            if (player.hasPermission("snowreports.notify") || player.hasPermission("snowreports.report.receive")) {
                 player.sendMessage(notifyMessage);
             }
         }
 
-        if (config.getBoolean("reports.notify-console")) {
+        if (SnowReports.getInstance().getConfig().getBoolean("reports.notify-console", true)) {
             Bukkit.getConsoleSender().sendMessage(notifyMessage);
         }
 
         reporter.sendMessage("§aYour report has been sent!");
         if (!reporter.hasPermission("snowreports.bypass.cooldown")) {
-            cooldownManager.setCooldown(reporter.getUniqueId(), Duration.ofSeconds(config.getInt("reports.cooldown"), 15));
+            cooldownManager.setCooldown(reporter.getUniqueId(), Duration.ofSeconds(SnowReports.getInstance().getConfig().getInt("reports.cooldown"), 15));
         }
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> presets = config.getStringList("reports.reason-presets");
+        List<String> presets = SnowReports.getInstance().getConfig().getStringList("reports.reason-presets");
         if (args.length == 1) {
             List<String> onlinePlayers = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {

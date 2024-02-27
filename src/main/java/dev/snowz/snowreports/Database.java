@@ -16,7 +16,7 @@ public class Database {
 
             plugin.getLogger().info("Connected to database.");
 
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS Reports (reportID INTEGER PRIMARY KEY AUTOINCREMENT, reportedPlayerUUID TEXT, reporterUUID TEXT, reason TEXT, timeStamp TEXT)").execute();
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS Reports (reportID INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, reportedPlayerUUID TEXT, reporterUUID TEXT, reason TEXT, timeStamp TEXT)").execute();
 
         } catch (SQLException e) {
             plugin.getLogger().severe(e.getMessage());

@@ -16,9 +16,11 @@ public class CommandDelReport implements CommandExecutor, TabExecutor {
             sender.sendMessage("§c§l(!) §cYou must specify a Report ID!");
             return true;
         }
+
         try {
             int reportID = Integer.parseInt(args[0]);
             boolean removed = SnowReports.getDb().deleteReport(reportID);
+
             if (removed) {
                 sender.sendMessage("§aReport #" + reportID + " deleted!");
             } else {

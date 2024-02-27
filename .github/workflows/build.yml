@@ -1,4 +1,4 @@
-name: Build
+name: Build SnowReports
 
 on:
   pull_request:
@@ -28,4 +28,3 @@ jobs:
       with:
         name: SnowReports
         path: target/SnowReports-*.jar
-        compression-level: 0

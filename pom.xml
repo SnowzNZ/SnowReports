@@ -6,7 +6,7 @@
 
     <groupId>dev.snowz</groupId>
     <artifactId>SnowReports</artifactId>
-    <version>2.0</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
 
     <name>SnowReports</name>
@@ -41,7 +41,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>dev.snowz.snowreports.utils.BStats</shadedPattern>
+                                    <shadedPattern>dev.snowz.snowreports.util</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -58,13 +58,13 @@
     </build>
 
     <repositories>
-        <!-- Spigot API -->
+        <!-- SpigotMC -->
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
 
-        <!-- SpiGUI -->
+        <!-- JitPack -->
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -95,7 +95,7 @@
             <version>1.3.1</version>
         </dependency>
 
-        <!-- Gson -->
+        <!-- gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
