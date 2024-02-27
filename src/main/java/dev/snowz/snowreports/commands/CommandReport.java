@@ -8,7 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
@@ -83,7 +82,7 @@ public class CommandReport implements CommandExecutor, TabCompleter {
                     .setTitle(SnowReports.getInstance().getConfig().getString("discord-integration.embed.title", "Report"))
                     .setDescription("**" + reportedPlayer.getName() + "** has been reported for: " + reason)
                     .setFooter("Reported by: " + reporter.getName(), "https://crafatar.com/avatars/" + reporter.getUniqueId())
-                    .setThumbnail("https://crafatar.com/renders/head/" + reportedPlayer.getUniqueId() + "?overlay")
+                    .setThumbnail("https://mc-heads.net/head/" + reportedPlayer.getUniqueId())
                     .setColor(Color.decode(SnowReports.getInstance().getConfig().getString("discord-integration.embed.hex-color", "#03c2fc")));
 
             webhook.setUsername("SnowReports");
