@@ -7,7 +7,11 @@ import dev.snowz.snowreports.commands.CommandReports;
 import dev.snowz.snowreports.commands.CommandSnowReports;
 import dev.snowz.snowreports.util.UpdateChecker;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class SnowReports extends JavaPlugin {
 
@@ -53,5 +57,23 @@ public class SnowReports extends JavaPlugin {
     @Override
     public void onDisable() {
         database.safeDisconnect();
+    }
+
+    public String getLocale(Player player) {
+        String locale;
+        String serverVersion = Bukkit.getBukkitVersion();
+        String[] versionParts = serverVersion.split("-")[0].split("\\.");
+        int majorVersion = Integer.parseInt(versionParts[1]);
+        if (majorVersion < 12) {
+            locale = player.spigot().getLocale();
+        } else {
+            try {
+                locale = player.getClass().getMethod("getLocale").invoke(player).toString();
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        // return new Locale(locale.split("_")[0], locale.split("_")[1]);
+        return locale;
     }
 }
