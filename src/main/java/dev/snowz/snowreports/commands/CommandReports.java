@@ -7,13 +7,13 @@ import dev.snowz.snowreports.Report;
 import dev.snowz.snowreports.SnowReports;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Comparator;
 import java.util.List;
@@ -24,10 +24,75 @@ public class CommandReports implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 
+        if (!(sender instanceof Player)) {
+            if (args.length == 0) {
+                int pageSize = 5;
+                List<Report> reports = SnowReports.getDb().getAllReports();
+                reports.sort(Comparator.comparingInt(Report::getReportID).reversed());
+
+                int pageCount = (int) Math.ceil((double) reports.size() / pageSize);
+
+                for (int page = 1; page <= pageCount; page++) {
+                    sender.sendMessage("Page " + page + "/" + pageCount);
+                    sender.sendMessage("§m------------------------------");
+
+                    int startIndex = (page - 1) * pageSize;
+                    int endIndex = Math.min(startIndex + pageSize, reports.size());
+
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Report report = reports.get(i);
+                        OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(report.getReporterUUID()));
+                        OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(UUID.fromString(report.getReportedPlayerUUID()));
+
+                        sender.sendMessage("§7Report ID: " + report.getReportID());
+                        sender.sendMessage("§cPlayer: " + reportedPlayer.getName());
+                        sender.sendMessage("§aReporter: " + reporter.getName());
+                        sender.sendMessage("§eReason: " + report.getReason());
+                        sender.sendMessage("§bTimestamp: " + report.getTimeStamp());
+                        sender.sendMessage("§m------------------------------");
+                    }
+                }
+            } else if (args.length == 1) {
+                OfflinePlayer queriedPlayer = Bukkit.getOfflinePlayer(args[0]);
+                int pageSize = 5;
+                List<Report> reports = SnowReports.getDb().getPlayerReports(queriedPlayer.getUniqueId().toString());
+                reports.sort(Comparator.comparingInt(Report::getReportID).reversed());
+
+                int pageCount = (int) Math.ceil((double) reports.size() / pageSize);
+
+                for (int page = 1; page <= pageCount; page++) {
+                    sender.sendMessage("Page " + page + "/" + pageCount);
+                    sender.sendMessage("§m------------------------------");
+
+                    int startIndex = (page - 1) * pageSize;
+                    int endIndex = Math.min(startIndex + pageSize, reports.size());
+
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Report report = reports.get(i);
+                        OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(report.getReporterUUID()));
+
+                        sender.sendMessage("§7Report ID: " + report.getReportID());
+                        sender.sendMessage("§cPlayer: " + queriedPlayer.getName());
+                        sender.sendMessage("§aReporter: " + reporter.getName());
+                        sender.sendMessage("§eReason: " + report.getReason());
+                        sender.sendMessage("§bTimestamp: " + report.getTimeStamp());
+                        sender.sendMessage("§m------------------------------");
+                    }
+                }
+            }
+            return true;
+        }
+
         Player player = (Player) sender;
 
         if (args.length == 1) {
             Player queriedPlayer = Bukkit.getPlayer(args[0]);
+
+            if (queriedPlayer == null) {
+                sender.sendMessage("§cPlayer not found.");
+                return true;
+            }
+
             List<Report> reports = SnowReports.getDb().getPlayerReports(queriedPlayer.getUniqueId().toString());
             reports.sort(Comparator.comparingInt(Report::getReportID).reversed());
 
@@ -36,37 +101,7 @@ public class CommandReports implements CommandExecutor {
                 return true;
             }
 
-            SGMenu reportsMenu = SnowReports.getSpiGUI().create(queriedPlayer.getName() + "'s Reports &7(Page {currentPage}/{maxPage})", 6);
-
-            for (Report report : reports) {
-
-                Player reporter = Bukkit.getPlayer(UUID.fromString(report.getReporterUUID()));
-
-                SGButton button = new SGButton(
-                        new ItemBuilder(Material.PAPER)
-                                .name("§c" + queriedPlayer.getName() + " §7(ID: " + report.getReportID() + ")")
-                                .lore(
-                                        "",
-                                        "§b‣ §fReported by: §a" + reporter.getName(),
-                                        "§b‣ §fReason: §e" + report.getReason(),
-                                        "",
-                                        "§b‣ §fDatetime: §7" + report.getTimeStamp(),
-                                        "",
-                                        "§7Left-click to teleport to §c" + queriedPlayer.getName(),
-                                        "§7Right-click to §c§ldelete §7this report"
-                                ).build())
-                        .withListener((InventoryClickEvent event) -> {
-                            if (event.isLeftClick()) {
-                                event.getWhoClicked().teleport(queriedPlayer.getLocation());
-                            } else if (event.isRightClick()) {
-                                SnowReports.getDb().deleteReport(report.getReportID());
-                                reportsMenu.removeButton(event.getSlot());
-                                reportsMenu.refreshInventory(event.getWhoClicked());
-                            }
-                        });
-
-                reportsMenu.addButton(button);
-            }
+            SGMenu reportsMenu = createReportsMenu("Reports for " + queriedPlayer.getName(), reports, player);
 
             player.openInventory(reportsMenu.getInventory());
 
@@ -79,69 +114,51 @@ public class CommandReports implements CommandExecutor {
                 return true;
             }
 
-            SGMenu reportsMenu = SnowReports.getSpiGUI().create("Global Reports &7(Page {currentPage}/{maxPage})", 6);
-
-            for (Report report : reports) {
-                Player reportedPlayer = Bukkit.getPlayer(UUID.fromString(report.getReportedPlayerUUID()));
-
-                ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-                SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
-                playerSkullMeta.setOwner(reportedPlayer.getName());
-                playerSkull.setItemMeta(playerSkullMeta);
-
-                Player reporter = Bukkit.getPlayer(UUID.fromString(report.getReporterUUID()));
-
-                SGButton button = new SGButton(
-                        new ItemBuilder(playerSkull)
-                                .name("§c" + reportedPlayer.getName() + " §7(ID: " + report.getReportID() + ")")
-                                .lore(
-                                        "",
-                                        "§b‣ §fReported by: §a" + reporter.getName(),
-                                        "§b‣ §fReason: §e" + report.getReason(),
-                                        "",
-                                        "§b‣ §fDatetime: §7" + report.getTimeStamp(),
-                                        "",
-                                        "§7Left-click to teleport to §c" + reportedPlayer.getName(),
-                                        "§7Right-click to §c§ldelete §7this report"
-                                ).build()
-                ).withListener((InventoryClickEvent event) -> {
-                    if (event.isLeftClick()) {
-                        event.getWhoClicked().teleport(reportedPlayer.getLocation());
-                    } else if (event.isRightClick()) {
-                        SnowReports.getDb().deleteReport(report.getReportID());
-                        reportsMenu.removeButton(event.getSlot());
-                        reportsMenu.refreshInventory(event.getWhoClicked());
-                    }
-                });
-
-                reportsMenu.addButton(button);
-            }
+            SGMenu reportsMenu = createReportsMenu("Global Reports", reports, player);
 
             player.openInventory(reportsMenu.getInventory());
         }
         return true;
     }
 
-}
+    private SGMenu createReportsMenu(String title, List<Report> reports, Player player) {
+        SGMenu reportsMenu = SnowReports.getSpiGUI().create(title + " &7(Page {currentPage}/{maxPage})", 6);
 
-//        int pageSize = 3; // Set the number of reports per page
-//        int pageCount = (int) Math.ceil((double) reports.size() / pageSize);
-//
-//        for (int page = 1; page <= pageCount; page++) {
-//            sender.sendMessage("Page " + page + "/" + pageCount);
-//            sender.sendMessage("§m------------------------------");
-//
-//            int startIndex = (page - 1) * pageSize;
-//            int endIndex = Math.min(startIndex + pageSize, reports.size());
-//
-//            for (int i = startIndex; i < endIndex; i++) {
-//                Report report = reports.get(i);
-//                OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(report.getReporterUUID()));
-//
-//                sender.sendMessage("§eReport ID: " + report.getReportID());
-//                sender.sendMessage("§aReporter: " + reporter.getName());
-//                sender.sendMessage("§cReason: " + report.getReason());
-//                sender.sendMessage("§bDate/Time: " + report.getTimeStamp());
-//                sender.sendMessage("§m------------------------------");
-//            }
-//        }
+        for (Report report : reports) {
+            Player reportedPlayer = Bukkit.getPlayer(UUID.fromString(report.getReportedPlayerUUID()));
+
+            ItemStack playerSkull = new ItemBuilder(Material.SKULL_ITEM)
+                    .skullOwner(reportedPlayer.getName())
+                    .build();
+
+            Player reporter = Bukkit.getPlayer(UUID.fromString(report.getReporterUUID()));
+
+            SGButton button = new SGButton(
+                    new ItemBuilder(playerSkull)
+                            .name("§c" + reportedPlayer.getName() + " §7(ID: " + report.getReportID() + ")")
+                            .lore(
+                                    "",
+                                    "§b‣ §fReported by: §a" + reporter.getName(),
+                                    "§b‣ §fReason: §e" + report.getReason(),
+                                    "",
+                                    "§b‣ §fTimestamp: §7" + report.getTimeStamp(),
+                                    "",
+                                    "§7Left-click to teleport to §c" + reportedPlayer.getName(),
+                                    "§7Right-click to §c§ldelete §7this report"
+                            ).build()
+            ).withListener((InventoryClickEvent event) -> {
+                if (event.isLeftClick()) {
+                    event.getWhoClicked().teleport(reportedPlayer.getLocation());
+                } else if (event.isRightClick()) {
+                    SnowReports.getDb().deleteReport(report.getReportID());
+                    reportsMenu.removeButton(event.getSlot());
+                    reportsMenu.refreshInventory(event.getWhoClicked());
+                }
+            });
+
+            reportsMenu.addButton(button);
+        }
+
+        return reportsMenu;
+    }
+}
