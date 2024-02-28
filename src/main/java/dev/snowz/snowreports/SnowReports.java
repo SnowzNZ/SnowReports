@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SnowReports extends JavaPlugin {
 
+    static int majorVersion = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
     private static SnowReports instance;
     private static Database database;
     private static SpiGUI spiGUI;
@@ -59,21 +60,18 @@ public class SnowReports extends JavaPlugin {
         database.safeDisconnect();
     }
 
-    public String getLocale(Player player) {
-        String locale;
-        String serverVersion = Bukkit.getBukkitVersion();
-        String[] versionParts = serverVersion.split("-")[0].split("\\.");
-        int majorVersion = Integer.parseInt(versionParts[1]);
+    public String getPlayerLocale(Player player) {
+        String locale = "en_us"; // Default to en_us
+
         if (majorVersion < 12) {
             locale = player.spigot().getLocale();
         } else {
             try {
                 locale = player.getClass().getMethod("getLocale").invoke(player).toString();
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
-        // return new Locale(locale.split("_")[0], locale.split("_")[1]);
         return locale;
     }
 }
