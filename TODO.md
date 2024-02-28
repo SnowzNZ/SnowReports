@@ -2,5 +2,7 @@
 - [ ] Delete report prompt
 - [ ] Add pages to GUI
 - [ ] Reload locale files on command
+- [ ] Possibly drop legacy support
+- [ ] Migrate to mini message
 - [ ] Localization
 - [ ] Option to use MySQL (????)
