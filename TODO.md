@@ -1,9 +1,6 @@
-ready for 1.8.8 final release:
--
-- [ ] Add pages to GUI
-- [ ] Option to use MySQL (????)
+- [ ] Format and refactor CommandReports.java
 - [ ] Delete report prompt
-
----
-- [ ] Localization 
+- [ ] Add pages to GUI
 - [ ] Reload locale files on command
+- [ ] Localization
+- [ ] Option to use MySQL (????)
