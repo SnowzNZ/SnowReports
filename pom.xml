@@ -46,7 +46,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>dev.snowz.snowreports.util</shadedPattern>
+                                    <shadedPattern>dev.snowz.snowreports.bstats</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

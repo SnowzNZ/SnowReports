@@ -8,7 +8,7 @@ import org.bukkit.command.TabExecutor;
 
 import java.util.List;
 
-public class CommandDelReport implements CommandExecutor, TabExecutor {
+public class DelReportCommand implements CommandExecutor, TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {

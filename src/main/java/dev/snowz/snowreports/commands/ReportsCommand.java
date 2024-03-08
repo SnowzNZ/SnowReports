@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public class CommandReports implements CommandExecutor {
+public class ReportsCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {

@@ -151,16 +151,15 @@ public class DiscordWebhook {
     }
 
     public static class EmbedObject {
+        private final List<Field> fields = new ArrayList<>();
         private String title;
         private String description;
         private String url;
         private Color color;
-
         private Footer footer;
         private Thumbnail thumbnail;
         private Image image;
         private Author author;
-        private final List<Field> fields = new ArrayList<>();
 
         public String getTitle() {
             return title;

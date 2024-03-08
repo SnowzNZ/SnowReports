@@ -1,21 +1,17 @@
 package dev.snowz.snowreports;
 
 import com.samjakob.spigui.SpiGUI;
-import dev.snowz.snowreports.commands.CommandDelReport;
-import dev.snowz.snowreports.commands.CommandReport;
-import dev.snowz.snowreports.commands.CommandReports;
-import dev.snowz.snowreports.commands.CommandSnowReports;
+import dev.snowz.snowreports.commands.DelReportCommand;
+import dev.snowz.snowreports.commands.ReportCommand;
+import dev.snowz.snowreports.commands.ReportsCommand;
+import dev.snowz.snowreports.commands.SnowReportsCommand;
 import dev.snowz.snowreports.util.UpdateChecker;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class SnowReports extends JavaPlugin {
 
-    static int majorVersion = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
+
     private static SnowReports instance;
     private static Database database;
     private static SpiGUI spiGUI;
@@ -44,10 +40,10 @@ public class SnowReports extends JavaPlugin {
 
         saveDefaultConfig();
 
-        getCommand("delreport").setExecutor(new CommandDelReport());
-        getCommand("report").setExecutor(new CommandReport());
-        getCommand("reports").setExecutor(new CommandReports());
-        getCommand("snowreports").setExecutor(new CommandSnowReports());
+        getCommand("delreport").setExecutor(new DelReportCommand());
+        getCommand("report").setExecutor(new ReportCommand());
+        getCommand("reports").setExecutor(new ReportsCommand());
+        getCommand("snowreports").setExecutor(new SnowReportsCommand());
 
 
         database = new Database();
@@ -58,20 +54,5 @@ public class SnowReports extends JavaPlugin {
     @Override
     public void onDisable() {
         database.safeDisconnect();
-    }
-
-    public String getPlayerLocale(Player player) {
-        String locale = "en_us"; // Default to en_us
-
-        if (majorVersion < 12) {
-            locale = player.spigot().getLocale();
-        } else {
-            try {
-                locale = player.getClass().getMethod("getLocale").invoke(player).toString();
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return locale;
     }
 }

@@ -1,5 +1,6 @@
+- [ ] Save locale files
 - [ ] Format and refactor CommandReports.java
-- [ ] Delete report prompt
+- [ ] Add delete report prompt
 - [ ] Add pages to GUI
 - [ ] Reload locale files on command
 - [ ] Possibly drop legacy support

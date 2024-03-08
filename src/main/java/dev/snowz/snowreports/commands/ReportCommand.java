@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CommandReport implements CommandExecutor, TabCompleter {
+public class ReportCommand implements CommandExecutor, TabCompleter {
 
     public final CooldownManager cooldownManager = new CooldownManager();
 
