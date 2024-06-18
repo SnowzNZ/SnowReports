@@ -32,7 +32,9 @@ public class SnowReports extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        UpdateChecker.checkUpdates(getDescription().getVersion());
+        if (getConfig().getBoolean("check-for-updates")) {
+            UpdateChecker.checkUpdates(getDescription().getVersion());
+        }
 
         if (getConfig().getBoolean("metrics")) {
             new Metrics(this, 19543);

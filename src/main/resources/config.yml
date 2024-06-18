@@ -1,3 +1,4 @@
+name: "TestReports"
 reports:
   enabled: true
   cooldown: 15
@@ -13,3 +14,4 @@ discord-integration:
 debug:
   allow-self-report: false
 metrics: true
+check-for-updates: true
