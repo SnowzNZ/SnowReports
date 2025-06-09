@@ -1,6 +1,7 @@
 package dev.snowz.snowreports.bukkit.gui.impl;
 
 import dev.snowz.snowreports.bukkit.gui.BaseGui;
+import dev.snowz.snowreports.bukkit.gui.item.BackItem;
 import dev.snowz.snowreports.bukkit.gui.item.InProgressItem;
 import dev.snowz.snowreports.bukkit.gui.item.OpenItem;
 import dev.snowz.snowreports.bukkit.gui.item.ResolveItem;
@@ -28,11 +29,12 @@ public final class UpdateStatusGui implements BaseGui<Gui> {
             .setStructure(
                 "# # # # # # # # #",
                 "# # 1 # 2 # 3 # #",
-                "# # # # # # # # #"
+                "- # # # # # # # #"
             )
             .addIngredient('1', new OpenItem(id))
             .addIngredient('2', new InProgressItem(id))
             .addIngredient('3', new ResolveItem(id))
+            .addIngredient('-', new BackItem())
             .build();
     }
 

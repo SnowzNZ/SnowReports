@@ -1,6 +1,7 @@
 package dev.snowz.snowreports.bukkit.gui.impl;
 
 import dev.snowz.snowreports.bukkit.gui.BaseGui;
+import dev.snowz.snowreports.bukkit.gui.item.BackItem;
 import dev.snowz.snowreports.bukkit.gui.item.DeleteItem;
 import dev.snowz.snowreports.bukkit.gui.item.UpdateStatusItem;
 import dev.snowz.snowreports.bukkit.gui.item.ViewChatHistoryItem;
@@ -31,11 +32,12 @@ public final class ManageGui implements BaseGui<Gui> {
             .setStructure(
                 "# # # # # # # # #",
                 "# # 1 # 2 # 3 # #",
-                "# # # # # # # # #"
+                "- # # # # # # # #"
             )
             .addIngredient('1', new UpdateStatusItem(id))
             .addIngredient('2', new ViewChatHistoryItem(id))
             .addIngredient('3', new DeleteItem(id))
+            .addIngredient('-', new BackItem())
             .build();
     }
 

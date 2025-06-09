@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
+import xyz.xenondevs.invui.window.Window;
+
+import java.util.Set;
 
 public final class ViewChatHistoryItem extends AbstractItem {
     private final ReportStatus status = ReportStatus.IN_PROGRESS;
@@ -32,6 +35,12 @@ public final class ViewChatHistoryItem extends AbstractItem {
         @NotNull final Player player,
         @NotNull final InventoryClickEvent event
     ) {
+        final Set<Window> windows = getWindows();
+        if (!windows.isEmpty()) {
+            final Window currentWindow = windows.iterator().next();
+            BackItem.pushWindow(player, currentWindow);
+        }
+
         new ChatHistoryGui(id).open(player);
     }
 }

@@ -10,9 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
+import xyz.xenondevs.invui.window.Window;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 public final class UpdateStatusItem extends AbstractItem {
 
@@ -37,6 +39,12 @@ public final class UpdateStatusItem extends AbstractItem {
         @NotNull final Player player,
         @NotNull final InventoryClickEvent event
     ) {
+        final Set<Window> windows = getWindows();
+        if (!windows.isEmpty()) {
+            final Window currentWindow = windows.iterator().next();
+            BackItem.pushWindow(player, currentWindow);
+        }
+
         new UpdateStatusGui(id).open(player);
     }
 }

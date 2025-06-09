@@ -34,11 +34,11 @@ public final class ReportBridgeListener implements PluginMessageListener {
                         if (json.isJsonArray()) {
                             return context.deserialize(json, ChatMessage[].class);
                         } else {
-                            String chatHistoryStr = json.getAsString();
+                            final String chatHistoryStr = json.getAsString();
                             try {
-                                ChatMessage message1 = new Gson().fromJson(chatHistoryStr, ChatMessage.class);
+                                final ChatMessage message1 = new Gson().fromJson(chatHistoryStr, ChatMessage.class);
                                 return new ChatMessage[]{ message1 };
-                            } catch (JsonSyntaxException e) {
+                            } catch (final JsonSyntaxException e) {
                                 return new ChatMessage[]{ new ChatMessage(
                                     chatHistoryStr,
                                     Instant.now().getEpochSecond()
@@ -56,7 +56,7 @@ public final class ReportBridgeListener implements PluginMessageListener {
             }
 
             SnowReports.getAlertManager().broadcastAlert(Report.fromModel(report));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             SnowReports.getInstance().getLogger().severe("Failed to read report from bridge: " + e.getMessage());
         }
     }

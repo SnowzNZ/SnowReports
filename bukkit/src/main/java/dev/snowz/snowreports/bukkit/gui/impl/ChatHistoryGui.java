@@ -3,6 +3,7 @@ package dev.snowz.snowreports.bukkit.gui.impl;
 import dev.snowz.snowreports.api.model.ChatMessage;
 import dev.snowz.snowreports.bukkit.SnowReports;
 import dev.snowz.snowreports.bukkit.gui.BaseGui;
+import dev.snowz.snowreports.bukkit.gui.item.BackItem;
 import dev.snowz.snowreports.bukkit.gui.item.ChatHistoryItem;
 import dev.snowz.snowreports.bukkit.gui.item.NextPageItem;
 import dev.snowz.snowreports.bukkit.gui.item.PreviousPageItem;
@@ -39,9 +40,10 @@ public final class ChatHistoryGui implements BaseGui<PagedGui<Item>> {
                 "# x x x x x x x #",
                 "# x x x x x x x #",
                 "# x x x x x x x #",
-                "# # < # # # > # #"
+                "- # < # # # > # #"
             )
             .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
+            .addIngredient('-', new BackItem())
             .addIngredient('<', new PreviousPageItem())
             .addIngredient('>', new NextPageItem())
             .setContent(chatHistoryItems)
