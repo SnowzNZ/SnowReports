@@ -1,5 +1,8 @@
 package dev.snowz.snowreports.bukkit.manager;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import com.google.gson.Gson;
 import dev.snowz.snowreports.api.event.ReportStatusUpdateEvent;
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.SnowReports;
@@ -7,7 +10,6 @@ import dev.snowz.snowreports.bukkit.util.DiscordWebhook;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.Report;
 import dev.snowz.snowreports.common.database.entity.User;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -22,7 +24,7 @@ import static dev.snowz.snowreports.bukkit.manager.MessageManager.getMessage;
 
 public final class ReportManager {
 
-    public boolean createReport(
+    public Report createReport(
         final Player reporter,
         final Player reported,
         final String reason,
@@ -41,12 +43,21 @@ public final class ReportManager {
         report.setServer(Config.get().getServerName());
         report.setChatHistory(SnowReports.getChatHistoryManager().getPlayerChatHistory(reported.getUniqueId()));
 
+        // Send report to plugin channel
+        final Gson gson = new Gson();
+        final String reportJson = gson.toJson(report);
+
+        final ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(reportJson);
+
+        reporter.sendPluginMessage(SnowReports.getInstance(), "snowreports:main", output.toByteArray());
+
         try {
             SnowReports.getReportDao().create(report);
-            return true;
+            return report;
         } catch (final SQLException e) {
             SnowReports.getInstance().getLogger().severe("Failed to create report: " + e.getMessage());
-            return false;
+            return null;
         }
     }
 
@@ -176,7 +187,11 @@ public final class ReportManager {
     ) {
         final long time = Instant.now().getEpochSecond();
 
-        createReport(reporter, reported, reason, time);
+        final Report report = createReport(reporter, reported, reason, time);
+        if (report == null) {
+            reporter.sendMessage(getMessage("report.creation_failed"));
+            return false;
+        }
 
         final String webhookURL = Config.get().getDiscord().getWebhookUrl();
         if (Config.get().getDiscord().isEnabled() && !webhookURL.isEmpty()) {
@@ -201,18 +216,7 @@ public final class ReportManager {
             webhook.execute();
         }
 
-        final Component notifyMessage = getMessage(
-            "report.notify",
-            reported.getName(),
-            reporter.getName(),
-            reason
-        );
-
-        SnowReports.getAlertManager().broadcastAlert(notifyMessage);
-
-        if (Config.get().getReports().isNotifyConsole()) {
-            Bukkit.getConsoleSender().sendMessage(notifyMessage);
-        }
+        SnowReports.getAlertManager().broadcastAlert(report);
 
         reporter.sendMessage(getMessage("report.sent"));
 

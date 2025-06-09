@@ -9,6 +9,7 @@ import dev.snowz.snowreports.bukkit.command.impl.*;
 import dev.snowz.snowreports.bukkit.command.impl.snowreports.SnowReportsCommand;
 import dev.snowz.snowreports.bukkit.listener.PlayerChatListener;
 import dev.snowz.snowreports.bukkit.listener.PlayerJoinListener;
+import dev.snowz.snowreports.bukkit.listener.ReportBridgeListener;
 import dev.snowz.snowreports.bukkit.manager.*;
 import dev.snowz.snowreports.bukkit.util.UpdateChecker;
 import dev.snowz.snowreports.common.config.Config;
@@ -138,6 +139,14 @@ public final class SnowReports extends JavaPlugin {
                 new PlayerJoinListener()
             )
             .forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
+
+        // Plugin channel
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "snowreports:main");
+        this.getServer().getMessenger().registerIncomingPluginChannel(
+            this,
+            "snowreports:main",
+            new ReportBridgeListener()
+        );
     }
 
     @Override

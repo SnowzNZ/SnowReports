@@ -1,5 +1,7 @@
 package dev.snowz.snowreports.bukkit.manager;
 
+import dev.snowz.snowreports.common.config.Config;
+import dev.snowz.snowreports.common.database.entity.Report;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,6 +10,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static dev.snowz.snowreports.bukkit.manager.MessageManager.getMessage;
 
 public final class AlertManager {
     private final Set<UUID> alertDisabled = ConcurrentHashMap.newKeySet();
@@ -63,18 +67,23 @@ public final class AlertManager {
         return Collections.unmodifiableSet(alertDisabled);
     }
 
-    /**
-     * Send an alert message to all online players with the permission
-     * except those who have explicitly disabled alerts
-     *
-     * @param message The message to send
-     */
-    public void broadcastAlert(final Component message) {
+    public void broadcastAlert(final Report report) {
+        final Component message = getMessage(
+            "report.notify",
+            report.getReported().getName(),
+            report.getReporter().getName(),
+            report.getReason()
+        );
+
         for (final Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("snowreports.alerts") && !alertDisabled.contains(player.getUniqueId())) {
                 player.sendMessage(message);
                 player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
             }
+        }
+
+        if (Config.get().getReports().isNotifyConsole()) {
+            Bukkit.getConsoleSender().sendMessage(message);
         }
     }
 }

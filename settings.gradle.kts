@@ -2,5 +2,6 @@ rootProject.name = "SnowReports"
 include(
     "api",
     "bukkit",
-    "common"
+    "common",
+    "velocity"
 )
