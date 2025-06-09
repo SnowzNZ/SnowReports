@@ -128,8 +128,8 @@ public final class Config {
                     """
             )
             private String tablePrefix = "snowreports_";
-            private boolean useSsl = true;
-            private boolean verifyServerCertificate = true;
+            private boolean useSsl = false;
+            private boolean verifyServerCertificate = false;
             private boolean allowPublicKeyRetrieval = true;
         }
     }
