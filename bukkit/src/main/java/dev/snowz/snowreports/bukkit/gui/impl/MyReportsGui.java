@@ -1,8 +1,8 @@
 package dev.snowz.snowreports.bukkit.gui.impl;
 
 import dev.snowz.snowreports.bukkit.gui.BaseGui;
-import dev.snowz.snowreports.bukkit.gui.item.BackItem;
-import dev.snowz.snowreports.bukkit.gui.item.ForwardItem;
+import dev.snowz.snowreports.bukkit.gui.item.NextPageItem;
+import dev.snowz.snowreports.bukkit.gui.item.PreviousPageItem;
 import dev.snowz.snowreports.bukkit.gui.item.SortItem;
 import dev.snowz.snowreports.bukkit.gui.item.ViewReportItem;
 import dev.snowz.snowreports.common.config.Config;
@@ -55,8 +55,8 @@ public final class MyReportsGui implements BaseGui<PagedGui<Item>> {
                 "# # < # * # > # #"
             )
             .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
-            .addIngredient('<', new BackItem())
-            .addIngredient('>', new ForwardItem())
+            .addIngredient('<', new PreviousPageItem())
+            .addIngredient('>', new NextPageItem())
             .addIngredient('*', sortItem)
             .setContent(createReportItems(reportsList))
             .build();

@@ -6,19 +6,19 @@ import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.controlitem.PageItem;
 
-public final class ForwardItem extends PageItem {
+public final class NextPageItem extends PageItem {
 
-    public ForwardItem() {
+    public NextPageItem() {
         super(true);
     }
 
     @Override
     public ItemProvider getItemProvider(final PagedGui<?> gui) {
         final ItemBuilder builder = new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE);
-        builder.setDisplayName("§aForward")
+        builder.setDisplayName("§aNext Page")
             .addLoreLines(gui.hasNextPage()
                 ? (gui.getCurrentPage() + 2) + "/" + gui.getPageAmount()
-                : "There are no more pages");
+                : "No more pages");
 
         return builder;
     }

@@ -6,19 +6,19 @@ import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.controlitem.PageItem;
 
-public final class BackItem extends PageItem {
+public final class PreviousPageItem extends PageItem {
 
-    public BackItem() {
+    public PreviousPageItem() {
         super(false);
     }
 
     @Override
     public ItemProvider getItemProvider(final PagedGui<?> gui) {
         final ItemBuilder builder = new ItemBuilder(Material.RED_STAINED_GLASS_PANE);
-        builder.setDisplayName("§cBack")
+        builder.setDisplayName("§cPrevious Page")
             .addLoreLines(gui.hasPreviousPage()
                 ? gui.getCurrentPage() + "/" + gui.getPageAmount()
-                : "Can't go back any further");
+                : "No previous page");
 
         return builder;
     }
