@@ -100,7 +100,7 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
                     report.getLastUpdated(),
                     Config.get().getTimeFormat()
                 ),
-                "§7• §fUpdated by: §e" + report.getUpdatedBy().getName(),
+                "§7• §fUpdated by: §e" + (report.getUpdatedBy() != null ? report.getUpdatedBy().getName() : "N/A"),
                 "§7• §fServer: §e" + report.getServer(),
                 "",
                 "§6Left-click §fto teleport to §e" + reported.getName() + "§6.",
