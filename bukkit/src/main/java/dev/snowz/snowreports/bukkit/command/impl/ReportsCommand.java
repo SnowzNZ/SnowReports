@@ -163,7 +163,7 @@ public final class ReportsCommand implements Command {
                 report.getLastUpdated(),
                 Config.get().getTimeFormat()
             ));
-            sender.sendMessage("Updated by: " + report.getUpdatedBy().getName());
+            sender.sendMessage("Updated by: " + (report.getUpdatedBy() != null ? report.getUpdatedBy().getName() : "N/A"));
             sender.sendMessage("Server: " + report.getServer());
             sender.sendMessage("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         }
