@@ -54,12 +54,11 @@ public final class ChatHistoryManager {
     private void cleanupOldMessages(final LinkedBlockingDeque<ChatMessage> history) {
         if (history.isEmpty()) return;
 
-        final long currentTime = System.currentTimeMillis();
-        final long maxAgeMillis = maxChatAgeSeconds * 1000L;
+        final long currentTime = Instant.now().getEpochSecond();
 
         while (!history.isEmpty()) {
             final ChatMessage oldest = history.peekFirst();
-            if (oldest != null && currentTime - oldest.timestamp() > maxAgeMillis) {
+            if (oldest != null && currentTime - oldest.timestamp() > maxChatAgeSeconds) {
                 history.pollFirst();
             } else {
                 break;
@@ -81,10 +80,9 @@ public final class ChatHistoryManager {
 
         final ChatMessage oldest = history.peekFirst();
         if (oldest != null) {
-            final long currentTime = System.currentTimeMillis();
-            final long maxAgeMillis = maxChatAgeSeconds * 1000L;
+            final long currentTime = Instant.now().getEpochSecond();
 
-            if (currentTime - oldest.timestamp() > maxAgeMillis) {
+            if (currentTime - oldest.timestamp() > maxChatAgeSeconds) {
                 cleanupOldMessages(history);
             }
         }
