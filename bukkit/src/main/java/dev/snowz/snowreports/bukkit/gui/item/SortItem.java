@@ -95,6 +95,11 @@ public final class SortItem extends AbstractItem {
             sorter.accept(reports, false);
         }
 
+        public SortMethod previous() {
+            final SortMethod[] values = values();
+            return values[(this.ordinal() + values.length - 1) % values.length];
+        }
+
         public SortMethod next() {
             final SortMethod[] values = values();
             return values[(this.ordinal() + 1) % values.length];
@@ -120,6 +125,13 @@ public final class SortItem extends AbstractItem {
     ) {
         if (clickType.isLeftClick()) {
             currentSort = currentSort.next();
+            currentSort.sort(reports);
+            sortListener.accept(currentSort, reports);
+            notifyWindows();
+
+            player.playSound(player.getLocation(), "ui.button.click", 1.0f, 1.0f);
+        } else if (clickType.isRightClick()) {
+            currentSort = currentSort.previous();
             currentSort.sort(reports);
             sortListener.accept(currentSort, reports);
             notifyWindows();
