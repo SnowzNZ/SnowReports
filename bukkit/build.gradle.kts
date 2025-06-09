@@ -7,6 +7,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://libraries.minecraft.net")
     maven("https://repo.xenondevs.xyz/releases")
+    maven("https://repo.alessiodp.com/releases/")
 }
 
 dependencies {
