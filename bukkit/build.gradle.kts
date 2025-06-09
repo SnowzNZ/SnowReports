@@ -18,7 +18,7 @@ dependencies {
 
     implementation("dev.jorel:commandapi-bukkit-shade:10.0.1")
     implementation("xyz.xenondevs.invui:invui:1.45")
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 }
 
 tasks {
