@@ -6,7 +6,6 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
-
 dependencies {
     // API
     api(project(":api"))
