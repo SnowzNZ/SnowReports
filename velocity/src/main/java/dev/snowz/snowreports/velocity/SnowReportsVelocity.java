@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 @Plugin(
     id = "snowreports",
     name = "SnowReports",
-    version = "1.0.0",
+    version = "1.1.0",
     description = "Lightweight, customizable player reporting plugin.",
     authors = { "Snowz" }
 )
