@@ -1,7 +1,10 @@
 package dev.snowz.snowreports.bukkit.gui.impl;
 
 import dev.snowz.snowreports.bukkit.gui.BaseGui;
-import dev.snowz.snowreports.bukkit.gui.item.*;
+import dev.snowz.snowreports.bukkit.gui.item.NextPageItem;
+import dev.snowz.snowreports.bukkit.gui.item.PreviousPageItem;
+import dev.snowz.snowreports.bukkit.gui.item.ReportItem;
+import dev.snowz.snowreports.bukkit.gui.item.SortItem;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.Report;
 import dev.snowz.snowreports.common.database.entity.User;
