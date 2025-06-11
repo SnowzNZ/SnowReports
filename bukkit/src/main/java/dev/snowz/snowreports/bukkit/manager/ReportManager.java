@@ -199,11 +199,11 @@ public final class ReportManager {
             final DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
                 .setTitle(Config.get().getDiscord().getEmbed().getTitle())
                 .setDescription("**Reporter:** `" + reporter.getName() + "`" +
-                    "\n**Reported:** `" + reported.getName() + "`" +
-                    "\n**Reason:** " + reason +
-                    "\n**Time:** <t:" + time + ":f>" +
-                    "\n**Server**: " + Config.get().getServerName() +
-                    "\n**Location:** " + reporter.getLocation().getBlockX() + ", " + reporter.getLocation().getBlockY() + ", " + reporter.getLocation().getBlockZ() + " (" + reporter.getWorld().getName() + ")")
+                    "\\n**Reported:** `" + reported.getName() + "`" +
+                    "\\n**Reason:** " + reason +
+                    "\\n**Time:** <t:" + time + ":f>" +
+                    "\\n**Server**: " + Config.get().getServerName() +
+                    "\\n**Location:** " + reporter.getLocation().getBlockX() + ", " + reporter.getLocation().getBlockY() + ", " + reporter.getLocation().getBlockZ() + " (" + reporter.getWorld().getName() + ")")
                 .setFooter(
                     "Reported by: " + reporter.getName(),
                     "https://mc-heads.net/head/" + reporter.getUniqueId()
