@@ -112,12 +112,12 @@ public final class ReportManager {
                     .setTitle("Report #" + reportId + " Status Updated")
                     .setDescription(
                         "**Reporter:** `" + report.getReporter().getName() + "`" +
-                            "\n**Reported:** `" + report.getReported().getName() + "`" +
-                            "\n**Old Status:** " + oldStatus.getName() +
-                            "\n**New Status:** " + newStatus.getName() +
-                            "\n**Updated By:** " + staffUser.getName() +
-                            "\n**Time:** <t:" + report.getLastUpdated() + ":f>" +
-                            "\n**Server:** " + Config.get().getServerName())
+                            "\\n**Reported:** `" + report.getReported().getName() + "`" +
+                            "\\n**Old Status:** " + oldStatus.getName() +
+                            "\\n**New Status:** " + newStatus.getName() +
+                            "\\n**Updated By:** " + staffUser.getName() +
+                            "\\n**Time:** <t:" + report.getLastUpdated() + ":f>" +
+                            "\\n**Server:** " + Config.get().getServerName())
                     .setFooter(
                         "Updated by: " + staffUser.getName(),
                         "https://mc-heads.net/head/" + staffUser.getUuid()
