@@ -1,151 +1,136 @@
 package dev.snowz.snowreports.bukkit.util;
 
-import dev.snowz.snowreports.bukkit.SnowReports;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
-import java.util.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+@Getter
+@Setter
+@Accessors(chain = true)
 public final class DiscordWebhook {
-
     private final String url;
-    private final List<EmbedObject> embeds = new ArrayList<>();
-    @Setter
     private String content;
-    @Setter
     private String username;
-    @Setter
     private String avatarUrl;
-    @Setter
     private boolean tts;
+    private final List<EmbedObject> embeds = new ArrayList<>();
+
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .build();
 
     public DiscordWebhook(final String url) {
         this.url = url;
     }
 
-    public void addEmbed(final EmbedObject embed) {
+    @SuppressWarnings("UnusedReturnValue")
+    public DiscordWebhook addEmbed(final EmbedObject embed) {
         this.embeds.add(embed);
+        return this;
     }
 
-    public void execute() {
-        if (this.content == null && this.embeds.isEmpty()) {
-            throw new IllegalArgumentException("Set content or add at least one EmbedObject");
+    public void execute() throws IOException, InterruptedException {
+        if (content == null && embeds.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Set content or add at least one EmbedObject"
+            );
         }
 
-        final Thread webhookThread = new Thread(() -> {
-            final JSONObject json = new JSONObject();
+        final String json = buildJsonPayload();
+        final HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Content-Type", "application/json")
+            .header("User-Agent", "Java-DiscordWebhook")
+            .timeout(Duration.ofSeconds(30))
+            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .build();
 
-            json.put("content", this.content);
-            json.put("username", this.username);
-            json.put("avatar_url", this.avatarUrl);
-            json.put("tts", this.tts);
+        final HttpResponse<String> response = HTTP_CLIENT.send(
+            request,
+            HttpResponse.BodyHandlers.ofString()
+        );
 
-            if (!this.embeds.isEmpty()) {
-                final List<JSONObject> embedObjects = new ArrayList<>();
+        if (response.statusCode() >= 400) {
+            throw new IOException(
+                "HTTP " + response.statusCode() + ": " + response.body()
+            );
+        }
+    }
 
-                for (final EmbedObject embed : this.embeds) {
-                    final JSONObject jsonEmbed = new JSONObject();
+    private String buildJsonPayload() {
+        final List<Map<String, Object>> embedMaps = embeds.stream()
+            .map(this::embedToMap)
+            .toList();
 
-                    jsonEmbed.put("title", embed.getTitle());
-                    jsonEmbed.put("description", embed.getDescription());
-                    jsonEmbed.put("url", embed.getUrl());
+        final Map<String, Object> payload = Map.of(
+            "content", content,
+            "username", username,
+            "avatar_url", avatarUrl,
+            "tts", tts,
+            "embeds", embedMaps
+        );
+        return JsonUtils.toJson(payload);
+    }
 
-                    if (embed.getColor() != null) {
-                        final Color color = embed.getColor();
-                        int rgb = color.getRed();
-                        rgb = (rgb << 8) + color.getGreen();
-                        rgb = (rgb << 8) + color.getBlue();
+    private Map<String, Object> embedToMap(final EmbedObject embed) {
+        final Map<String, Object> footerMap = embed.footer != null ?
+            Map.of("text", embed.footer.text(), "icon_url", embed.footer.iconUrl()) : null;
 
-                        jsonEmbed.put("color", rgb);
-                    }
+        final Map<String, Object> imageMap = embed.image != null ?
+            Map.of("url", embed.image.url()) : null;
 
-                    final EmbedObject.Footer footer = embed.getFooter();
-                    final EmbedObject.Image image = embed.getImage();
-                    final EmbedObject.Thumbnail thumbnail = embed.getThumbnail();
-                    final EmbedObject.Author author = embed.getAuthor();
-                    final List<EmbedObject.Field> fields = embed.getFields();
+        final Map<String, Object> thumbnailMap = embed.thumbnail != null ?
+            Map.of("url", embed.thumbnail.url()) : null;
 
-                    if (footer != null) {
-                        final JSONObject jsonFooter = new JSONObject();
+        final Map<String, Object> authorMap = embed.author != null ?
+            Map.of(
+                "name", embed.author.name(), "url", embed.author.url(),
+                "icon_url", embed.author.iconUrl()
+            ) : null;
 
-                        jsonFooter.put("text", footer.text());
-                        jsonFooter.put("icon_url", footer.iconUrl());
-                        jsonEmbed.put("footer", jsonFooter);
-                    }
+        final List<Map<String, Object>> fieldMaps = embed.fields.stream()
+            .map(field -> Map.<String, Object>of(
+                "name", field.name(),
+                "value", field.value(),
+                "inline", field.inline()
+            ))
+            .toList();
 
-                    if (image != null) {
-                        final JSONObject jsonImage = new JSONObject();
+        final Map<String, Object> embedMap = new HashMap<>();
+        embedMap.put("title", embed.title);
+        embedMap.put("description", embed.description);
+        embedMap.put("url", embed.url);
+        embedMap.put("color", embed.color != null ? colorToRgb(embed.color) : null);
+        embedMap.put("footer", footerMap);
+        embedMap.put("image", imageMap);
+        embedMap.put("thumbnail", thumbnailMap);
+        embedMap.put("author", authorMap);
+        embedMap.put("fields", fieldMaps);
 
-                        jsonImage.put("url", image.url());
-                        jsonEmbed.put("image", jsonImage);
-                    }
+        return JsonUtils.filterNulls(embedMap);
+    }
 
-                    if (thumbnail != null) {
-                        final JSONObject jsonThumbnail = new JSONObject();
-
-                        jsonThumbnail.put("url", thumbnail.url());
-                        jsonEmbed.put("thumbnail", jsonThumbnail);
-                    }
-
-                    if (author != null) {
-                        final JSONObject jsonAuthor = new JSONObject();
-
-                        jsonAuthor.put("name", author.name());
-                        jsonAuthor.put("url", author.url());
-                        jsonAuthor.put("icon_url", author.iconUrl());
-                        jsonEmbed.put("author", jsonAuthor);
-                    }
-
-                    final List<JSONObject> jsonFields = new ArrayList<>();
-                    for (final EmbedObject.Field field : fields) {
-                        final JSONObject jsonField = new JSONObject();
-
-                        jsonField.put("name", field.name());
-                        jsonField.put("value", field.value());
-                        jsonField.put("inline", field.inline());
-
-                        jsonFields.add(jsonField);
-                    }
-
-                    jsonEmbed.put("fields", jsonFields.toArray());
-                    embedObjects.add(jsonEmbed);
-                }
-
-                json.put("embeds", embedObjects.toArray());
-            }
-            try {
-                final URL url = new URI(this.url).toURL();
-                final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-                connection.addRequestProperty("Content-Type", "application/json");
-                connection.addRequestProperty("User-Agent", "Java-tazpvp-webhook");
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-
-                final OutputStream stream = connection.getOutputStream();
-                stream.write(json.toString().getBytes());
-                stream.flush();
-                stream.close();
-
-                connection.getInputStream().close();
-                connection.disconnect();
-            } catch (final Exception e) {
-                SnowReports.getInstance().getLogger().severe("An error occurred while sending the webhook: " + e.getMessage());
-            }
-        });
-
-        webhookThread.start();
+    private int colorToRgb(final Color color) {
+        return (color.getRed() << 16) + (color.getGreen() << 8) + color.getBlue();
     }
 
     @Getter
+    @Setter
+    @Accessors(chain = true, fluent = true)
     public static class EmbedObject {
-        private final List<Field> fields = new ArrayList<>();
         private String title;
         private String description;
         private String url;
@@ -154,24 +139,10 @@ public final class DiscordWebhook {
         private Thumbnail thumbnail;
         private Image image;
         private Author author;
+        private final List<Field> fields = new ArrayList<>();
 
-        public EmbedObject setTitle(final String title) {
-            this.title = title;
-            return this;
-        }
-
-        public EmbedObject setDescription(final String description) {
-            this.description = description;
-            return this;
-        }
-
-        public EmbedObject setUrl(final String url) {
-            this.url = url;
-            return this;
-        }
-
-        public EmbedObject setColor(final Color color) {
-            this.color = color;
+        public EmbedObject setFooter(final String text, final String icon) {
+            this.footer = new Footer(text, icon);
             return this;
         }
 
@@ -185,11 +156,6 @@ public final class DiscordWebhook {
             return this;
         }
 
-        public EmbedObject setFooter(final String text, final String icon) {
-            this.footer = new Footer(text, icon);
-            return this;
-        }
-
         public EmbedObject setAuthor(final String name, final String url, final String icon) {
             this.author = new Author(name, url, icon);
             return this;
@@ -200,68 +166,64 @@ public final class DiscordWebhook {
             return this;
         }
 
-        private record Footer(String text, String iconUrl) {
+        public record Footer(String text, String iconUrl) {
         }
 
-        private record Thumbnail(String url) {
+        public record Thumbnail(String url) {
         }
 
-        private record Image(String url) {
+        public record Image(String url) {
         }
 
-        private record Author(String name, String url, String iconUrl) {
+        public record Author(String name, String url, String iconUrl) {
         }
 
-        private record Field(String name, String value, boolean inline) {
+        public record Field(String name, String value, boolean inline) {
         }
     }
 
-    private static class JSONObject {
+    private static class JsonUtils {
+        static String toJson(final Map<String, Object> map) {
+            final String content = map.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
+                .map(entry -> "\"%s\":%s".formatted(
+                    entry.getKey(),
+                    valueToJson(entry.getValue())
+                ))
+                .collect(Collectors.joining(","));
 
-        private final HashMap<String, Object> map = new HashMap<>();
-
-        void put(final String key, final Object value) {
-            if (value != null) {
-                map.put(key, value);
-            }
+            return "{" + content + "}";
         }
 
-        @Override
-        public String toString() {
-            final StringBuilder builder = new StringBuilder();
-            final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
-            builder.append("{");
-
-            int i = 0;
-            for (final Map.Entry<String, Object> entry : entrySet) {
-                final Object val = entry.getValue();
-                builder.append(quote(entry.getKey())).append(":");
-
-                if (val instanceof String) {
-                    builder.append(quote(String.valueOf(val)));
-                } else if (val instanceof Integer) {
-                    builder.append(Integer.valueOf(String.valueOf(val)));
-                } else if (val instanceof Boolean) {
-                    builder.append(val);
-                } else if (val instanceof JSONObject) {
-                    builder.append(val);
-                } else if (val.getClass().isArray()) {
-                    builder.append("[");
-                    final int len = Array.getLength(val);
-                    for (int j = 0; j < len; j++) {
-                        builder.append(Array.get(val, j).toString()).append(j != len - 1 ? "," : "");
-                    }
-                    builder.append("]");
-                }
-
-                builder.append(++i == entrySet.size() ? "}" : ",");
-            }
-
-            return builder.toString();
+        static Map<String, Object> filterNulls(final Map<String, Object> map) {
+            return map.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    Map.Entry::getValue
+                ));
         }
 
-        private String quote(final String string) {
-            return "\"" + string + "\"";
+        @SuppressWarnings("unchecked")
+        private static String valueToJson(final Object value) {
+            if (value instanceof String) {
+                return "\"%s\"".formatted((String) value);
+            } else if (value instanceof Number) {
+                return value.toString();
+            } else if (value instanceof Boolean) {
+                return value.toString();
+            } else if (value instanceof List<?> list) {
+                final String listContent = list.stream()
+                    .map(item -> item instanceof Map ?
+                        toJson((Map<String, Object>) item) :
+                        valueToJson(item))
+                    .collect(Collectors.joining(","));
+                return "[" + listContent + "]";
+            } else if (value instanceof Map) {
+                return toJson((Map<String, Object>) value);
+            } else {
+                return "null";
+            }
         }
     }
 }
