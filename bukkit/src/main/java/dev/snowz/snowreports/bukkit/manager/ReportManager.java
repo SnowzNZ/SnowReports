@@ -6,10 +6,10 @@ import com.google.gson.Gson;
 import dev.snowz.snowreports.api.event.ReportStatusUpdateEvent;
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.SnowReports;
-import dev.snowz.snowreports.bukkit.util.DiscordWebhook;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.Report;
 import dev.snowz.snowreports.common.database.entity.User;
+import dev.snowz.snowreports.common.discord.DiscordWebhook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

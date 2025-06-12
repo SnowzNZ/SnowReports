@@ -1,4 +1,4 @@
-package dev.snowz.snowreports.bukkit.util;
+package dev.snowz.snowreports.common.discord;
 
 import lombok.Getter;
 import lombok.Setter;
