@@ -129,7 +129,7 @@ public final class DiscordWebhook {
 
     @Getter
     @Setter
-    @Accessors(chain = true, fluent = true)
+    @Accessors(chain = true)
     public static class EmbedObject {
         private String title;
         private String description;
@@ -212,7 +212,7 @@ public final class DiscordWebhook {
                 return value.toString();
             } else if (value instanceof Boolean) {
                 return value.toString();
-            } else if (value instanceof List<?> list) {
+            } else if (value instanceof final List<?> list) {
                 final String listContent = list.stream()
                     .map(item -> item instanceof Map ?
                         toJson((Map<String, Object>) item) :
