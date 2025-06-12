@@ -126,7 +126,11 @@ public final class ReportManager {
 
                 webhook.setUsername("SnowReports");
                 webhook.addEmbed(embed);
-                webhook.execute();
+                try {
+                    webhook.execute();
+                } catch (final Exception e) {
+                    SnowReports.getInstance().getLogger().severe("Failed to send Discord webhook: " + e.getMessage());
+                }
             }
 
             return true;
@@ -213,7 +217,11 @@ public final class ReportManager {
 
             webhook.setUsername("SnowReports");
             webhook.addEmbed(embed);
-            webhook.execute();
+            try {
+                webhook.execute();
+            } catch (final Exception e) {
+                SnowReports.getInstance().getLogger().severe("Failed to send Discord webhook: " + e.getMessage());
+            }
         }
 
         SnowReports.getAlertManager().broadcastAlert(report);
