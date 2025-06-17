@@ -1,5 +1,6 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -24,7 +25,7 @@ public final class CancelItem extends AbstractItem {
         @NotNull final InventoryClickEvent event
     ) {
         if (clickType.isLeftClick()) {
-            player.closeInventory();
+            GuiHistoryManager.previousMenu(player);
         }
     }
 }

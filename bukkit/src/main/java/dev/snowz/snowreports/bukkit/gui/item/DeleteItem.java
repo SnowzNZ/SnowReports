@@ -1,6 +1,7 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.bukkit.gui.impl.DeleteReportConfirmationGui;
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -9,9 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
-import xyz.xenondevs.invui.window.Window;
-
-import java.util.Set;
 
 public final class DeleteItem extends AbstractItem {
 
@@ -33,12 +31,7 @@ public final class DeleteItem extends AbstractItem {
         @NotNull final Player player,
         @NotNull final InventoryClickEvent event
     ) {
-        final Set<Window> windows = getWindows();
-        if (!windows.isEmpty()) {
-            final Window currentWindow = windows.iterator().next();
-            BackItem.pushWindow(player, currentWindow);
-        }
-
+        GuiHistoryManager.pushCurrentWindow(player, getWindows());
         new DeleteReportConfirmationGui(id).open(player);
     }
 }

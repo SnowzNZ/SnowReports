@@ -2,6 +2,7 @@ package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.SnowReports;
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -32,6 +33,6 @@ public final class OpenItem extends AbstractItem {
         @NotNull final InventoryClickEvent event
     ) {
         SnowReports.getReportManager().updateReportStatus(id, status, player);
-        event.getInventory().close();
+        GuiHistoryManager.previousMenu(player);
     }
 }

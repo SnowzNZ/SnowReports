@@ -1,6 +1,7 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.bukkit.gui.impl.ManageGui;
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import dev.snowz.snowreports.common.database.entity.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,10 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
-import xyz.xenondevs.invui.window.Window;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static dev.snowz.snowreports.bukkit.manager.MessageManager.getMessage;
@@ -56,12 +55,7 @@ public final class ReportItem extends AbstractItem {
             player.teleport(target);
             player.sendMessage(getMessage("player.teleported_to", reported.getName()));
         } else if (clickType.isRightClick()) {
-            final Set<Window> windows = getWindows();
-            if (!windows.isEmpty()) {
-                final Window currentWindow = windows.iterator().next();
-                BackItem.pushWindow(player, currentWindow);
-            }
-
+            GuiHistoryManager.pushCurrentWindow(player, getWindows());
             new ManageGui(this, id).open(player);
         }
     }

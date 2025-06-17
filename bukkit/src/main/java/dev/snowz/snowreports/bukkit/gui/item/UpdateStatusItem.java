@@ -2,6 +2,7 @@ package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.bukkit.SnowReports;
 import dev.snowz.snowreports.bukkit.gui.impl.UpdateStatusGui;
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import dev.snowz.snowreports.common.database.entity.Report;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -39,12 +40,7 @@ public final class UpdateStatusItem extends AbstractItem {
         @NotNull final Player player,
         @NotNull final InventoryClickEvent event
     ) {
-        final Set<Window> windows = getWindows();
-        if (!windows.isEmpty()) {
-            final Window currentWindow = windows.iterator().next();
-            BackItem.pushWindow(player, currentWindow);
-        }
-
+        GuiHistoryManager.pushCurrentWindow(player, getWindows());
         new UpdateStatusGui(id).open(player);
     }
 }

@@ -1,6 +1,7 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.bukkit.SnowReports;
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -42,7 +43,7 @@ public final class ConfirmItem extends AbstractItem {
                         SnowReports.runSync(() -> {
                                 if (deleted) {
                                     player.sendMessage(getMessage("report.deleted", id));
-                                    player.closeInventory();
+                                    GuiHistoryManager.previousMenu(player);
                                 } else {
                                     player.sendMessage(getMessage("report.not_found", id));
                                 }

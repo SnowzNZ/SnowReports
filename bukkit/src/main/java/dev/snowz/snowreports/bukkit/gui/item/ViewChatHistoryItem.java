@@ -2,6 +2,7 @@ package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.gui.impl.ChatHistoryGui;
+import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -15,8 +16,6 @@ import xyz.xenondevs.invui.window.Window;
 import java.util.Set;
 
 public final class ViewChatHistoryItem extends AbstractItem {
-    private final ReportStatus status = ReportStatus.IN_PROGRESS;
-
     private final int id;
 
     public ViewChatHistoryItem(final int id) {
@@ -35,12 +34,7 @@ public final class ViewChatHistoryItem extends AbstractItem {
         @NotNull final Player player,
         @NotNull final InventoryClickEvent event
     ) {
-        final Set<Window> windows = getWindows();
-        if (!windows.isEmpty()) {
-            final Window currentWindow = windows.iterator().next();
-            BackItem.pushWindow(player, currentWindow);
-        }
-
+        GuiHistoryManager.pushCurrentWindow(player, getWindows());
         new ChatHistoryGui(id).open(player);
     }
 }
