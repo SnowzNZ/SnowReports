@@ -214,7 +214,7 @@ public final class SortItem extends AbstractItem {
 
         lore.add("§fSort Options:");
         for (final SortMethod method : SortMethod.getByCategory(currentSort.getCategory())) {
-            lore.add((method == currentSort ? "§a➤ " : "§7  ") + method.getDisplayName());
+            lore.add((method == currentSort ? "§a\uD83E\uDC1A " : "§7  ") + method.getDisplayName());
         }
         lore.add("");
         lore.add("§6Right-click §fto change category.");
