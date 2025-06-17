@@ -58,7 +58,7 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
                 "# x x x x x x x #",
                 "# x x x x x x x #",
                 "# x x x x x x x #",
-                "# # < # * # > # #"
+                "# < # # * # # > #"
             )
             .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
             .addIngredient('<', new PreviousPageItem())
