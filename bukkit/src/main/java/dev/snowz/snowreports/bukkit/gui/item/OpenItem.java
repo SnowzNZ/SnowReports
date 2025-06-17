@@ -2,7 +2,7 @@ package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.SnowReports;
-import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
+import dev.snowz.snowreports.bukkit.manager.GuiHistoryManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;

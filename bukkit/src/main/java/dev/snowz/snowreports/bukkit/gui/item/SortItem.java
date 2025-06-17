@@ -1,6 +1,5 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
-import dev.snowz.snowreports.bukkit.SnowReports;
 import dev.snowz.snowreports.common.database.entity.Report;
 import lombok.Getter;
 import org.bukkit.Bukkit;

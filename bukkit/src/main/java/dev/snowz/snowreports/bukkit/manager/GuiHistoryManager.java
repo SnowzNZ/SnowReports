@@ -1,13 +1,9 @@
-package dev.snowz.snowreports.bukkit.gui.manager;
+package dev.snowz.snowreports.bukkit.manager;
 
 import org.bukkit.entity.Player;
 import xyz.xenondevs.invui.window.Window;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class GuiHistoryManager {
@@ -54,7 +50,7 @@ public final class GuiHistoryManager {
      * Records the current window from a set of windows in the player's navigation history.
      * This is a convenience method for when you have a set of windows and want to record the current one.
      *
-     * @param player The player
+     * @param player  The player
      * @param windows Set of windows from which to extract the current window
      * @return true if a window was successfully pushed, false otherwise
      */

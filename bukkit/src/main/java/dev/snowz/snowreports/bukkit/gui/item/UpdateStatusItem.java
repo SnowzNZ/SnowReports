@@ -2,7 +2,7 @@ package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.bukkit.SnowReports;
 import dev.snowz.snowreports.bukkit.gui.impl.UpdateStatusGui;
-import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
+import dev.snowz.snowreports.bukkit.manager.GuiHistoryManager;
 import dev.snowz.snowreports.common.database.entity.Report;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -11,11 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
-import xyz.xenondevs.invui.window.Window;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Set;
 
 public final class UpdateStatusItem extends AbstractItem {
 

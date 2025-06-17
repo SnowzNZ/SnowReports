@@ -1,7 +1,7 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
 import dev.snowz.snowreports.bukkit.gui.impl.ManageGui;
-import dev.snowz.snowreports.bukkit.gui.manager.GuiHistoryManager;
+import dev.snowz.snowreports.bukkit.manager.GuiHistoryManager;
 import dev.snowz.snowreports.common.database.entity.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
