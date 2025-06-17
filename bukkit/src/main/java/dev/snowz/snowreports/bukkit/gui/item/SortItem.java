@@ -1,7 +1,9 @@
 package dev.snowz.snowreports.bukkit.gui.item;
 
+import dev.snowz.snowreports.bukkit.SnowReports;
 import dev.snowz.snowreports.common.database.entity.Report;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -11,33 +13,58 @@ import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 public final class SortItem extends AbstractItem {
+
+    @Getter
+    public enum SortCategory {
+        DATE("Date"),
+        REPORTER("Reporter"),
+        REPORTED("Reported"),
+        REASON("Reason"),
+        UPDATED_BY("Updated By"),
+        PLAYER_STATUS("Player Status");
+
+        private final String displayName;
+
+        SortCategory(final String displayName) {
+            this.displayName = displayName;
+        }
+
+        public SortCategory next() {
+            final SortCategory[] values = values();
+            return values[(this.ordinal() + 1) % values.length];
+        }
+
+        public SortCategory previous() {
+            final SortCategory[] values = values();
+            return values[(this.ordinal() + values.length - 1) % values.length];
+        }
+    }
 
     @Getter
     public enum SortMethod {
         // Date sort options
         DATE_ASC(
-            "Date: Oldest to Newest", (reports, reversed) ->
+            "Oldest to Newest", SortCategory.DATE, (reports, reversed) ->
             reports.sort(Comparator.comparing(Report::getCreatedAt))
         ),
         DATE_DESC(
-            "Date: Newest to Oldest", (reports, reversed) ->
+            "Newest to Oldest", SortCategory.DATE, (reports, reversed) ->
             reports.sort(Comparator.comparing(Report::getCreatedAt).reversed())
         ),
 
         // Reporter name sort options
         REPORTER_NAME_ASC(
-            "Reporter: A to Z", (reports, reversed) ->
+            "A to Z", SortCategory.REPORTER, (reports, reversed) ->
             reports.sort(Comparator.comparing((Report r) -> r.getReporter().getName(), String.CASE_INSENSITIVE_ORDER))
         ),
         REPORTER_NAME_DESC(
-            "Reporter: Z to A", (reports, reversed) ->
+            "Z to A", SortCategory.REPORTER, (reports, reversed) ->
             reports.sort(Comparator.comparing(
                 (Report r) -> r.getReporter().getName(),
                 String.CASE_INSENSITIVE_ORDER
@@ -46,11 +73,11 @@ public final class SortItem extends AbstractItem {
 
         // Reported name sort options
         REPORTED_NAME_ASC(
-            "Reported: A to Z", (reports, reversed) ->
+            "A to Z", SortCategory.REPORTED, (reports, reversed) ->
             reports.sort(Comparator.comparing((Report r) -> r.getReported().getName(), String.CASE_INSENSITIVE_ORDER))
         ),
         REPORTED_NAME_DESC(
-            "Reported: Z to A", (reports, reversed) ->
+            "Z to A", SortCategory.REPORTED, (reports, reversed) ->
             reports.sort(Comparator.comparing(
                 (Report r) -> r.getReported().getName(),
                 String.CASE_INSENSITIVE_ORDER
@@ -59,35 +86,58 @@ public final class SortItem extends AbstractItem {
 
         // Reason sort options
         REASON_ASC(
-            "Reason: A to Z", (reports, reversed) ->
+            "A to Z", SortCategory.REASON, (reports, reversed) ->
             reports.sort(Comparator.comparing(Report::getReason, String.CASE_INSENSITIVE_ORDER))
         ),
         REASON_DESC(
-            "Reason: Z to A", (reports, reversed) ->
+            "Z to A", SortCategory.REASON, (reports, reversed) ->
             reports.sort(Comparator.comparing(Report::getReason, String.CASE_INSENSITIVE_ORDER).reversed())
         ),
 
         // Updated by name sort options
         UPDATED_BY_ASC(
-            "Updated By: A to Z", (reports, reversed) ->
+            "A to Z", SortCategory.UPDATED_BY, (reports, reversed) ->
             reports.sort(Comparator.comparing(
                 (Report r) -> r.getUpdatedBy() != null ? r.getUpdatedBy().getName() : "",
                 String.CASE_INSENSITIVE_ORDER
             ))
         ),
         UPDATED_BY_DESC(
-            "Updated By: Z to A", (reports, reversed) ->
+            "Z to A", SortCategory.UPDATED_BY, (reports, reversed) ->
             reports.sort(Comparator.comparing(
                 (Report r) -> r.getUpdatedBy() != null ? r.getUpdatedBy().getName() : "",
                 String.CASE_INSENSITIVE_ORDER
             ).reversed())
+        ),
+
+        // Performance may not be optimal here due to the getPlayer call, we'll see...
+        PLAYER_STATUS_ONLINE_FIRST(
+            "Online First", SortCategory.PLAYER_STATUS, (reports, reversed) ->
+            reports.sort(Comparator.comparing((Report r) -> {
+                Player player = Bukkit.getPlayer(r.getReported().getUuid());
+                return player != null && player.isOnline();
+            }).reversed())
+        ),
+        PLAYER_STATUS_OFFLINE_FIRST(
+            "Offline First", SortCategory.PLAYER_STATUS, (reports, reversed) ->
+            reports.sort(Comparator.comparing((Report r) -> {
+                Player player = Bukkit.getPlayer(r.getReported().getUuid());
+                return player != null && player.isOnline();
+            }))
         );
 
+
         private final String displayName;
+        private final SortCategory category;
         private final BiConsumer<List<Report>, Boolean> sorter;
 
-        SortMethod(final String displayName, final BiConsumer<List<Report>, Boolean> sorter) {
+        SortMethod(
+            final String displayName,
+            final SortCategory category,
+            final BiConsumer<List<Report>, Boolean> sorter
+        ) {
             this.displayName = displayName;
+            this.category = category;
             this.sorter = sorter;
         }
 
@@ -95,14 +145,26 @@ public final class SortItem extends AbstractItem {
             sorter.accept(reports, false);
         }
 
-        public SortMethod previous() {
-            final SortMethod[] values = values();
-            return values[(this.ordinal() + values.length - 1) % values.length];
+        public static List<SortMethod> getByCategory(final SortCategory category) {
+            final List<SortMethod> methods = new ArrayList<>();
+            for (final SortMethod method : values()) {
+                if (method.category == category) {
+                    methods.add(method);
+                }
+            }
+            return methods;
         }
 
-        public SortMethod next() {
-            final SortMethod[] values = values();
-            return values[(this.ordinal() + 1) % values.length];
+        public SortMethod nextInCategory() {
+            final List<SortMethod> methodsInCategory = getByCategory(this.category);
+            final int currentIndex = methodsInCategory.indexOf(this);
+            return methodsInCategory.get((currentIndex + 1) % methodsInCategory.size());
+        }
+
+        public SortMethod previousInCategory() {
+            final List<SortMethod> methodsInCategory = getByCategory(this.category);
+            final int currentIndex = methodsInCategory.indexOf(this);
+            return methodsInCategory.get((currentIndex + methodsInCategory.size() - 1) % methodsInCategory.size());
         }
     }
 
@@ -123,30 +185,44 @@ public final class SortItem extends AbstractItem {
         @NotNull final Player player,
         @NotNull final InventoryClickEvent event
     ) {
-        if (clickType.isLeftClick()) {
-            currentSort = currentSort.next();
-            currentSort.sort(reports);
-            sortListener.accept(currentSort, reports);
-            notifyWindows();
-
-            player.playSound(player.getLocation(), "ui.button.click", 1.0f, 1.0f);
-        } else if (clickType.isRightClick()) {
-            currentSort = currentSort.previous();
-            currentSort.sort(reports);
-            sortListener.accept(currentSort, reports);
-            notifyWindows();
-
-            player.playSound(player.getLocation(), "ui.button.click", 1.0f, 1.0f);
+        if (clickType.isRightClick()) {
+            final SortCategory nextCategory = currentSort.getCategory().next();
+            currentSort = SortMethod.getByCategory(nextCategory).get(0);
+            updateSort(player);
+        } else if (clickType.isLeftClick()) {
+            currentSort = currentSort.nextInCategory();
+            updateSort(player);
+        } else if (clickType.isShiftClick()) {
+            currentSort = currentSort.previousInCategory();
+            updateSort(player);
         }
+    }
+
+    private void updateSort(final Player player) {
+        currentSort.sort(reports);
+        sortListener.accept(currentSort, reports);
+        notifyWindows();
+        player.playSound(player.getLocation(), "ui.button.click", 1.0f, 1.0f);
     }
 
     @Override
     public ItemProvider getItemProvider() {
-        final List<String> lore = Arrays.stream(SortMethod.values())
-            .map(method -> method.getDisplayName() + (currentSort == method ? " §a✓" : ""))
-            .collect(Collectors.toList());
+        final List<String> lore = new ArrayList<>();
 
-        return new ItemBuilder(Material.LADDER)
+        lore.add("§fCategory: §6" + currentSort.getCategory().getDisplayName());
+        lore.add("");
+
+        lore.add("§fSort Options:");
+        for (final SortMethod method : SortMethod.getByCategory(currentSort.getCategory())) {
+            lore.add((method == currentSort ? "§a➤ " : "§7  ") + method.getDisplayName());
+        }
+        lore.add("");
+        lore.add("§6Right-click §fto change category.");
+        lore.add("");
+        lore.add("§6Left-click §fto go down.");
+        lore.add("§6Shift-click §fto go up.");
+
+        return new ItemBuilder(Material.COMPASS)
             .setDisplayName("§6Sort Reports")
             .setLegacyLore(lore);
     }
