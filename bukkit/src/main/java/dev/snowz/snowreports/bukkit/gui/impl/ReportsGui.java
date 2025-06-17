@@ -86,9 +86,17 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
             final User reported = report.getReported();
             final int id = report.getId();
             final ItemStack playerHead = getPlayerHead(UUID.fromString(reported.getUuid()));
+
+            // Check if the reported player is online
+            boolean isOnline = false;
+            Player reportedPlayer = org.bukkit.Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
+            if (reportedPlayer != null && reportedPlayer.isOnline()) {
+                isOnline = true;
+            }
+
             final List<String> lore = List.of(
                 "§8§m                                                            ",
-                "§7• §fReported: §e" + reported.getName(),
+                "§7• §fReported: §e" + reported.getName() + " " + (isOnline ? "§a⏺" : "§7⏺"),
                 "§7• §fReporter: §e" + report.getReporter().getName(),
                 "§7• §fReason: §e" + report.getReason(),
                 "§7• §fCreated at: §e" + formatEpochTime(
