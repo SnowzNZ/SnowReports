@@ -17,7 +17,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
     compileOnly("com.mojang:brigadier:1.0.18")
 
-    implementation("dev.jorel:commandapi-bukkit-shade:10.0.1")
+    implementation("dev.jorel:commandapi-bukkit-shade:10.1.0")
     implementation("xyz.xenondevs.invui:invui:1.45")
     implementation("org.bstats:bstats-bukkit:3.1.0")
 }
