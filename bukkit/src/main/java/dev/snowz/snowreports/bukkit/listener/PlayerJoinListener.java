@@ -22,7 +22,7 @@ public final class PlayerJoinListener implements Listener {
     public void updateNotifier(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
-        if (player.isOp()) {
+        if (player.isOp() || player.hasPermission("snowreports.update")) {
             if (SnowReports.isUpdateAvailable()) {
                 player.sendMessage(getMessage("update_available", SnowReports.VERSION));
             }
