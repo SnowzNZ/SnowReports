@@ -18,7 +18,11 @@ dependencies {
     compileOnly("com.mojang:brigadier:1.0.18")
 
     implementation("dev.jorel:commandapi-bukkit-shade:10.1.0")
-    implementation("xyz.xenondevs.invui:invui:1.46")
+    implementation("xyz.xenondevs.invui:invui:1.46") {
+        (0..15).forEach { version ->
+            exclude(group = "xyz.xenondevs.inventoryaccess", module = "inventoryaccess-$version")
+        }
+    }
     implementation("org.bstats:bstats-bukkit:3.1.0")
 }
 
@@ -30,7 +34,6 @@ tasks {
     }
 
     shadowJar {
-        minimize()
         mergeServiceFiles()
         archiveClassifier.set("")
 
