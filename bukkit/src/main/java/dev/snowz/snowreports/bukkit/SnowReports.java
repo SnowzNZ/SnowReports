@@ -71,8 +71,13 @@ public final class SnowReports extends JavaPlugin {
     @Override
     public void onLoad() {
         CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
+
+        // Set custom CommandAPI Logger
         final Logger commandAPILogger = Logger.getLogger("SnowReports-CommandAPI");
         CommandAPI.setLogger(CommandAPILogger.fromJavaLogger(commandAPILogger));
+
+        // Disable ORMLite logging
+        com.j256.ormlite.logger.Logger.setGlobalLogLevel(com.j256.ormlite.logger.Level.OFF);
     }
 
     @Override
