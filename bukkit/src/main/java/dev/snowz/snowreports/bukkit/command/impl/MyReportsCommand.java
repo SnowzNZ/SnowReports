@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static dev.snowz.snowreports.bukkit.manager.MessageManager.getMessage;
+
 public final class MyReportsCommand implements Command {
 
     @Override
@@ -46,8 +48,13 @@ public final class MyReportsCommand implements Command {
                             report.getReporter().getName().equalsIgnoreCase(player.getName()))
                         .collect(Collectors.toList());
 
-                    SnowReports.runSync(() ->
-                        new MyReportsGui(myReports, page).open(player)
+                    SnowReports.runSync(() -> {
+                            if (myReports.isEmpty()) {
+                                player.sendMessage(getMessage("myreports.no_reports"));
+                                return;
+                            }
+                            new MyReportsGui(myReports, page).open(player);
+                        }
                     );
                 } catch (final SQLException e) {
                     player.sendMessage("Failed to fetch your reports");

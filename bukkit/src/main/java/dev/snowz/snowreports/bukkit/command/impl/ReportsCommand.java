@@ -100,7 +100,14 @@ public final class ReportsCommand implements Command {
                 final String title = playerName == null ?
                     "Reports" : "Reports for " + playerName;
 
-                SnowReports.runSync(() -> new ReportsGui(filteredReports, page, title).open(player));
+                SnowReports.runSync(() -> {
+                    if (filteredReports.isEmpty()) {
+                        player.sendMessage(getMessage("reports.no_reports"));
+                        return;
+                    }
+
+                    new ReportsGui(filteredReports, page, title).open(player);
+                });
             } catch (final SQLException e) {
                 player.sendMessage("Failed to fetch reports");
                 SnowReports.getInstance().getLogger().severe("Database error: " + e.getMessage());
