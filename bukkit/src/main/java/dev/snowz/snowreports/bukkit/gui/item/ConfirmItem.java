@@ -44,6 +44,7 @@ public final class ConfirmItem extends AbstractItem {
                                 if (deleted) {
                                     player.sendMessage(getMessage("report.deleted", id));
                                     GuiHistoryManager.previousMenu(player);
+                                    GuiHistoryManager.previousMenu(player);
                                 } else {
                                     player.sendMessage(getMessage("report.not_found", id));
                                 }
