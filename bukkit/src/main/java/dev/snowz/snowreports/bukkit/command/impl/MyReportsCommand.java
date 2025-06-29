@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static dev.snowz.snowreports.bukkit.manager.MessageManager.getMessage;
 
@@ -42,11 +41,10 @@ public final class MyReportsCommand implements Command {
 
             SnowReports.runAsync(() -> {
                 try {
-                    final List<Report> allReports = SnowReports.getReportDao().queryForAll();
-                    final List<Report> myReports = allReports.stream()
-                        .filter(report ->
-                            report.getReporter().getName().equalsIgnoreCase(player.getName()))
-                        .collect(Collectors.toList());
+                    final List<Report> myReports = SnowReports.getReportDao().queryBuilder()
+                        .where()
+                        .eq("reporter_uuid", player.getUniqueId().toString())
+                        .query();
 
                     SnowReports.runSync(() -> {
                             if (myReports.isEmpty()) {
