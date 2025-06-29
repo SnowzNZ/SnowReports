@@ -12,10 +12,9 @@ import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public final class SortItem extends AbstractItem {
 
@@ -109,22 +108,38 @@ public final class SortItem extends AbstractItem {
             ).reversed())
         ),
 
-        // Performance may not be optimal here due to the getPlayer call, we'll see...
         PLAYER_STATUS_ONLINE_FIRST(
-            "Online First", SortCategory.PLAYER_STATUS, (reports, reversed) ->
-            reports.sort(Comparator.comparing((Report r) -> {
-                Player player = Bukkit.getPlayer(r.getReported().getUuid());
-                return player != null && player.isOnline();
-            }).reversed())
+            "Online First", SortCategory.PLAYER_STATUS, (reports, reversed) -> {
+            Map<String, Boolean> onlineCache = reports.stream()
+                .collect(Collectors.toMap(
+                    r -> r.getReported().getUuid(),
+                    r -> {
+                        Player player = Bukkit.getPlayer(UUID.fromString(r.getReported().getUuid()));
+                        return player != null && player.isOnline();
+                    },
+                    (existing, replacement) -> existing // Handle duplicates
+                ));
+
+            reports.sort(Comparator.comparing((Report r) ->
+                onlineCache.get(r.getReported().getUuid())).reversed());
+        }
         ),
         PLAYER_STATUS_OFFLINE_FIRST(
-            "Offline First", SortCategory.PLAYER_STATUS, (reports, reversed) ->
-            reports.sort(Comparator.comparing((Report r) -> {
-                Player player = Bukkit.getPlayer(r.getReported().getUuid());
-                return player != null && player.isOnline();
-            }))
-        );
+            "Offline First", SortCategory.PLAYER_STATUS, (reports, reversed) -> {
+            Map<String, Boolean> onlineCache = reports.stream()
+                .collect(Collectors.toMap(
+                    r -> r.getReported().getUuid(),
+                    r -> {
+                        Player player = Bukkit.getPlayer(UUID.fromString(r.getReported().getUuid()));
+                        return player != null && player.isOnline();
+                    },
+                    (existing, replacement) -> existing
+                ));
 
+            reports.sort(Comparator.comparing((Report r) ->
+                onlineCache.get(r.getReported().getUuid())));
+        }
+        );
 
         private final String displayName;
         private final SortCategory category;
