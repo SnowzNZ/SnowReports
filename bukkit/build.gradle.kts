@@ -44,9 +44,6 @@ tasks {
         relocate("xyz.xenondevs.inventoryaccess", "dev.snowz.snowreports.libs.inventoryaccess")
         relocate("org.bstats", "dev.snowz.snowreports.libs.bstats")
         relocate("net.byteflux.libby", "dev.snowz.snowreports.libs.libby")
-        relocate("org.intellij.lang", "dev.snowz.snowreports.libs.intellij")
-        relocate("org.jetbrains.annotations", "dev.snowz.snowreports.libs.jetbrains")
-        relocate("org.snakeyaml.engine", "dev.snowz.snowreports.libs.snakeyaml")
     }
 
     jar {
