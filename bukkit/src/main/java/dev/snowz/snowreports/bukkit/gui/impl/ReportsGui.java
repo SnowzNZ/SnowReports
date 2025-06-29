@@ -89,7 +89,7 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
 
             // Check if the reported player is online
             boolean isOnline = false;
-            Player reportedPlayer = org.bukkit.Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
+            final Player reportedPlayer = org.bukkit.Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
             if (reportedPlayer != null && reportedPlayer.isOnline()) {
                 isOnline = true;
             }
