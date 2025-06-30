@@ -31,8 +31,10 @@ public final class SnowReportsCommand implements Command {
         help.put("/snowreports disable", "Disable reporting.");
         help.put("/snowreports reload (config/messages)", "Reload the config or messages.");
         help.put("/deletereport (id)", "Delete a report.");
+        help.put("/myreports (page)", "View your reports.");
         help.put("/report (player) (reason)", "Report a player.");
         help.put("/reports (player) (page)", "View reports.");
+        help.put("/setstatus (id) (status)", "Set the status of a report.");
     }
 
     @Override
