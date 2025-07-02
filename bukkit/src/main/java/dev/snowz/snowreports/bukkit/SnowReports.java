@@ -11,6 +11,7 @@ import dev.snowz.snowreports.bukkit.listener.PlayerChatListener;
 import dev.snowz.snowreports.bukkit.listener.PlayerJoinListener;
 import dev.snowz.snowreports.bukkit.listener.ReportBridgeListener;
 import dev.snowz.snowreports.bukkit.manager.*;
+import dev.snowz.snowreports.bukkit.placeholder.SnowReportsPlaceholder;
 import dev.snowz.snowreports.bukkit.util.UpdateChecker;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.DatabaseManager;
@@ -154,6 +155,11 @@ public final class SnowReports extends JavaPlugin {
             "snowreports:main",
             new ReportBridgeListener()
         );
+
+        // Placeholders
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new SnowReportsPlaceholder().register();
+        }
     }
 
     @Override
