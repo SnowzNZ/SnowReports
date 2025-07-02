@@ -26,6 +26,11 @@ public final class SetStatusCommand implements Command {
     }
 
     @Override
+    public List<String> getAliases() {
+        return List.of("changestatus");
+    }
+
+    @Override
     public List<Argument<?>> getArguments() {
         return List.of(
             new IntegerArgument("id")
