@@ -70,7 +70,9 @@ public final class SnowReports extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
+        CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
+            .beLenientForMinorVersions(true)
+        );
 
         // Set custom CommandAPI Logger
         final Logger commandAPILogger = Logger.getLogger("SnowReports-CommandAPI");
