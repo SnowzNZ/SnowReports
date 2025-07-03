@@ -28,11 +28,10 @@ public final class DeleteReportConfirmationGui implements BaseGui<Gui> {
             .setStructure(
                 "# # # # # # # # #",
                 "# # < # # # > # #",
-                "- # # # # # # # #"
+                "# # # # # # # # #"
             )
             .addIngredient('<', new ConfirmItem(id))
             .addIngredient('>', new CancelItem())
-            .addIngredient('-', new BackItem())
             .build();
     }
 

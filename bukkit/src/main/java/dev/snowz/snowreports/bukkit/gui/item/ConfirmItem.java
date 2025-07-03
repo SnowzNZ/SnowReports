@@ -43,8 +43,7 @@ public final class ConfirmItem extends AbstractItem {
                         SnowReports.runSync(() -> {
                                 if (deleted) {
                                     player.sendMessage(getMessage("report.deleted", id));
-                                    GuiHistoryManager.previousMenu(player);
-                                    GuiHistoryManager.previousMenu(player);
+                                    player.closeInventory();
                                 } else {
                                     player.sendMessage(getMessage("report.not_found", id));
                                 }
