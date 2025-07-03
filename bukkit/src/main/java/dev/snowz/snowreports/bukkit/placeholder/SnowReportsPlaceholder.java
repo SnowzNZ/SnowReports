@@ -34,11 +34,11 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String params) {
+    public String onPlaceholderRequest(final Player player, @NotNull final String params) {
         if (params.equalsIgnoreCase("reports_total")) {
             try {
                 return String.valueOf(SnowReports.getReportDao().countOf());
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 SnowReports.getInstance().getLogger().warning("Failed to fetch report count: " + e.getMessage());
                 return "0";
             }
@@ -49,7 +49,7 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
                 return String.valueOf(SnowReports.getReportDao().queryBuilder()
                     .where()
                     .eq("status", ReportStatus.OPEN).countOf());
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 SnowReports.getInstance().getLogger().warning("Failed to fetch open report count: " + e.getMessage());
                 return "0";
             }
@@ -60,7 +60,7 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
                 return String.valueOf(SnowReports.getReportDao().queryBuilder()
                     .where()
                     .eq("status", ReportStatus.IN_PROGRESS).countOf());
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 SnowReports.getInstance().getLogger().warning("Failed to fetch in-progress report count: " + e.getMessage());
                 return "0";
             }
@@ -72,7 +72,7 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
                     .where()
                     .eq("status", ReportStatus.RESOLVED)
                     .countOf());
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 SnowReports.getInstance().getLogger().warning("Failed to fetch resolved report count: " + e.getMessage());
                 return "0";
             }
