@@ -138,7 +138,39 @@ public final class ReportManager {
 
     public boolean deleteReport(final int reportId) {
         try {
-            return SnowReports.getReportDao().deleteById(reportId) > 0;
+            final Report report = SnowReports.getReportDao().queryForId(reportId);
+            if (report == null) {
+                return false;
+            }
+
+            final boolean deleted = SnowReports.getReportDao().deleteById(reportId) > 0;
+
+            if (deleted && Config.get().getDiscord().isEnabled()) {
+                final String webhookURL = Config.get().getDiscord().getWebhookUrl();
+                if (!webhookURL.isEmpty()) {
+                    final DiscordWebhook webhook = new DiscordWebhook(webhookURL);
+                    final DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
+                        .setTitle("Report #" + reportId + " Deleted")
+                        .setDescription(
+                            "**Reporter:** `" + report.getReporter().getName() + "`" +
+                                "\\n**Reported:** `" + report.getReported().getName() + "`" +
+                                "\\n**Reason:** " + report.getReason() +
+                                "\\n**Status:** " + report.getStatus().getName() +
+                                "\\n**Time:** <t:" + Instant.now().getEpochSecond() + ":f>" +
+                                "\\n**Server:** " + Config.get().getServerName())
+                        .setFooter(
+                            "SnowReports",
+                            "https://mc-heads.net/head/" + report.getReporter().getUuid()
+                        )
+                        .setColor(Color.RED);
+
+                    webhook.setUsername("SnowReports");
+                    webhook.addEmbed(embed);
+                    webhook.execute();
+                }
+            }
+
+            return deleted;
         } catch (final NumberFormatException e) {
             SnowReports.getInstance().getLogger().warning("Invalid report ID format: " + reportId);
             return false;
@@ -198,12 +230,13 @@ public final class ReportManager {
             final DiscordWebhook webhook = new DiscordWebhook(webhookURL);
             final DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
                 .setTitle(Config.get().getDiscord().getEmbed().getTitle())
-                .setDescription("**Reporter:** `" + reporter.getName() + "`" +
-                    "\\n**Reported:** `" + reported.getName() + "`" +
-                    "\\n**Reason:** " + reason +
-                    "\\n**Time:** <t:" + time + ":f>" +
-                    "\\n**Server**: " + Config.get().getServerName() +
-                    "\\n**Location:** " + reporter.getLocation().getBlockX() + ", " + reporter.getLocation().getBlockY() + ", " + reporter.getLocation().getBlockZ() + " (" + reporter.getWorld().getName() + ")")
+                .setDescription(
+                    "**Reporter:** `" + reporter.getName() + "`" +
+                        "\\n**Reported:** `" + reported.getName() + "`" +
+                        "\\n**Reason:** " + reason +
+                        "\\n**Time:** <t:" + time + ":f>" +
+                        "\\n**Server**: " + Config.get().getServerName() +
+                        "\\n**Location:** " + reporter.getLocation().getBlockX() + ", " + reporter.getLocation().getBlockY() + ", " + reporter.getLocation().getBlockZ() + " (" + reporter.getWorld().getName() + ")")
                 .setFooter(
                     "Reported by: " + reporter.getName(),
                     "https://mc-heads.net/head/" + reporter.getUniqueId()
