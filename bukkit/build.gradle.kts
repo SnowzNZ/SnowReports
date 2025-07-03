@@ -17,7 +17,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
     compileOnly("com.mojang:brigadier:1.0.18")
 
-    implementation("dev.jorel:commandapi-bukkit-shade:10.1.0")
+    implementation("dev.jorel:commandapi-bukkit-shade:10.1.1")
     implementation("xyz.xenondevs.invui:invui:1.46") {
         (0..15).forEach { version ->
             exclude(group = "xyz.xenondevs.inventoryaccess", module = "inventoryaccess-$version")
