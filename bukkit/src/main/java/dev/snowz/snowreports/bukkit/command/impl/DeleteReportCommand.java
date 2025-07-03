@@ -51,18 +51,14 @@ public final class DeleteReportCommand implements Command {
             final String confirm = (String) args.getOrDefault("confirm", "");
 
             if (confirm.equals("confirm")) {
-                SnowReports.runAsync(() -> {
-                        final boolean deleted = SnowReports.getReportManager().deleteReport(reportId);
+                final boolean deleted = SnowReports.getReportManager().deleteReport(reportId);
 
-                        SnowReports.runSync(() -> {
-                            if (deleted) {
-                                sender.sendMessage(getMessage("report.deleted", reportId));
-                            } else {
-                                sender.sendMessage(getMessage("report.not_found", reportId));
-                            }
-                        });
-                    }
-                );
+                if (deleted) {
+                    sender.sendMessage(getMessage("report.deleted", reportId));
+                } else {
+                    sender.sendMessage(getMessage("report.not_found", reportId));
+                }
+
             } else {
                 sender.sendMessage(getMessage("delreport.confirm", reportId));
                 sender.sendMessage(getMessage("click_to_confirm").clickEvent(ClickEvent.runCommand("/delreport " + reportId + " confirm")));

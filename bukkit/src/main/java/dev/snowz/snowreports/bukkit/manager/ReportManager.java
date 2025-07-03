@@ -6,10 +6,10 @@ import com.google.gson.Gson;
 import dev.snowz.snowreports.api.event.ReportStatusUpdateEvent;
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.SnowReports;
-import dev.snowz.snowreports.bukkit.util.DiscordWebhook;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.Report;
 import dev.snowz.snowreports.common.database.entity.User;
+import dev.snowz.snowreports.common.discord.DiscordWebhook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -83,7 +83,7 @@ public final class ReportManager {
             newStatus,
             staffUser.toModel()
         );
-        SnowReports.runSync(() -> Bukkit.getPluginManager().callEvent(event));
+        Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return false;
         }
@@ -107,26 +107,26 @@ public final class ReportManager {
 
             final String webhookURL = Config.get().getDiscord().getWebhookUrl();
             if (Config.get().getDiscord().isEnabled() && !webhookURL.isEmpty()) {
-                final DiscordWebhook webhook = new DiscordWebhook(webhookURL);
-                final DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
-                    .setTitle("Report #" + reportId + " Status Updated")
-                    .setDescription(
-                        "**Reporter:** `" + report.getReporter().getName() + "`" +
-                            "\\n**Reported:** `" + report.getReported().getName() + "`" +
-                            "\\n**Old Status:** " + oldStatus.getName() +
-                            "\\n**New Status:** " + newStatus.getName() +
-                            "\\n**Updated By:** " + staffUser.getName() +
-                            "\\n**Time:** <t:" + report.getLastUpdated() + ":f>" +
-                            "\\n**Server:** " + Config.get().getServerName())
-                    .setFooter(
-                        "Updated by: " + staffUser.getName(),
-                        "https://mc-heads.net/head/" + staffUser.getUuid()
-                    )
-                    .setColor(Color.decode(newStatus.getColor()));
+                final DiscordWebhook webhook = new DiscordWebhook(webhookURL)
+                    .setUsername("SnowReports")
+                    .addEmbed(new DiscordWebhook.EmbedObject()
+                        .setTitle("Report #" + reportId + " Status Updated")
+                        .setDescription(
+                            "**Reporter:** `" + report.getReporter().getName() + "`" +
+                                "\n**Reported:** `" + report.getReported().getName() + "`" +
+                                "\n**Old Status:** " + oldStatus.getName() +
+                                "\n**New Status:** " + newStatus.getName() +
+                                "\n**Updated By:** " + staffUser.getName() +
+                                "\n**Time:** <t:" + report.getLastUpdated() + ":f>" +
+                                "\n**Server:** " + Config.get().getServerName())
+                        .setFooter(
+                            "Updated by: " + staffUser.getName(),
+                            "https://mc-heads.net/head/" + staffUser.getUuid()
+                        )
+                        .setColor(Color.decode(newStatus.getColor()))
+                    );
 
-                webhook.setUsername("SnowReports");
-                webhook.addEmbed(embed);
-                webhook.execute();
+                webhook.executeAsync();
             }
 
             return true;
@@ -143,34 +143,30 @@ public final class ReportManager {
                 return false;
             }
 
-            final boolean deleted = SnowReports.getReportDao().deleteById(reportId) > 0;
-
-            if (deleted && Config.get().getDiscord().isEnabled()) {
-                final String webhookURL = Config.get().getDiscord().getWebhookUrl();
-                if (!webhookURL.isEmpty()) {
-                    final DiscordWebhook webhook = new DiscordWebhook(webhookURL);
-                    final DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
+            final String webhookURL = Config.get().getDiscord().getWebhookUrl();
+            if (Config.get().getDiscord().isEnabled() && !webhookURL.isEmpty()) {
+                final DiscordWebhook webhook = new DiscordWebhook(webhookURL)
+                    .setUsername("SnowReports")
+                    .addEmbed(new DiscordWebhook.EmbedObject()
                         .setTitle("Report #" + reportId + " Deleted")
                         .setDescription(
                             "**Reporter:** `" + report.getReporter().getName() + "`" +
-                                "\\n**Reported:** `" + report.getReported().getName() + "`" +
-                                "\\n**Reason:** " + report.getReason() +
-                                "\\n**Status:** " + report.getStatus().getName() +
-                                "\\n**Time:** <t:" + Instant.now().getEpochSecond() + ":f>" +
-                                "\\n**Server:** " + Config.get().getServerName())
+                                "\n**Reported:** `" + report.getReported().getName() + "`" +
+                                "\n**Reason:** " + report.getReason() +
+                                "\n**Status:** " + report.getStatus().getName() +
+                                "\n**Time:** <t:" + Instant.now().getEpochSecond() + ":f>" +
+                                "\n**Server:** " + Config.get().getServerName())
                         .setFooter(
                             "SnowReports",
                             "https://mc-heads.net/head/" + report.getReporter().getUuid()
                         )
-                        .setColor(Color.RED);
+                        .setColor(Color.RED)
+                    );
 
-                    webhook.setUsername("SnowReports");
-                    webhook.addEmbed(embed);
-                    webhook.execute();
-                }
+                webhook.executeAsync();
             }
 
-            return deleted;
+            return SnowReports.getReportDao().deleteById(reportId) > 0;
         } catch (final NumberFormatException e) {
             SnowReports.getInstance().getLogger().warning("Invalid report ID format: " + reportId);
             return false;
@@ -227,26 +223,26 @@ public final class ReportManager {
 
         final String webhookURL = Config.get().getDiscord().getWebhookUrl();
         if (Config.get().getDiscord().isEnabled() && !webhookURL.isEmpty()) {
-            final DiscordWebhook webhook = new DiscordWebhook(webhookURL);
-            final DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
-                .setTitle(Config.get().getDiscord().getEmbed().getTitle())
-                .setDescription(
-                    "**Reporter:** `" + reporter.getName() + "`" +
-                        "\\n**Reported:** `" + reported.getName() + "`" +
-                        "\\n**Reason:** " + reason +
-                        "\\n**Time:** <t:" + time + ":f>" +
-                        "\\n**Server**: " + Config.get().getServerName() +
-                        "\\n**Location:** " + reporter.getLocation().getBlockX() + ", " + reporter.getLocation().getBlockY() + ", " + reporter.getLocation().getBlockZ() + " (" + reporter.getWorld().getName() + ")")
-                .setFooter(
-                    "Reported by: " + reporter.getName(),
-                    "https://mc-heads.net/head/" + reporter.getUniqueId()
-                )
-                .setThumbnail("https://mc-heads.net/head/" + reported.getUniqueId())
-                .setColor(Color.decode(Config.get().getDiscord().getEmbed().getHexColor()));
+            final DiscordWebhook webhook = new DiscordWebhook(webhookURL)
+                .setUsername("SnowReports")
+                .addEmbed(new DiscordWebhook.EmbedObject()
+                    .setTitle(Config.get().getDiscord().getEmbed().getTitle())
+                    .setDescription(
+                        "**Reporter:** `" + reporter.getName() + "`" +
+                            "\n**Reported:** `" + reported.getName() + "`" +
+                            "\n**Reason:** " + reason +
+                            "\n**Time:** <t:" + time + ":f>" +
+                            "\n**Server**: " + Config.get().getServerName() +
+                            "\n**Location:** " + reporter.getLocation().getBlockX() + ", " + reporter.getLocation().getBlockY() + ", " + reporter.getLocation().getBlockZ() + " (" + reporter.getWorld().getName() + ")")
+                    .setFooter(
+                        "Reported by: " + reporter.getName(),
+                        "https://mc-heads.net/head/" + reporter.getUniqueId()
+                    )
+                    .setThumbnail("https://mc-heads.net/head/" + reported.getUniqueId())
+                    .setColor(Color.decode(Config.get().getDiscord().getEmbed().getHexColor()))
+                );
 
-            webhook.setUsername("SnowReports");
-            webhook.addEmbed(embed);
-            webhook.execute();
+            webhook.executeAsync();
         }
 
         SnowReports.getAlertManager().broadcastAlert(report);
