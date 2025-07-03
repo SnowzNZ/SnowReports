@@ -35,25 +35,19 @@ public final class ConfirmItem extends AbstractItem {
         @NotNull final InventoryClickEvent event
     ) {
         if (clickType.isLeftClick()) {
-            SnowReports.runAsync(() -> {
-                    try {
-                        final boolean deleted = SnowReports.getReportDao().deleteById(id) > 0;
+            try {
+                final boolean deleted = SnowReports.getReportManager().deleteReport(id);
 
-                        SnowReports.runSync(() -> {
-                                if (deleted) {
-                                    player.sendMessage(getMessage("report.deleted", id));
-                                    player.closeInventory();
-                                } else {
-                                    player.sendMessage(getMessage("report.not_found", id));
-                                }
-                            }
-                        );
-
-                    } catch (final Exception e) {
-                        SnowReports.getInstance().getLogger().warning("Failed to delete report with ID '" + id + "': " + e.getMessage());
-                    }
+                if (deleted) {
+                    player.sendMessage(getMessage("report.deleted", id));
+                    player.closeInventory();
+                } else {
+                    player.sendMessage(getMessage("report.not_found", id));
                 }
-            );
+
+            } catch (final Exception e) {
+                SnowReports.getInstance().getLogger().warning("Failed to delete report with ID '" + id + "': " + e.getMessage());
+            }
         }
     }
 }
