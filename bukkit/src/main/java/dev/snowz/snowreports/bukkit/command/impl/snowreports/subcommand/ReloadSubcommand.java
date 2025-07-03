@@ -19,6 +19,11 @@ public final class ReloadSubcommand implements Subcommand {
     }
 
     @Override
+    public String getDescription() {
+        return "Reload the plugin configuration and messages.";
+    }
+
+    @Override
     public List<Argument<?>> getArguments() {
         return List.of(
             new MultiLiteralArgument("file", "config", "messages")

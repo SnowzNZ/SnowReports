@@ -23,6 +23,11 @@ public final class ReportCommand implements Command {
     }
 
     @Override
+    public String getDescription() {
+        return "Report a player.";
+    }
+
+    @Override
     public List<Argument<?>> getArguments() {
         return List.of(
             new PlayerArgument("player"),

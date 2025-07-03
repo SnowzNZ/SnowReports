@@ -22,6 +22,11 @@ public final class MyReportsCommand implements Command {
     }
 
     @Override
+    public String getDescription() {
+        return "View your submitted reports.";
+    }
+
+    @Override
     public List<Argument<?>> getArguments() {
         return List.of(
             new IntegerArgument("page")

@@ -25,6 +25,11 @@ public final class DeleteReportCommand implements Command {
     }
 
     @Override
+    public String getDescription() {
+        return "Delete a report.";
+    }
+
+    @Override
     public List<String> getAliases() {
         return List.of("delreport");
     }

@@ -27,6 +27,14 @@ public interface Command {
     String getName();
 
     /**
+     * Gets the description of the command.
+     * This is used for help messages and command descriptions.
+     *
+     * @return The command description
+     */
+    String getDescription();
+
+    /**
      * Gets alternative names for this command.
      * These are registered as command aliases.
      *

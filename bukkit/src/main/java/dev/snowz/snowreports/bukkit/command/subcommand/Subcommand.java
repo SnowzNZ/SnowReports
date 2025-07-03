@@ -22,6 +22,14 @@ public interface Subcommand {
     String getName();
 
     /**
+     * Gets the description of the subcommand.
+     * This is used for help messages and command descriptions.
+     *
+     * @return The subcommand description
+     */
+    String getDescription();
+
+    /**
      * Gets the arguments for this subcommand.
      *
      * @return The list of arguments for this subcommand

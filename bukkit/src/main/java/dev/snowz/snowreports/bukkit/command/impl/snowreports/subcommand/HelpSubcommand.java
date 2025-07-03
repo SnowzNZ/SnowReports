@@ -12,9 +12,14 @@ public final class HelpSubcommand implements Subcommand {
     }
 
     @Override
+    public String getDescription() {
+        return "Show help for SnowReports commands.";
+    }
+
+    @Override
     public CommandExecutor getExecutor() {
         return (sender, args) -> {
-            SnowReportsCommand.showHelp(sender);
+            new SnowReportsCommand().showHelp(sender);
         };
     }
 }

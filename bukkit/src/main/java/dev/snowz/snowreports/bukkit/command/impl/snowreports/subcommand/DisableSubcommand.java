@@ -14,6 +14,11 @@ public final class DisableSubcommand implements Subcommand {
     }
 
     @Override
+    public String getDescription() {
+        return "Disable the report system.";
+    }
+
+    @Override
     public CommandExecutor getExecutor() {
         return (sender, args) -> {
             Config.get().getReports().setEnabled(false);

@@ -19,6 +19,11 @@ public final class AlertsSubcommand implements Subcommand {
     }
 
     @Override
+    public String getDescription() {
+        return "Toggle report alerts.";
+    }
+
+    @Override
     public List<Argument<?>> getArguments() {
         return List.of(
             new MultiLiteralArgument("action", "enable", "disable")

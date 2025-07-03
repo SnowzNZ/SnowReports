@@ -1,7 +1,6 @@
 package dev.snowz.snowreports.bukkit.gui.impl;
 
 import dev.snowz.snowreports.bukkit.gui.BaseGui;
-import dev.snowz.snowreports.bukkit.gui.item.BackItem;
 import dev.snowz.snowreports.bukkit.gui.item.CancelItem;
 import dev.snowz.snowreports.bukkit.gui.item.ConfirmItem;
 import org.bukkit.entity.Player;

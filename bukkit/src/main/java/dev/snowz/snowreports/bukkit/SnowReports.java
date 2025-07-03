@@ -58,6 +58,9 @@ public final class SnowReports extends JavaPlugin {
     @Getter
     private static ChatHistoryManager chatHistoryManager;
 
+    @Getter
+    private static List<Command> commands;
+
     public static String VERSION;
 
     @SuppressWarnings("deprecation")
@@ -130,15 +133,15 @@ public final class SnowReports extends JavaPlugin {
 
         // Commands
         CommandAPI.onEnable();
-        List.of(
-                new SnowReportsCommand(),
-                new DeleteReportCommand(),
-                new MyReportsCommand(),
-                new ReportCommand(),
-                new ReportsCommand(),
-                new SetStatusCommand()
-            )
-            .forEach(Command::register);
+        commands = List.of(
+            new SnowReportsCommand(),
+            new DeleteReportCommand(),
+            new MyReportsCommand(),
+            new ReportCommand(),
+            new ReportsCommand(),
+            new SetStatusCommand()
+        );
+        commands.forEach(Command::register);
 
         // Listeners
         List.of(

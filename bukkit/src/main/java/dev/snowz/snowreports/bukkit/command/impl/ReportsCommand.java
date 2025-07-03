@@ -29,6 +29,11 @@ public final class ReportsCommand implements Command {
     }
 
     @Override
+    public String getDescription() {
+        return "View all reports or reports for a specific player.";
+    }
+
+    @Override
     public List<Argument<?>> getArguments() {
         return List.of(
             new StringArgument("playerOrPage")

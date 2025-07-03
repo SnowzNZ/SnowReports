@@ -26,6 +26,11 @@ public final class SetStatusCommand implements Command {
     }
 
     @Override
+    public String getDescription() {
+        return "Change the status of a report.";
+    }
+
+    @Override
     public List<String> getAliases() {
         return List.of("changestatus");
     }
