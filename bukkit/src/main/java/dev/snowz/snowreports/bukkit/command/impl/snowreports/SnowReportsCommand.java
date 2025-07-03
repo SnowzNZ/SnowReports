@@ -1,5 +1,6 @@
 package dev.snowz.snowreports.bukkit.command.impl.snowreports;
 
+import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import dev.snowz.snowreports.bukkit.SnowReports;
 import dev.snowz.snowreports.bukkit.command.Command;
@@ -9,10 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -22,24 +20,14 @@ import static dev.snowz.snowreports.bukkit.manager.MessageManager.deserialize;
 
 public final class SnowReportsCommand implements Command {
 
-    private static final Map<String, String> help = new LinkedHashMap<>();
-
-    static {
-        help.put("/snowreports help", "Show this help message.");
-        help.put("/snowreports alerts (enable/disable)", "Toggle the alerts.");
-        help.put("/snowreports enable", "Enable reporting.");
-        help.put("/snowreports disable", "Disable reporting.");
-        help.put("/snowreports reload (config/messages)", "Reload the config or messages.");
-        help.put("/deletereport (id)", "Delete a report.");
-        help.put("/myreports (page)", "View your reports.");
-        help.put("/report (player) (reason)", "Report a player.");
-        help.put("/reports (player) (page)", "View reports.");
-        help.put("/setstatus (id) (status)", "Set the status of a report.");
-    }
-
     @Override
     public String getName() {
         return "snowreports";
+    }
+
+    @Override
+    public String getDescription() {
+        return "SnowReports main command.";
     }
 
     @Override
@@ -63,7 +51,7 @@ public final class SnowReportsCommand implements Command {
         );
     }
 
-    public static void showHelp(final CommandSender sender) {
+    public void showHelp(final CommandSender sender) {
         sender.sendMessage(deserialize("&7&m                                                            "));
         sender.sendMessage(deserialize("&bSnowReports &e" + SnowReports.VERSION + " &fby &dSnowz"));
         sender.sendMessage(deserialize(""));
@@ -71,38 +59,72 @@ public final class SnowReportsCommand implements Command {
         sender.sendMessage(deserialize("&fto view its description."));
         sender.sendMessage(deserialize(""));
 
-        help.forEach((command, description) -> {
-            final Component message = deserialize(formatCommand(command))
-                .hoverEvent(HoverEvent.showText(deserialize("&f" + description)));
+        for (final Subcommand subcommand : getSubcommands()) {
+            final StringBuilder commandFormat = new StringBuilder("/snowreports " + subcommand.getName());
+
+            if (!subcommand.getArguments().isEmpty()) {
+                for (final Argument<?> arg : subcommand.getArguments()) {
+                    if (arg.isOptional()) {
+                        commandFormat.append(" [").append(arg.getNodeName()).append("]");
+                    } else {
+                        commandFormat.append(" <").append(arg.getNodeName()).append(">");
+                    }
+                }
+            }
+
+            final Component message = deserialize(formatCommand(commandFormat.toString()))
+                .hoverEvent(HoverEvent.showText(deserialize("&f" + subcommand.getDescription())));
 
             sender.sendMessage(message);
-        });
+        }
+
+        for (final Command command : SnowReports.getCommands()) {
+            if (command.getName().equals("snowreports")) {
+                continue; // Skip this command since we already displayed its subcommands
+            }
+
+            final StringBuilder commandFormat = new StringBuilder("/" + command.getName());
+
+            if (!command.getArguments().isEmpty()) {
+                for (final Argument<?> arg : command.getArguments()) {
+                    if (arg.isOptional()) {
+                        commandFormat.append(" [").append(arg.getNodeName()).append("]");
+                    } else {
+                        commandFormat.append(" <").append(arg.getNodeName()).append(">");
+                    }
+                }
+            }
+
+            final Component message = deserialize(formatCommand(commandFormat.toString()))
+                .hoverEvent(HoverEvent.showText(deserialize("&f" + command.getDescription())));
+
+            sender.sendMessage(message);
+        }
 
         sender.sendMessage(deserialize("&7&m                                                            "));
     }
 
     private static String formatCommand(final String command) {
-        final Pattern pattern = Pattern.compile("\\(.*?\\)|\\S+");
+        final Pattern pattern = Pattern.compile("\\[.*?\\]|<.*?>|\\S+");
         final Matcher matcher = pattern.matcher(command);
 
         final String[] parts = matcher.results().map(MatchResult::group).toArray(String[]::new);
         final AtomicInteger index = new AtomicInteger(0);
 
-        final List<String> list = Arrays.asList(parts);
+        for (int i = 0; i < parts.length; i++) {
+            final String part = parts[i];
+            final int currentIndex = index.getAndIncrement();
 
-        list.forEach(part -> {
-            final int incremented = index.getAndIncrement();
-
-            if (part.startsWith("(") && part.endsWith(")")) {
-                parts[incremented] = "&e" + part;
-            } else if (incremented == 0) {
-                parts[incremented] = "&b" + part;
+            if (part.startsWith("[") && part.endsWith("]") || part.startsWith("<") && part.endsWith(">")) {
+                parts[currentIndex] = "&e" + part;
+            } else if (currentIndex == 0) {
+                parts[currentIndex] = "&b" + part;
             } else if (part.contains("/")) {
-                parts[incremented] = part.replace("/", "&e/&e");
+                parts[currentIndex] = part.replace("/", "&e/&e");
             } else {
-                parts[incremented] = "&f" + part;
+                parts[currentIndex] = "&f" + part;
             }
-        });
+        }
 
         return String.join(" ", parts);
     }
