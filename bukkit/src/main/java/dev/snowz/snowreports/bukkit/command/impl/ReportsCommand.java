@@ -63,15 +63,10 @@ public final class ReportsCommand implements Command {
                 }
             }
 
-            try {
-                if (sender instanceof final ConsoleCommandSender console) {
-                    displayReportsToConsole(console, playerName, page);
-                } else if (sender instanceof final Player player) {
-                    displayReportsToPlayer(player, playerName, page);
-                }
-            } catch (final SQLException e) {
-                sender.sendMessage("An error occurred while fetching reports.");
-                SnowReports.getInstance().getLogger().severe("Error fetching reports: " + e.getMessage());
+            if (sender instanceof final ConsoleCommandSender console) {
+                displayReportsToConsole(console, playerName, page);
+            } else if (sender instanceof final Player player) {
+                displayReportsToPlayer(player, playerName, page);
             }
         };
     }
@@ -96,7 +91,7 @@ public final class ReportsCommand implements Command {
         final Player player,
         final String playerName,
         final int page
-    ) throws SQLException {
+    ) {
         SnowReports.runAsync(() -> {
             try {
                 final List<Report> allReports = SnowReports.getReportDao().queryForAll();
