@@ -18,8 +18,6 @@ public final class HelpSubcommand implements Subcommand {
 
     @Override
     public CommandExecutor getExecutor() {
-        return (sender, args) -> {
-            new SnowReportsCommand().showHelp(sender);
-        };
+        return (sender, args) -> new SnowReportsCommand().showHelp(sender);
     }
 }
