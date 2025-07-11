@@ -55,8 +55,7 @@ public final class SnowReportsCommand implements Command {
         sender.sendMessage(deserialize("&7&m                                                            "));
         sender.sendMessage(deserialize("&bSnowReports &e" + SnowReports.VERSION + " &fby &dSnowz"));
         sender.sendMessage(deserialize(""));
-        sender.sendMessage(deserialize("&fHover over a subcommand"));
-        sender.sendMessage(deserialize("&fto view its description."));
+        sender.sendMessage(deserialize("&fHover over a command to view its description."));
         sender.sendMessage(deserialize(""));
 
         for (final Subcommand subcommand : getSubcommands()) {
