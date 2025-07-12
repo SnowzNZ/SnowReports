@@ -38,6 +38,17 @@ Lightweight, customizable player reporting plugin.
 | `snowreports.bypass.report`     | Makes a player immune to reports                    |
 | `snowreports.update`            | Get notified if an update is available when joining |
 
+### Placeholders
+
+Requires [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)
+
+| Placeholder                        | Description                         |
+|------------------------------------|-------------------------------------|
+| `%snowreports_reports_total%`      | Total number of reports             |
+| `%snowreports_reports_open%`       | Total number of open reports        |
+| `%snowreports_reports_inprogress%` | Total number of in progress reports |
+| `%snowreports_reports_resolved%`   | Total number of resolved reports    |
+
 ## License
 
 SnowReports is licensed under the [GPL-3.0 license](LICENSE).
