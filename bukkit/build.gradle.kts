@@ -8,6 +8,7 @@ repositories {
     maven("https://libraries.minecraft.net")
     maven("https://repo.xenondevs.xyz/releases")
     maven("https://repo.alessiodp.com/releases/")
+    maven("https://repo.extendedclip.com/releases/")
 }
 
 dependencies {
@@ -16,6 +17,7 @@ dependencies {
 
     compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
     compileOnly("com.mojang:brigadier:1.0.18")
+    compileOnly("me.clip:placeholderapi:2.11.6")
 
     implementation("dev.jorel:commandapi-bukkit-shade:10.1.1")
     implementation("xyz.xenondevs.invui:invui:1.46") {

@@ -4,3 +4,4 @@ main: dev.snowz.snowreports.bukkit.SnowReports
 author: Snowz
 description: Lightweight, customizable player reporting plugin.
 api-version: '1.20'
+softdepend: [ "PlaceholderAPI" ]
