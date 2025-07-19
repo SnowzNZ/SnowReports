@@ -163,6 +163,7 @@ public final class SnowReports extends JavaPlugin {
     @Override
     public void onDisable() {
         // Shutdown executors
+        PlayerChatListener.shutdown();
         DiscordWebhook.shutdown();
 
         // Commands
