@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Accessors(chain = true)
@@ -60,6 +61,19 @@ public final class DiscordWebhook {
         }
         this.embeds.add(embed);
         return this;
+    }
+
+    public static void shutdown() {
+        EXECUTOR.shutdown();
+
+        try {
+            if (!EXECUTOR.awaitTermination(10, TimeUnit.SECONDS)) {
+                EXECUTOR.shutdownNow();
+            }
+        } catch (final InterruptedException e) {
+            EXECUTOR.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     public CompletableFuture<Void> executeAsync() {
