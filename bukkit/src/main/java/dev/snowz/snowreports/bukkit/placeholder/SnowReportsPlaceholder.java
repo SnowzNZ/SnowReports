@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 public final class SnowReportsPlaceholder extends PlaceholderExpansion {
 
+    @SuppressWarnings("deprecation")
     @Override
     @NotNull
     public String getAuthor() {
@@ -25,7 +26,7 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getVersion() {
-        return SnowReports.getInstance().getDescription().getVersion();
+        return SnowReports.VERSION;
     }
 
     @Override
