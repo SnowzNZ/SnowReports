@@ -19,7 +19,7 @@ dependencies {
     compileOnly("com.mojang:brigadier:1.0.18")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
-    implementation("dev.jorel:commandapi-bukkit-shade:10.1.1")
+    implementation("dev.jorel:commandapi-bukkit-shade:10.1.2")
     implementation("xyz.xenondevs.invui:invui:1.46") {
         (0..15).forEach { version ->
             exclude(group = "xyz.xenondevs.inventoryaccess", module = "inventoryaccess-$version")
