@@ -66,6 +66,24 @@ public final class UserManager {
     }
 
     /**
+     * Gets a user by name
+     *
+     * @param name Player name to search for
+     * @return The User if found, or null if not found
+     */
+    public User getUserByName(final String name) {
+        try {
+            return SnowReports.getUserDao().queryBuilder()
+                .where()
+                .eq("name", name)
+                .queryForFirst();
+        } catch (final Exception e) {
+            SnowReports.getInstance().getLogger().warning("Failed to get user with name " + name + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Updates a user's name if it differs from the current one
      *
      * @param uuid Player UUID as string

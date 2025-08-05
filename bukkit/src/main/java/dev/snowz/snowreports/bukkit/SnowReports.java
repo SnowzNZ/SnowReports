@@ -137,6 +137,8 @@ public final class SnowReports extends JavaPlugin {
         CommandAPI.onEnable();
         commands = List.of(
             new SnowReportsCommand(),
+            new DeleteAllReportsCommand(),
+            new DeleteAllReportsFromCommand(),
             new DeleteReportCommand(),
             new MyReportsCommand(),
             new ReportCommand(),

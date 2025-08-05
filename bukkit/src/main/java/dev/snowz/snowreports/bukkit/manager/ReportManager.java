@@ -3,6 +3,7 @@ package dev.snowz.snowreports.bukkit.manager;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import dev.snowz.snowreports.api.event.ReportStatusUpdateEvent;
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.bukkit.SnowReports;
@@ -172,6 +173,28 @@ public final class ReportManager {
             return false;
         } catch (final SQLException e) {
             SnowReports.getInstance().getLogger().warning("Failed to delete report with ID '" + reportId + "': " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteAllReports() {
+        try {
+            final int deletedCount = SnowReports.getReportDao().deleteBuilder().delete();
+            return deletedCount > 0;
+        } catch (final SQLException e) {
+            SnowReports.getInstance().getLogger().warning("Failed to delete all reports: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteAllReportsFrom(final User user) {
+        try {
+            final DeleteBuilder<Report, Integer> deleteBuilder = SnowReports.getReportDao().deleteBuilder();
+            deleteBuilder.where().eq("reporter_uuid", user.getUuid());
+            final int deleted = deleteBuilder.delete();
+            return deleted > 0;
+        } catch (final SQLException e) {
+            SnowReports.getInstance().getLogger().warning("Failed to delete all reports from user '" + user.getName() + "': " + e.getMessage());
             return false;
         }
     }
