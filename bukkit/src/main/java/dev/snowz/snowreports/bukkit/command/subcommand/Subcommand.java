@@ -30,6 +30,17 @@ public interface Subcommand {
     String getDescription();
 
     /**
+     * Gets the permission required to use this subcommand.
+     * By default, uses the format "snowreports.command.parent.name".
+     *
+     * @param parentCommandName The name of the parent command
+     * @return The permission string
+     */
+    default String getPermission(final String parentCommandName) {
+        return "snowreports.command." + parentCommandName + "." + getName();
+    }
+
+    /**
      * Gets the arguments for this subcommand.
      *
      * @return The list of arguments for this subcommand

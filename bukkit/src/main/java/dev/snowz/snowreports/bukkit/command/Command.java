@@ -111,6 +111,7 @@ public interface Command {
             command = command.withSubcommand(
                 new CommandAPICommand(subcommand.getName())
                     .withArguments(subcommand.getArguments())
+                    .withPermission(subcommand.getPermission(getName()))
                     .executes(subcommand.getExecutor())
             );
         }
