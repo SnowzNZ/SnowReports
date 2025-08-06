@@ -14,7 +14,7 @@ import java.util.List;
  * SnowReports Command
  *
  * @author Snowz
- * @since 2.0.0
+ * @since 1.0.0
  */
 public interface Command {
 

@@ -10,7 +10,7 @@ import java.util.List;
  * SnowReports Subcommand
  *
  * @author Snowz
- * @since 2.0.0
+ * @since 1.0.0
  */
 public interface Subcommand {
 
