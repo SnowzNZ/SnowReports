@@ -1,0 +1,7 @@
+name: SnowReports
+version: '${project.version}'
+main: dev.snowz.snowreports.paper.SnowReports
+author: Snowz
+description: Lightweight, customizable player reporting plugin.
+api-version: '1.20'
+softdepend: [ "PlaceholderAPI" ]
