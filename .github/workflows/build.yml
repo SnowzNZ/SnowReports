@@ -29,5 +29,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: |
+            paper/build/libs/*
             velocity/build/libs/*
-            bukkit/build/libs/*
