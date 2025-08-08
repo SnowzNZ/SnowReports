@@ -1,5 +1,5 @@
 name: SnowReports
-version: '${project.version}'
+version: '${version}'
 main: dev.snowz.snowreports.paper.SnowReports
 author: Snowz
 description: Lightweight, customizable player reporting plugin.
