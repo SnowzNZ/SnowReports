@@ -52,12 +52,12 @@ public final class DeleteAllReportsFromCommand implements Command {
                 final boolean deleted = SnowReports.getReportManager().deleteAllReportsFrom(user);
 
                 if (deleted) {
-                    sender.sendMessage(getMessage("delallreportsfrom.success"));
+                    sender.sendMessage(getMessage("delallreportsfrom.success", playerName));
                 } else {
-                    sender.sendMessage(getMessage("delallreportsfrom.failed"));
+                    sender.sendMessage(getMessage("delallreportsfrom.failed", playerName));
                 }
             } else {
-                sender.sendMessage(getMessage("delallreportsfrom.confirm"));
+                sender.sendMessage(getMessage("delallreportsfrom.confirm", playerName));
                 sender.sendMessage(getMessage("click_to_confirm").clickEvent(ClickEvent.runCommand(
                     "/deleteallreportsfrom " + playerName + " confirm")));
             }
