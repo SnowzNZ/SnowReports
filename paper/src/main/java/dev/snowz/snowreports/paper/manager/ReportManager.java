@@ -272,10 +272,11 @@ public final class ReportManager {
 
         reporter.sendMessage(getMessage("report.sent"));
 
-        if (!reporter.hasPermission("snowreports.bypass.cooldown")) {
+        final int cooldown = Config.get().getReports().getCooldown();
+        if (!reporter.hasPermission("snowreports.bypass.cooldown") || cooldown != -1) {
             SnowReports.getCooldownManager().setCooldown(
                 reporter.getUniqueId(),
-                Duration.ofSeconds(Config.get().getReports().getCooldown())
+                Duration.ofSeconds(cooldown)
             );
         }
 
