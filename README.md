@@ -8,35 +8,39 @@ Lightweight, customizable player reporting plugin.
 ## Features
 
 - **Report Reason Presets** with auto-completion
-- **Multiple Storage Methods**
+- **Multiple Storage Methods** MySQL, SQLite, MariaDB, PostgreSQL, H2
 - **Intuitive GUI** for viewing and managing reports
 - **Discord Integration** via webhooks
 - **Automatic Update Checking**
 - **Highly Customizable** settings and messages
-- **Cross-server** support (while using a remote storage method)
+- **Cross-server support** while using a remote storage method with the velocity plugin
+- **Chat History** stored for each report
 
 ## Usage
 
 ### Commands
 
-| Command                              | Description                                 | Permission                         |
-|--------------------------------------|---------------------------------------------|------------------------------------|
-| `/snowreports`                       | Main command                                | `snowreports.command.snowreports`  |
-| `/deletereport <id> [confirm]`       | Delete a specific report                    | `snowreports.command.deletereport` |
-| `/myreports [page]`                  | View reports you've made                    | `snowreports.command.myreports`    |
-| `/report <player> [reason]`          | Report a player                             | `snowreports.command.report`       |
-| `/reports [player/page]`             | View all reports or player-specific reports | `snowreports.command.reports`      |
-| `/setstatus <id> <status> [confirm]` | Set the status of a report                  | `snowreports.command.setstatus`    |
+| Command                                    | Description                                 | Permission                                 |
+|--------------------------------------------|---------------------------------------------|--------------------------------------------|
+| `/snowreports`                             | Main command                                | `snowreports.command.snowreports`          |
+| `/deleteallreports [confirm]`              | Delete all reports                          | `snowreports.command.deleteallreports`     |
+| `/deleteallreportsfrom <player> [confirm]` | Delete all reports made by a player         | `snowreports.command.deleteallreportsfrom` |
+| `/deletereport <id> [confirm]`             | Delete a specific report                    | `snowreports.command.deletereport`         |
+| `/myreports [page]`                        | View reports you've made                    | `snowreports.command.myreports`            |
+| `/report <player> [reason]`                | Report a player                             | `snowreports.command.report`               |
+| `/reports [player/page]`                   | View all reports or player-specific reports | `snowreports.command.reports`              |
+| `/setstatus <id> <status> [confirm]`       | Set the status of a report                  | `snowreports.command.setstatus`            |
 
 ### Permissions
 
-| Permission                      | Description                                         |
-|---------------------------------|-----------------------------------------------------|
-| `snowreports.command.<command>` | Give permission to a certain command                |
-| `snowreports.alerts`            | Receive an alert when a player is reported          |
-| `snowreports.bypass.cooldown`   | Bypass the report cooldown                          |
-| `snowreports.bypass.report`     | Makes a player immune to reports                    |
-| `snowreports.update`            | Get notified if an update is available when joining |
+| Permission                                   | Description                                         |
+|----------------------------------------------|-----------------------------------------------------|
+| `snowreports.command.<command>`              | Give permission to a certain command                |
+| `snowreports.command.<command>.<subcommand>` | Give permission to a certain subcommand             |
+| `snowreports.alerts`                         | Receive an alert when a player is reported          |
+| `snowreports.bypass.cooldown`                | Bypass the report cooldown                          |
+| `snowreports.bypass.report`                  | Makes a player immune to reports                    |
+| `snowreports.update`                         | Get notified if an update is available when joining |
 
 ### Placeholders
 
