@@ -37,3 +37,4 @@ update_available: '<yellow>An update is available! <green>Click here to download
 alerts.enabled: '<green>Alerts enabled.'
 alerts.disabled: '<red>Alerts disabled.'
 myreports.no_reports: '<red>You have not made any reports!'
+security.console_only: '<red>This command can only be run from console!'

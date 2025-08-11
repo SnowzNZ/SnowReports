@@ -59,6 +59,8 @@ public final class Config {
 
     private ReportsConfig reports = new ReportsConfig();
 
+    private SecurityConfig security = new SecurityConfig();
+
     private DiscordConfig discord = new DiscordConfig();
 
     private DebugConfig debug = new DebugConfig();
@@ -167,6 +169,17 @@ public final class Config {
             })
             private int maxAgeSeconds = 1800;
         }
+    }
+
+    @Getter
+    @Setter
+    @Configuration
+    @NoArgsConstructor
+    public static class SecurityConfig {
+        @Comment("If enabled, only the console can use /deleteallreports.")
+        private boolean deleteAllReports = true;
+        @Comment("If enabled, only the console can use /deleteallreportsfrom.")
+        private boolean deleteAllReportsFrom = true;
     }
 
     @Getter

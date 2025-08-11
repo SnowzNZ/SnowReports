@@ -4,10 +4,12 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
+import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.User;
 import dev.snowz.snowreports.paper.SnowReports;
 import dev.snowz.snowreports.paper.command.Command;
 import net.kyori.adventure.text.event.ClickEvent;
+import org.bukkit.command.ConsoleCommandSender;
 
 import java.util.List;
 
@@ -42,6 +44,13 @@ public final class DeleteAllReportsFromCommand implements Command {
     @Override
     public CommandExecutor getExecutor() {
         return (sender, args) -> {
+            if (Config.get().getSecurity().isDeleteAllReportsFrom()) {
+                if (!(sender instanceof ConsoleCommandSender)) {
+                    sender.sendMessage(getMessage("security.console_only"));
+                    return;
+                }
+            }
+
             final String playerName = (String) args.get("playerName");
             final String confirm = (String) args.getOrDefault("confirm", "");
 
