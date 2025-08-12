@@ -9,6 +9,7 @@ import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.DatabaseManager;
 import dev.snowz.snowreports.common.database.entity.Report;
 import dev.snowz.snowreports.common.database.entity.User;
+import dev.snowz.snowreports.common.database.migrator.DatabaseMigrator;
 import dev.snowz.snowreports.common.discord.DiscordWebhook;
 import dev.snowz.snowreports.common.manager.ChatHistoryManager;
 import dev.snowz.snowreports.paper.command.Command;
@@ -106,10 +107,18 @@ public final class SnowReports extends JavaPlugin {
         }
 
         // Database
+        final Class<?>[] entities = new Class<?>[]{
+            Report.class,
+            User.class
+        };
+
         dbManager = new DatabaseManager(getDataFolder(), new BukkitLibraryManager(this));
         try {
             dbManager.connect(Config.get());
-            dbManager.createTables(Report.class, User.class);
+            dbManager.createTables(entities);
+
+            final DatabaseMigrator dbMigrator = new DatabaseMigrator(dbManager);
+            dbMigrator.migrateEntities(entities);
 
             reportDao = dbManager.getDao(Report.class);
             userDao = dbManager.getDao(User.class);
@@ -147,7 +156,7 @@ public final class SnowReports extends JavaPlugin {
                     int resolvedCount = 0;
 
                     for (final Report report : allReports) {
-                        ReportStatus status = report.getStatus();
+                        final ReportStatus status = report.getStatus();
 
                         switch (status) {
                             case OPEN:

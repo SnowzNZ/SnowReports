@@ -1,7 +1,6 @@
 package dev.snowz.snowreports.common.database.entity;
 
 import com.google.gson.Gson;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import dev.snowz.snowreports.api.model.ChatMessage;
@@ -40,8 +39,7 @@ public final class Report {
 
     @DatabaseField(
         columnName = "reason",
-        canBeNull = false,
-        dataType = DataType.LONG_STRING
+        canBeNull = false
     )
     private String reason;
 
@@ -79,8 +77,7 @@ public final class Report {
     private String server;
 
     @DatabaseField(
-        columnName = "chat_history",
-        dataType = DataType.LONG_STRING
+        columnName = "chat_history"
     )
     private String chatHistory;
 

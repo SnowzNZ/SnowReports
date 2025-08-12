@@ -391,7 +391,7 @@ public final class DatabaseManager {
     /**
      * Check if the SQLException is related to duplicate indexes
      */
-    private boolean isDuplicateIndexError(final SQLException e) {
+    public boolean isDuplicateIndexError(final SQLException e) {
         final String message = e.getMessage().toLowerCase();
 
         // Check the main exception
