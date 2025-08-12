@@ -43,12 +43,12 @@ public final class Config {
 
     @Comment({
         "Possible options:",
-        "",
+        " ",
         "Remote databases - requires connection information to be configured below",
         "- MySQL",
         "- MariaDB",
         "- PostgreSQL",
-        "",
+        " ",
         "Flatfile/local database - no extra configuration required",
         "- SQLite (default)",
         "- H2"
@@ -96,7 +96,7 @@ public final class Config {
 
         @Comment({
             "These settings apply to the remote database connection pool.",
-            "",
+            " ",
             "- The default values will be suitable for the majority of users.",
             "- Do not change these settings unless you know what you're doing!"
         })
