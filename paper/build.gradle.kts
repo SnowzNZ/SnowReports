@@ -31,7 +31,7 @@ dependencies {
 tasks {
     processResources {
         filesMatching("**/plugin.yml") {
-            expand("version" to provider { project.version })
+            expand("version" to project.version)
         }
     }
 
