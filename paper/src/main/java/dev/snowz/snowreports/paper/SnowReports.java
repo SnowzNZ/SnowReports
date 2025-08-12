@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import dev.jorel.commandapi.CommandAPILogger;
+import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.DatabaseManager;
 import dev.snowz.snowreports.common.database.entity.Report;
@@ -22,13 +23,16 @@ import dev.snowz.snowreports.paper.util.UpdateChecker;
 import lombok.Getter;
 import net.byteflux.libby.BukkitLibraryManager;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.DrilldownPie;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.xenondevs.invui.gui.structure.Structure;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public final class SnowReports extends JavaPlugin {
@@ -130,7 +134,54 @@ public final class SnowReports extends JavaPlugin {
 
         // Metrics
         if (Config.get().isMetrics()) {
-            new Metrics(this, 19543);
+            final Metrics metrics = new Metrics(this, 19543);
+            metrics.addCustomChart(new DrilldownPie(
+                "reports_by_status", () -> {
+                final Map<String, Map<String, Integer>> map = new HashMap<>();
+
+                try {
+                    final List<Report> allReports = reportDao.queryForAll();
+
+                    int openCount = 0;
+                    int inProgressCount = 0;
+                    int resolvedCount = 0;
+
+                    for (final Report report : allReports) {
+                        ReportStatus status = report.getStatus();
+
+                        switch (status) {
+                            case OPEN:
+                                openCount++;
+                                break;
+                            case IN_PROGRESS:
+                                inProgressCount++;
+                                break;
+                            case RESOLVED:
+                                resolvedCount++;
+                                break;
+                            default:
+                                openCount++;
+                                break;
+                        }
+                    }
+
+                    if (openCount > 0) {
+                        map.put("Open", Map.of("Reports", openCount));
+                    }
+                    if (inProgressCount > 0) {
+                        map.put("In Progress", Map.of("Reports", inProgressCount));
+                    }
+                    if (resolvedCount > 0) {
+                        map.put("Resolved", Map.of("Reports", resolvedCount));
+                    }
+
+                    return map;
+                } catch (final SQLException e) {
+                    getLogger().warning("Failed to query reports for metrics: " + e.getMessage());
+                    return new HashMap<>();
+                }
+            }
+            ));
         }
 
         // Commands
