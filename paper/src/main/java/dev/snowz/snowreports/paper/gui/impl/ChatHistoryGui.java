@@ -8,7 +8,7 @@ import dev.snowz.snowreports.paper.gui.item.ChatHistoryItem;
 import dev.snowz.snowreports.paper.gui.item.NextPageItem;
 import dev.snowz.snowreports.paper.gui.item.PreviousPageItem;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
 import xyz.xenondevs.invui.item.Item;
@@ -28,7 +28,7 @@ public final class ChatHistoryGui implements BaseGui<PagedGui<Item>> {
     }
 
     @Override
-    public @NotNull PagedGui<Item> create() {
+    public @NonNull PagedGui<Item> create() {
         final List<Item> chatHistoryItems = new ArrayList<>();
         for (final ChatMessage chatMessage : chatHistory) {
             chatHistoryItems.add(new ChatHistoryItem(chatMessage));

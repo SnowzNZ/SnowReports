@@ -6,7 +6,7 @@ import dev.snowz.snowreports.paper.manager.GuiHistoryManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
@@ -28,9 +28,9 @@ public final class OpenItem extends AbstractItem {
 
     @Override
     public void handleClick(
-        @NotNull final ClickType clickType,
-        @NotNull final Player player,
-        @NotNull final InventoryClickEvent event
+        @NonNull final ClickType clickType,
+        @NonNull final Player player,
+        @NonNull final InventoryClickEvent event
     ) {
         SnowReports.getReportManager().updateReportStatus(id, status, player);
         GuiHistoryManager.previousMenu(player);

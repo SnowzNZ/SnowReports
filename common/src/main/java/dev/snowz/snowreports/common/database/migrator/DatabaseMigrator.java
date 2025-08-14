@@ -7,14 +7,12 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import dev.snowz.snowreports.common.database.DatabaseManager;
 import dev.snowz.snowreports.common.database.type.DatabaseType;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
-@ApiStatus.Experimental
 public final class DatabaseMigrator {
 
     private final DatabaseManager dbManager;

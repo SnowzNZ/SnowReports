@@ -10,7 +10,7 @@ import dev.snowz.snowreports.paper.gui.item.SortItem;
 import dev.snowz.snowreports.paper.gui.item.ViewReportItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
 import xyz.xenondevs.invui.item.Item;
@@ -33,7 +33,7 @@ public final class MyReportsGui implements BaseGui<PagedGui<Item>> {
     }
 
     @Override
-    public @NotNull PagedGui<Item> create() {
+    public @NonNull PagedGui<Item> create() {
         final List<Report> reportsList = new ArrayList<>(reports);
 
         @SuppressWarnings("unchecked") final PagedGui<Item>[] guiHolder = new PagedGui[1];
@@ -46,7 +46,7 @@ public final class MyReportsGui implements BaseGui<PagedGui<Item>> {
         }
         );
 
-        final PagedGui<@NotNull Item> reportsGui = PagedGui.items()
+        final PagedGui<@NonNull Item> reportsGui = PagedGui.items()
             .setStructure(
                 "# # # # # # # # #",
                 "# x x x x x x x #",

@@ -6,7 +6,7 @@ import dev.snowz.snowreports.paper.gui.item.DeleteItem;
 import dev.snowz.snowreports.paper.gui.item.UpdateStatusItem;
 import dev.snowz.snowreports.paper.gui.item.ViewChatHistoryItem;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.window.Window;
@@ -27,7 +27,7 @@ public final class ManageGui implements BaseGui<Gui> {
     }
 
     @Override
-    public @NotNull Gui create() {
+    public @NonNull Gui create() {
         return Gui.normal()
             .setStructure(
                 "# # # # # # # # #",

@@ -6,7 +6,7 @@ import dev.snowz.snowreports.paper.gui.item.InProgressItem;
 import dev.snowz.snowreports.paper.gui.item.OpenItem;
 import dev.snowz.snowreports.paper.gui.item.ResolveItem;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.window.Window;
 
@@ -24,7 +24,7 @@ public final class UpdateStatusGui implements BaseGui<Gui> {
     }
 
     @Override
-    public @NotNull Gui create() {
+    public @NonNull Gui create() {
         return Gui.normal()
             .setStructure(
                 "# # # # # # # # #",

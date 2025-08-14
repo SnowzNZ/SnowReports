@@ -13,14 +13,14 @@ import dev.snowz.snowreports.common.database.entity.Report;
 import dev.snowz.snowreports.paper.SnowReports;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Instant;
 
 public final class ReportBridgeListener implements PluginMessageListener {
 
     @Override
-    public void onPluginMessageReceived(final String channel, @NotNull final Player player, final byte[] message) {
+    public void onPluginMessageReceived(final String channel, @NonNull final Player player, final byte[] message) {
         if (!channel.equals("snowreports:main")) return;
         if (!Config.get().getStorageMethod().isRemote()) return;
 

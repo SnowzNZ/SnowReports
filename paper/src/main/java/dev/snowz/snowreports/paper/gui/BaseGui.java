@@ -1,6 +1,6 @@
 package dev.snowz.snowreports.paper.gui;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import xyz.xenondevs.invui.gui.Gui;
 
 /**
@@ -15,5 +15,6 @@ public interface BaseGui<T extends Gui> {
      *
      * @return The created GUI
      */
-    @NotNull T create();
+    @NonNull
+    T create();
 }

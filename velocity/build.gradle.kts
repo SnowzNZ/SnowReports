@@ -1,7 +1,3 @@
-plugins {
-    `java-library`
-}
-
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }

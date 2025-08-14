@@ -4,7 +4,7 @@ import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.paper.SnowReports;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.SQLException;
 
@@ -12,19 +12,19 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
 
     @SuppressWarnings("deprecation")
     @Override
-    @NotNull
+    @NonNull
     public String getAuthor() {
         return String.join(", ", SnowReports.getInstance().getDescription().getAuthors());
     }
 
     @Override
-    @NotNull
+    @NonNull
     public String getIdentifier() {
         return "snowreports";
     }
 
     @Override
-    @NotNull
+    @NonNull
     public String getVersion() {
         return SnowReports.VERSION;
     }
@@ -35,7 +35,7 @@ public final class SnowReportsPlaceholder extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(final Player player, @NotNull final String params) {
+    public String onPlaceholderRequest(final Player player, @NonNull final String params) {
         if (params.equalsIgnoreCase("reports_total")) {
             try {
                 return String.valueOf(SnowReports.getReportDao().countOf());
