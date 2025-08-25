@@ -152,6 +152,8 @@ public final class Config {
         @NoArgsConstructor
         public static class Reason {
             private boolean required = true;
+            @Comment("The maximum number of characters a custom reason can be. Set to -1 for no limit.")
+            private int characterLimit = -1;
             private String[] presets = { "Cheating", "Spamming", "Griefing", "Toxicity" };
         }
 

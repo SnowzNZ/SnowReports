@@ -52,6 +52,13 @@ public final class ReportCommand implements Command {
                 reporter.sendMessage(getMessage("error.reports_disabled"));
                 return;
             }
+            if (reason.length() > Config.get().getReports().getReason().getCharacterLimit()) {
+                reporter.sendMessage(getMessage(
+                    "error.reason_too_long",
+                    Config.get().getReports().getReason().getCharacterLimit()
+                ));
+                return;
+            }
 
             if (reportedPlayer == null) {
                 reporter.sendMessage(getMessage("error.player_not_found"));
