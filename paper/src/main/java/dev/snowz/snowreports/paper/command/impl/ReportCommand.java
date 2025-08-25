@@ -11,6 +11,7 @@ import dev.snowz.snowreports.paper.command.argument.PlayerArgument;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 
 import static dev.snowz.snowreports.paper.manager.MessageManager.getMessage;
@@ -52,6 +53,14 @@ public final class ReportCommand implements Command {
                 reporter.sendMessage(getMessage("error.reports_disabled"));
                 return;
             }
+
+            if (!Config.get().getReports().getReason().isCustomAllowed()) {
+                if (!Arrays.stream(Config.get().getReports().getReason().getPresets()).toList().contains(reason)) {
+                    reporter.sendMessage(getMessage("error.preset_only"));
+                    return;
+                }
+            }
+
             if (reason.length() > Config.get().getReports().getReason().getCharacterLimit()) {
                 reporter.sendMessage(getMessage(
                     "error.reason_too_long",
