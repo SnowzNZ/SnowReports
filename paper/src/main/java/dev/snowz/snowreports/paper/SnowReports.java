@@ -156,6 +156,8 @@ public final class SnowReports extends JavaPlugin {
                     int resolvedCount = 0;
 
                     for (final Report report : allReports) {
+                        if (!report.getServer().equals(Config.get().getServerName())) continue;
+
                         final ReportStatus status = report.getStatus();
 
                         switch (status) {
