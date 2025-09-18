@@ -21,11 +21,11 @@ subprojects {
     dependencies {
         api("org.jspecify:jspecify:1.0.0")
 
-        compileOnly("org.projectlombok:lombok:1.18.40")
-        annotationProcessor("org.projectlombok:lombok:1.18.40")
+        compileOnly("org.projectlombok:lombok:1.18.42")
+        annotationProcessor("org.projectlombok:lombok:1.18.42")
 
-        testCompileOnly("org.projectlombok:lombok:1.18.40")
-        testAnnotationProcessor("org.projectlombok:lombok:1.18.40")
+        testCompileOnly("org.projectlombok:lombok:1.18.42")
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
     }
 
     java {
