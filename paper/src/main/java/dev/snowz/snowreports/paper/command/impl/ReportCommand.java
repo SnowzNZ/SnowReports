@@ -61,10 +61,11 @@ public final class ReportCommand implements Command {
                 }
             }
 
-            if (reason.length() > Config.get().getReports().getReason().getCharacterLimit()) {
+            final int charLimit = Config.get().getReports().getReason().getCharacterLimit();
+            if (charLimit != -1 && reason.length() > charLimit) {
                 reporter.sendMessage(getMessage(
                     "error.reason_too_long",
-                    Config.get().getReports().getReason().getCharacterLimit()
+                    charLimit
                 ));
                 return;
             }
