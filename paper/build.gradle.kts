@@ -20,7 +20,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
 
     implementation("dev.jorel:commandapi-bukkit-shade:10.1.2")
-    implementation("xyz.xenondevs.invui:invui:1.46") {
+    implementation("xyz.xenondevs.invui:invui:1.47") {
         (0..15).forEach { version ->
             exclude(group = "xyz.xenondevs.inventoryaccess", module = "inventoryaccess-$version")
         }
