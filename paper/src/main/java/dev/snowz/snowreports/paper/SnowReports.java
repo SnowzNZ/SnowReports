@@ -2,8 +2,8 @@ package dev.snowz.snowreports.paper;
 
 import com.j256.ormlite.dao.Dao;
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import dev.jorel.commandapi.CommandAPILogger;
+import dev.jorel.commandapi.CommandAPIPaperConfig;
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.DatabaseManager;
@@ -70,9 +70,8 @@ public final class SnowReports extends JavaPlugin {
 
     public static String VERSION;
 
-    @SuppressWarnings("deprecation")
     private static String getVersion() {
-        return instance.getDescription().getVersion();
+        return instance.getPluginMeta().getVersion();
     }
 
     @Getter
@@ -80,9 +79,7 @@ public final class SnowReports extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
-            .beLenientForMinorVersions(true)
-        );
+        CommandAPI.onLoad(new CommandAPIPaperConfig(this));
 
         // Set custom CommandAPI Logger
         final Logger commandAPILogger = Logger.getLogger("SnowReports-CommandAPI");
