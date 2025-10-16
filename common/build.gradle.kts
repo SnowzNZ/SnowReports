@@ -6,7 +6,7 @@ repositories {
 dependencies {
     api(project(":api"))
 
-    api("de.exlll:configlib-yaml:4.6.2")
+    api("de.exlll:configlib-yaml:4.6.3")
     api("com.j256.ormlite:ormlite-core:6.1")
     api("com.j256.ormlite:ormlite-jdbc:6.1")
     api("net.byteflux:libby-bukkit:1.3.1")
