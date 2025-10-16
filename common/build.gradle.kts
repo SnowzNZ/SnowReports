@@ -11,5 +11,5 @@ dependencies {
     api("com.j256.ormlite:ormlite-jdbc:6.1")
     api("net.byteflux:libby-bukkit:1.3.1")
 
-    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
 }

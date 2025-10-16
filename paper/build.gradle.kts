@@ -1,5 +1,6 @@
 plugins {
     id("com.gradleup.shadow") version "9.2.2"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
 }
 
 repositories {
@@ -15,11 +16,11 @@ dependencies {
     // Common
     implementation(project(":common"))
 
-    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
     compileOnly("com.mojang:brigadier:1.0.18")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
-    implementation("dev.jorel:commandapi-bukkit-shade:10.1.2")
+    implementation("dev.jorel:commandapi-paper-shade:11.0.0")
     implementation("xyz.xenondevs.invui:invui:1.47") {
         (0..15).forEach { version ->
             exclude(group = "xyz.xenondevs.inventoryaccess", module = "inventoryaccess-$version")
@@ -30,7 +31,7 @@ dependencies {
 
 tasks {
     processResources {
-        filesMatching("**/plugin.yml") {
+        filesMatching("**/paper-plugin.yml") {
             expand("version" to project.version)
         }
     }
