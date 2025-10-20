@@ -35,6 +35,8 @@ public final class PlayerChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(final AsyncChatEvent event) {
+        if (event.isCancelled()) return;
+
         final Player player = event.getPlayer();
         final String message = ((TextComponent) event.message()).content();
 
