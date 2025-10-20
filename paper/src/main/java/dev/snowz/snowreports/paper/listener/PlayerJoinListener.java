@@ -11,6 +11,7 @@ import static dev.snowz.snowreports.paper.manager.MessageManager.getMessage;
 
 public final class PlayerJoinListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateUserName(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
@@ -18,6 +19,7 @@ public final class PlayerJoinListener implements Listener {
         SnowReports.runAsync(() -> SnowReports.getUserManager().updateUserName(player));
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateNotifier(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();

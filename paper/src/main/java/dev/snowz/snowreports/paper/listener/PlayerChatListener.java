@@ -33,6 +33,7 @@ public final class PlayerChatListener implements Listener {
             );
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(final AsyncChatEvent event) {
         if (event.isCancelled()) return;
