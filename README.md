@@ -39,6 +39,7 @@ Lightweight, customizable player reporting plugin.
 | `snowreports.command.<command>.<subcommand>` | Give permission to a certain subcommand             |
 | `snowreports.alerts`                         | Receive an alert when a player is reported          |
 | `snowreports.bypass.cooldown`                | Bypass the report cooldown                          |
+| `snowreports.bypass.limit`                   | Bypass the active report limit                      |
 | `snowreports.bypass.report`                  | Makes a player immune to reports                    |
 | `snowreports.update`                         | Get notified if an update is available when joining |
 

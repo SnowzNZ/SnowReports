@@ -238,6 +238,25 @@ public final class ReportManager {
     ) {
         final long time = Instant.now().getEpochSecond();
 
+        final int playerLimit = Config.get().getReports().getPlayerLimit();
+        if (playerLimit != -1 && !reporter.hasPermission("snowreports.bypass.limit")) {
+            try {
+                final long activeReports = SnowReports.getReportDao()
+                    .queryBuilder()
+                    .where()
+                    .eq("reporter_uuid", reporter.getUniqueId().toString())
+                    .and()
+                    .in("status", ReportStatus.OPEN, ReportStatus.IN_PROGRESS)
+                    .countOf();
+                if (activeReports >= playerLimit) {
+                    reporter.sendMessage(getMessage("error.player_report_limit", activeReports, playerLimit));
+                    return false;
+                }
+            } catch (final SQLException e) {
+                SnowReports.getInstance().getLogger().warning("Failed to check active report count for '" + reporter.getName() + "': " + e.getMessage());
+            }
+        }
+
         final Report report = createReport(reporter, reported, reason, time);
         if (report == null) {
             reporter.sendMessage(getMessage("report.creation_failed"));
