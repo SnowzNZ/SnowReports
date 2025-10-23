@@ -2,8 +2,8 @@ package dev.snowz.snowreports.paper;
 
 import com.j256.ormlite.dao.Dao;
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import dev.jorel.commandapi.CommandAPILogger;
+import dev.jorel.commandapi.CommandAPIPaperConfig;
 import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.DatabaseManager;
@@ -22,11 +22,11 @@ import dev.snowz.snowreports.paper.manager.*;
 import dev.snowz.snowreports.paper.placeholder.SnowReportsPlaceholder;
 import dev.snowz.snowreports.paper.util.UpdateChecker;
 import lombok.Getter;
-import net.byteflux.libby.BukkitLibraryManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.xenondevs.invui.InvUI;
 import xyz.xenondevs.invui.gui.structure.Structure;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 
@@ -70,9 +70,8 @@ public final class SnowReports extends JavaPlugin {
 
     public static String VERSION;
 
-    @SuppressWarnings("deprecation")
     private static String getVersion() {
-        return instance.getDescription().getVersion();
+        return instance.getPluginMeta().getVersion();
     }
 
     @Getter
@@ -80,9 +79,7 @@ public final class SnowReports extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
-            .beLenientForMinorVersions(true)
-        );
+        CommandAPI.onLoad(new CommandAPIPaperConfig(this));
 
         // Set custom CommandAPI Logger
         final Logger commandAPILogger = Logger.getLogger("SnowReports-CommandAPI");
@@ -112,7 +109,7 @@ public final class SnowReports extends JavaPlugin {
             User.class
         };
 
-        dbManager = new DatabaseManager(getDataFolder(), new BukkitLibraryManager(this));
+        dbManager = new DatabaseManager(getDataFolder());
         try {
             dbManager.connect(Config.get());
             dbManager.createTables(entities);
@@ -139,6 +136,8 @@ public final class SnowReports extends JavaPlugin {
         // Messages
         MessageManager.loadMessages();
 
+        // InvUI
+        InvUI.getInstance().setPlugin(this);
         Structure.addGlobalIngredient('#', new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setDisplayName(""));
 
         // Metrics
