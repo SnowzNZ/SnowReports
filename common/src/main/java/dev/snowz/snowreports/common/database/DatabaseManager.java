@@ -8,8 +8,6 @@ import com.j256.ormlite.table.TableUtils;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.type.DatabaseType;
 import lombok.Getter;
-import net.byteflux.libby.Library;
-import net.byteflux.libby.LibraryManager;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -29,25 +27,16 @@ public final class DatabaseManager {
     private final Map<Class<?>, Dao<?, ?>> daoMap;
     private boolean isConnected = false;
 
-    private final LibraryManager libraryManager;
-    private final Map<DatabaseType, Boolean> loadedDrivers;
-
     private final File dataFolder;
 
     /**
      * Create a platform-agnostic DatabaseManager
      *
-     * @param dataFolder     The data folder for the plugin/application
-     * @param libraryManager Platform-specific library manager implementation
+     * @param dataFolder The data folder for the plugin/application
      */
-    public DatabaseManager(final File dataFolder, final LibraryManager libraryManager) {
+    public DatabaseManager(final File dataFolder) {
         this.dataFolder = dataFolder;
-        this.libraryManager = libraryManager;
         this.daoMap = new HashMap<>();
-        this.loadedDrivers = new HashMap<>();
-
-        // Add Maven Central repository for dependency resolution
-        libraryManager.addMavenCentral();
     }
 
     /**
@@ -55,9 +44,6 @@ public final class DatabaseManager {
      */
     public void connect(final Config config) throws SQLException {
         this.databaseType = config.getStorageMethod();
-
-        // Load the required database driver dynamically
-        loadDatabaseDriver(databaseType);
 
         final String connectionUrl = buildConnectionUrl(config);
         String username = null;
@@ -73,76 +59,11 @@ public final class DatabaseManager {
     }
 
     /**
-     * Dynamically load the database driver using Libby
-     */
-    private void loadDatabaseDriver(final DatabaseType databaseType) throws SQLException {
-        // Check if driver is already loaded
-        if (loadedDrivers.getOrDefault(databaseType, false)) {
-            return;
-        }
-
-        try {
-            final Library driverLibrary = createDriverLibrary(databaseType);
-            if (driverLibrary != null) {
-                logger.info("Loading database driver for " + databaseType.name() + "...");
-                libraryManager.loadLibrary(driverLibrary);
-                loadedDrivers.put(databaseType, true);
-                logger.info("Successfully loaded " + databaseType.name() + " driver");
-            }
-        } catch (final Exception e) {
-            throw new SQLException("Failed to load database driver for " + databaseType.name(), e);
-        }
-    }
-
-    /**
-     * Create Library instance for the specified database type
-     */
-    private Library createDriverLibrary(final DatabaseType databaseType) {
-        return switch (databaseType) {
-            case MYSQL -> Library.builder()
-                .groupId("com{}mysql")
-                .artifactId("mysql-connector-j")
-                .version("9.3.0")
-                .id("mysql-driver")
-                .relocate("com{}mysql", "dev{}snowz{}snowreports{}libs{}mysql")
-                .build();
-            case MARIADB -> Library.builder()
-                .groupId("org{}mariadb{}jdbc")
-                .artifactId("mariadb-java-client")
-                .version("3.5.3")
-                .id("mariadb-driver")
-                .relocate("org{}mariadb", "dev{}snowz{}snowreports{}libs{}mariadb")
-                .build();
-            case POSTGRESQL -> Library.builder()
-                .groupId("org{}postgresql")
-                .artifactId("postgresql")
-                .version("42.7.5")
-                .id("postgresql-driver")
-                .relocate("org{}postgresql", "dev{}snowz{}snowreports{}libs{}postgresql")
-                .build();
-            case H2 -> Library.builder()
-                .groupId("com{}h2database")
-                .artifactId("h2")
-                .version("2.3.232")
-                .id("h2-driver")
-                .relocate("org{}h2", "dev{}snowz{}snowreports{}libs{}h2")
-                .build();
-            case SQLITE -> Library.builder()
-                .groupId("org{}xerial")
-                .artifactId("sqlite-jdbc")
-                .version("3.49.1.0")
-                .id("sqlite-driver")
-                .relocate("org{}sqlite", "dev{}snowz{}snowreports{}libs{}sqlite")
-                .build();
-        };
-    }
-
-    /**
      * Connect to database with connection details
      */
     private void connect(final String connectionUrl, final String username, final String password) throws SQLException {
         try {
-            // Verify the driver class is available
+            // Verify the driver class is available (provided by the platform loader)
             Class.forName(getDriverClass(databaseType));
 
             // Create connection source
@@ -158,7 +79,7 @@ public final class DatabaseManager {
         } catch (final ClassNotFoundException e) {
             throw new SQLException(
                 "Database driver not found for: " + databaseType.name() +
-                    ". Driver may not have loaded correctly.", e
+                    ". Ensure the driver is provided by the platform loader.", e
             );
         }
     }
@@ -230,15 +151,15 @@ public final class DatabaseManager {
     }
 
     /**
-     * Get database driver class name (with relocated packages)
+     * Get database driver class name
      */
     private String getDriverClass(final DatabaseType databaseType) {
         return switch (databaseType) {
-            case MYSQL -> "dev.snowz.snowreports.libs.mysql.cj.jdbc.Driver";
-            case MARIADB -> "dev.snowz.snowreports.libs.mariadb.jdbc.Driver";
-            case POSTGRESQL -> "dev.snowz.snowreports.libs.postgresql.Driver";
-            case H2 -> "dev.snowz.snowreports.libs.h2.Driver";
-            case SQLITE -> "dev.snowz.snowreports.libs.sqlite.JDBC";
+            case MYSQL -> "com.mysql.cj.jdbc.Driver";
+            case MARIADB -> "org.mariadb.jdbc.Driver";
+            case POSTGRESQL -> "org.postgresql.Driver";
+            case H2 -> "org.h2.Driver";
+            case SQLITE -> "org.sqlite.JDBC";
         };
     }
 
@@ -249,23 +170,6 @@ public final class DatabaseManager {
         return databaseType == DatabaseType.MYSQL ||
             databaseType == DatabaseType.MARIADB ||
             databaseType == DatabaseType.POSTGRESQL;
-    }
-
-    /**
-     * Preload all database drivers for faster connection switching
-     */
-    public void preloadAllDrivers() {
-        logger.info("Pre-loading all database drivers...");
-
-        for (final DatabaseType type : DatabaseType.values()) {
-            try {
-                loadDatabaseDriver(type);
-            } catch (final SQLException e) {
-                logger.warning("Failed to pre-load driver for " + type.name() + ": " + e.getMessage());
-            }
-        }
-
-        logger.info("Finished pre-loading database drivers");
     }
 
     /**
@@ -345,9 +249,6 @@ public final class DatabaseManager {
      */
     public boolean testConnection(final Config config) {
         try {
-            // Load driver first
-            loadDatabaseDriver(config.getStorageMethod());
-
             // Test connection
             connect(config);
             final boolean connected = isConnected();
@@ -359,12 +260,6 @@ public final class DatabaseManager {
         }
     }
 
-    /**
-     * Get information about loaded drivers
-     */
-    public Map<DatabaseType, Boolean> getLoadedDrivers() {
-        return new HashMap<>(loadedDrivers);
-    }
 
     /**
      * Close database connection
