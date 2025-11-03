@@ -111,8 +111,8 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
                 "§7• §fUpdated by: §e" + (report.getUpdatedBy() != null ? report.getUpdatedBy().getName() : "N/A"),
                 "§7• §fServer: §e" + report.getServer(),
                 "",
-                "§6Left-click §fto teleport to §e" + reported.getName() + "§6.",
-                "§6Right-click §fto manage."
+                "§6Left-click §fto manage.",
+                "§6Right-click §fto teleport to §e" + reported.getName() + "§6."
             );
             reportItems.add(new ReportItem(playerHead, "§6Report #" + id, lore, reported, id));
         }

@@ -47,6 +47,9 @@ public final class ReportItem extends AbstractItem {
         @NonNull final InventoryClickEvent event
     ) {
         if (clickType.isLeftClick()) {
+            GuiHistoryManager.pushCurrentWindow(player, getWindows());
+            new ManageGui(this, id).open(player);
+        } else if (clickType.isRightClick()) {
             final Player target = Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
             if (target == null) {
                 player.sendMessage(getMessage("player.not_online", reported.getName()));
@@ -54,9 +57,6 @@ public final class ReportItem extends AbstractItem {
             }
             player.teleport(target);
             player.sendMessage(getMessage("player.teleported_to", reported.getName()));
-        } else if (clickType.isRightClick()) {
-            GuiHistoryManager.pushCurrentWindow(player, getWindows());
-            new ManageGui(this, id).open(player);
         }
     }
 
