@@ -13,7 +13,7 @@ dependencies {
 
 tasks {
     jar {
-        archiveBaseName.set("SnowReports-velocity")
+        archiveBaseName.set("SnowReports-Velocity")
         archiveVersion.set(project.version.toString())
         archiveClassifier.set("")
     }
