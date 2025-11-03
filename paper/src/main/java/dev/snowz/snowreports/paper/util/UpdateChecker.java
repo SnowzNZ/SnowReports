@@ -21,6 +21,11 @@ public final class UpdateChecker {
         final Logger logger = SnowReports.getInstance().getLogger();
         logger.info("Checking for updates...");
 
+        if (currentVersion.contains("SNAPSHOT")) {
+            logger.info("You are running a snapshot version of SnowReports.");
+            return false;
+        }
+
         try {
             final HttpURLConnection connection = (HttpURLConnection) new URI(API_URL).toURL().openConnection();
             connection.setRequestMethod("GET");

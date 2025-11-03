@@ -3,6 +3,8 @@ package dev.snowz.snowreports.paper.manager;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.Report;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static dev.snowz.snowreports.paper.manager.MessageManager.getMessage;
+import static dev.snowz.snowreports.paper.manager.MessageManager.getMessages;
+import static dev.snowz.snowreports.paper.util.TimeUtil.formatEpochTime;
 
 public final class AlertManager {
     private final Set<UUID> alertDisabled = ConcurrentHashMap.newKeySet();
@@ -68,12 +72,25 @@ public final class AlertManager {
     }
 
     public void broadcastAlert(final Report report) {
-        final Component message = getMessage(
+        final Component base = getMessage(
             "report.notify",
             report.getReported().getName(),
             report.getReporter().getName(),
             report.getReason()
         );
+
+        final Component message = base
+            .hoverEvent(HoverEvent.showText(
+                getMessages(
+                    "report.notify_hover",
+                    report.getReported().getName(),
+                    report.getReporter().getName(),
+                    report.getReason(),
+                    formatEpochTime(report.getCreatedAt(), Config.get().getTimeFormat()),
+                    report.getServer()
+                )
+            ))
+            .clickEvent(ClickEvent.runCommand("/tp " + report.getReported().getName()));
 
         for (final Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("snowreports.alerts") && !alertDisabled.contains(player.getUniqueId())) {

@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public final class MessageManager {
 
@@ -66,6 +68,18 @@ public final class MessageManager {
         final Component message = MiniMessage.miniMessage().deserialize(stringMessage);
 
         return prefix.append(message);
+    }
+
+    public static Component getMessages(final String path, final Object... args) {
+        final List<String> stringMessages = messagesConfig.getStringList(path);
+        return IntStream.range(0, stringMessages.size())
+            .mapToObj(i -> {
+                final Component c = MiniMessage.miniMessage().deserialize(
+                    MessageFormat.format(stringMessages.get(i), args)
+                );
+                return i < stringMessages.size() - 1 ? c.append(Component.newline()) : c;
+            })
+            .reduce(Component.empty(), Component::append);
     }
 
     public static Component deserialize(final String input) {
