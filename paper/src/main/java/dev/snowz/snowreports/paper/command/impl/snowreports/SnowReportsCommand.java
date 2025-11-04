@@ -7,6 +7,7 @@ import dev.snowz.snowreports.paper.command.Command;
 import dev.snowz.snowreports.paper.command.impl.snowreports.subcommand.*;
 import dev.snowz.snowreports.paper.command.subcommand.Subcommand;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.CommandSender;
 
@@ -72,7 +73,8 @@ public final class SnowReportsCommand implements Command {
             }
 
             final Component message = deserialize(formatCommand(commandFormat.toString()))
-                .hoverEvent(HoverEvent.showText(deserialize("&f" + subcommand.getDescription())));
+                .hoverEvent(HoverEvent.showText(deserialize("&f" + subcommand.getDescription())))
+                .clickEvent(ClickEvent.suggestCommand("/snowreports " + subcommand.getName() + " "));
 
             sender.sendMessage(message);
         }
@@ -95,7 +97,8 @@ public final class SnowReportsCommand implements Command {
             }
 
             final Component message = deserialize(formatCommand(commandFormat.toString()))
-                .hoverEvent(HoverEvent.showText(deserialize("&f" + command.getDescription())));
+                .hoverEvent(HoverEvent.showText(deserialize("&f" + command.getDescription())))
+                .clickEvent(ClickEvent.suggestCommand("/" + command.getName() + " "));
 
             sender.sendMessage(message);
         }
