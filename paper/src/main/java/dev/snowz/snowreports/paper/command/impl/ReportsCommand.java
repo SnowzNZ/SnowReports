@@ -3,7 +3,7 @@ package dev.snowz.snowreports.paper.command.impl;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.IntegerArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.TextArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import dev.snowz.snowreports.common.config.Config;
 import dev.snowz.snowreports.common.database.entity.Report;
@@ -36,7 +36,7 @@ public final class ReportsCommand implements Command {
     @Override
     public List<Argument<?>> getArguments() {
         return List.of(
-            new StringArgument("playerOrPage")
+            new TextArgument("playerOrPage")
                 .replaceSuggestions(ArgumentSuggestions.strings(
                     Bukkit.getOnlinePlayers().stream()
                         .map(Player::getName)
@@ -52,33 +52,43 @@ public final class ReportsCommand implements Command {
     public CommandExecutor getExecutor() {
         return (sender, args) -> {
             String playerName = null;
+            String serverName = null;
             int page = 1;
 
             final String arg = (String) args.get("playerOrPage");
             if (arg != null) {
-                try {
-                    page = Integer.parseInt(arg);
-                } catch (final NumberFormatException e) {
-                    playerName = arg;
+                if (arg.startsWith("s:")) {
+                    serverName = arg.substring(2);
+                } else {
+                    try {
+                        page = Integer.parseInt(arg);
+                    } catch (final NumberFormatException e) {
+                        playerName = arg;
+                    }
                 }
             }
 
             if (sender instanceof final ConsoleCommandSender console) {
-                displayReportsToConsole(console, playerName, page);
+                displayReportsToConsole(console, playerName, serverName, page);
             } else if (sender instanceof final Player player) {
-                displayReportsToPlayer(player, playerName, page);
+                displayReportsToPlayer(player, playerName, serverName, page);
             }
         };
     }
 
-    private void displayReportsToConsole(final ConsoleCommandSender sender, final String playerName, final int page) {
+    private void displayReportsToConsole(
+        final ConsoleCommandSender sender,
+        final String playerName,
+        final String serverName,
+        final int page
+    ) {
         SnowReports.runAsync(() -> {
             try {
                 final List<Report> allReports = SnowReports.getReportDao().queryForAll();
-                final List<Report> filteredReports = filterReportsByPlayer(allReports, playerName);
+                final List<Report> filteredReports = filterReports(allReports, playerName, serverName);
 
                 SnowReports.runSync(
-                    () -> sendReportsToConsole(sender, filteredReports, page, playerName)
+                    () -> sendReportsToConsole(sender, filteredReports, page, playerName, serverName)
                 );
             } catch (final SQLException e) {
                 sender.sendMessage("Failed to fetch reports: " + e.getMessage());
@@ -90,15 +100,15 @@ public final class ReportsCommand implements Command {
     private void displayReportsToPlayer(
         final Player player,
         final String playerName,
+        final String serverName,
         final int page
     ) {
         SnowReports.runAsync(() -> {
             try {
                 final List<Report> allReports = SnowReports.getReportDao().queryForAll();
-                final List<Report> filteredReports = filterReportsByPlayer(allReports, playerName);
+                final List<Report> filteredReports = filterReports(allReports, playerName, serverName);
 
-                final String title = playerName == null ?
-                    "Reports" : "Reports for " + playerName;
+                final String title = buildTitle(playerName, serverName);
 
                 SnowReports.runSync(() -> {
                     if (filteredReports.isEmpty()) {
@@ -115,23 +125,39 @@ public final class ReportsCommand implements Command {
         });
     }
 
-    private List<Report> filterReportsByPlayer(final List<Report> reports, final String playerName) {
-        if (playerName == null) {
-            return reports;
-        }
-
+    private List<Report> filterReports(final List<Report> reports, final String playerName, final String serverName) {
         return reports.stream()
-            .filter(report ->
-                report.getReported().getName().equalsIgnoreCase(playerName) ||
-                    report.getReporter().getName().equalsIgnoreCase(playerName))
+            .filter(report -> {
+                final boolean matchesPlayer = playerName == null ||
+                    report.getReported().getName().equalsIgnoreCase(playerName) ||
+                    report.getReporter().getName().equalsIgnoreCase(playerName);
+
+                final boolean matchesServer = serverName == null ||
+                    report.getServer().equalsIgnoreCase(serverName);
+
+                return matchesPlayer && matchesServer;
+            })
             .collect(Collectors.toList());
+    }
+
+    private String buildTitle(final String playerName, final String serverName) {
+        if (playerName != null && serverName != null) {
+            return "Reports for " + playerName + " on " + serverName;
+        } else if (playerName != null) {
+            return "Reports for " + playerName;
+        } else if (serverName != null) {
+            return "Reports on " + serverName;
+        } else {
+            return "Reports";
+        }
     }
 
     private void sendReportsToConsole(
         final ConsoleCommandSender sender,
         final List<Report> reports,
         final int page,
-        final String playerName
+        final String playerName,
+        final String serverName
     ) {
         final int pageSize = 5;
         final int pageCount = Math.max(1, (int) Math.ceil((double) reports.size() / pageSize));
@@ -141,8 +167,7 @@ public final class ReportsCommand implements Command {
             return;
         }
 
-        final String header = playerName == null ?
-            "All Reports" : "Reports for " + playerName;
+        final String header = buildTitle(playerName, serverName);
 
         sender.sendMessage(header + " (Page " + page + "/" + pageCount + ")");
         sender.sendMessage("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -176,4 +201,3 @@ public final class ReportsCommand implements Command {
         }
     }
 }
-
