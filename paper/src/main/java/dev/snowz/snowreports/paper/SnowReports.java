@@ -22,6 +22,7 @@ import dev.snowz.snowreports.paper.manager.*;
 import dev.snowz.snowreports.paper.placeholder.SnowReportsPlaceholder;
 import dev.snowz.snowreports.paper.util.UpdateChecker;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bukkit.Material;
@@ -30,6 +31,7 @@ import xyz.xenondevs.invui.InvUI;
 import xyz.xenondevs.invui.gui.structure.Structure;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +89,13 @@ public final class SnowReports extends JavaPlugin {
 
         // Disable ORMLite logging
         com.j256.ormlite.logger.Logger.setGlobalLogLevel(com.j256.ormlite.logger.Level.OFF);
+
+        // Remove old lib folder
+        try {
+            FileUtils.deleteDirectory(getDataFolder().toPath().resolve("lib").toFile());
+        } catch (IOException e) {
+            getLogger().warning("Failed to delete old lib folder: " + e.getMessage());
+        }
     }
 
     @Override
