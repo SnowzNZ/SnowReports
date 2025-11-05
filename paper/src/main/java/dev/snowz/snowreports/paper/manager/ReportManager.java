@@ -101,7 +101,7 @@ public final class ReportManager {
                 reporter.sendMessage(getMessage(
                     "report.status_updated",
                     report.getReported().getName(),
-                    newStatus.name().toLowerCase(),
+                    "<#" + newStatus.getColor() + ">" + newStatus.getName().toLowerCase(),
                     staffUser.getName()
                 ));
             }

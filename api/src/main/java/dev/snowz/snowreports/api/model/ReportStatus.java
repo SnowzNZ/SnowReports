@@ -23,7 +23,8 @@ public enum ReportStatus {
     }
 
     public String getDisplayName() {
-        return LegacyComponentSerializer.legacySection().serialize(Component.text(name).color(TextColor.fromHexString(
-            color)));
+        return LegacyComponentSerializer.legacySection().serialize(
+            Component.text(name).color(TextColor.fromHexString(color))
+        );
     }
 }

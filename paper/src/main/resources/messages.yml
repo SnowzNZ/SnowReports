@@ -16,7 +16,7 @@ report.notify_hover:
   - '<gray>Click to teleport to <aqua>{0}<gray>.'
 report.already_resolved: '<red>Report #{0} has already been resolved!'
 report.updated_status: '<green>Updated report #{0} status to {1}'
-report.status_updated: '<green>Your report on <red>{0}</red> has been updated to {1} by <light_purple>{2}'
+report.status_updated: '<green>Your report on <red>{0}</red> has been updated to {1} <green>by <aqua>{2}<green>.'
 report.invalid_status: '<red>That is not a valid status!'
 report.already_status: '<red>That report is already set to {0}!'
 report.update_failed: '<red>Failed to update report #{0}!'
