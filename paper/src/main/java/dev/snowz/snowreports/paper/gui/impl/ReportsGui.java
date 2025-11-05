@@ -8,6 +8,7 @@ import dev.snowz.snowreports.paper.gui.item.NextPageItem;
 import dev.snowz.snowreports.paper.gui.item.PreviousPageItem;
 import dev.snowz.snowreports.paper.gui.item.ReportItem;
 import dev.snowz.snowreports.paper.gui.item.SortItem;
+import dev.snowz.snowreports.paper.util.TextUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
@@ -94,26 +95,26 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
                 isOnline = true;
             }
 
-            final List<String> lore = List.of(
-                "§8§m                                                            ",
-                "§7• §fReported: §e" + reported.getName() + " " + (isOnline ? "§a⏺" : "§7⏺"),
-                "§7• §fReporter: §e" + report.getReporter().getName(),
-                "§7• §fReason: §e" + report.getReason(),
-                "§7• §fCreated at: §e" + formatEpochTime(
-                    report.getCreatedAt(),
-                    Config.get().getTimeFormat()
-                ),
-                "§7• §fStatus: §e" + report.getStatus().getDisplayName(),
-                "§7• §fUpdated at: §e" + formatEpochTime(
-                    report.getLastUpdated(),
-                    Config.get().getTimeFormat()
-                ),
-                "§7• §fUpdated by: §e" + (report.getUpdatedBy() != null ? report.getUpdatedBy().getName() : "N/A"),
-                "§7• §fServer: §e" + report.getServer(),
-                "",
-                "§6Left-click §fto manage.",
-                "§6Right-click §fto teleport to §e" + reported.getName() + "§6."
-            );
+            final List<String> lore = new ArrayList<>();
+            lore.add("§8§m                                                            ");
+            lore.add("§7• §fReported: §e" + reported.getName() + " " + (isOnline ? "§a⏺" : "§7⏺"));
+            lore.add("§7• §fReporter: §e" + report.getReporter().getName());
+            lore.addAll(TextUtil.wrapText(report.getReason(), "§7• §fReason: ", "§e   ", 50));
+            lore.add("§7• §fCreated at: §e" + formatEpochTime(
+                report.getCreatedAt(),
+                Config.get().getTimeFormat()
+            ));
+            lore.add("§7• §fStatus: §e" + report.getStatus().getDisplayName());
+            lore.add("§7• §fUpdated at: §e" + formatEpochTime(
+                report.getLastUpdated(),
+                Config.get().getTimeFormat()
+            ));
+            lore.add("§7• §fUpdated by: §e" + (report.getUpdatedBy() != null ? report.getUpdatedBy().getName() : "N/A"));
+            lore.add("§7• §fServer: §e" + report.getServer());
+            lore.add("");
+            lore.add("§6Left-click §fto manage.");
+            lore.add("§6Right-click §fto teleport to §e" + reported.getName() + "§6.");
+
             reportItems.add(new ReportItem(playerHead, "§6Report #" + id, lore, reported, id));
         }
         return reportItems;

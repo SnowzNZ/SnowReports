@@ -7,6 +7,8 @@ report.resolved: '<green>Report #{0} has been resolved'
 report.not_found: '<red>Report #{0} not found!'
 report.notify: '<yellow>{0} <red>has been reported by <yellow>{1} <red>for <yellow>{2}'
 report.notify_hover:
+  - '<gray>Report <aqua>#{0}:'
+  - ''
   - '<gray>Reported: <aqua>{0}'
   - '<gray>Reporter: <aqua>{1}'
   - '<gray>Reason: <aqua>{2}'
