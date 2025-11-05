@@ -10,6 +10,7 @@ import dev.snowz.snowreports.paper.gui.item.ReportItem;
 import dev.snowz.snowreports.paper.gui.item.SortItem;
 import dev.snowz.snowreports.paper.manager.HeadManager;
 import dev.snowz.snowreports.paper.util.TextUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
@@ -88,9 +89,8 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
             final int id = report.getId();
             final ItemStack playerHead = HeadManager.getPlayerHead(UUID.fromString(reported.getUuid()));
 
-            // Check if the reported player is online
             boolean isOnline = false;
-            final Player reportedPlayer = org.bukkit.Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
+            final Player reportedPlayer = Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
             if (reportedPlayer != null && reportedPlayer.isOnline()) {
                 isOnline = true;
             }
@@ -99,7 +99,7 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
             lore.add("§8§m                                                            ");
             lore.add("§7• §fReported: §e" + reported.getName() + " " + (isOnline ? "§a⏺" : "§7⏺"));
             lore.add("§7• §fReporter: §e" + report.getReporter().getName());
-            lore.addAll(TextUtil.wrapText(report.getReason(), "§7• §fReason: ", "§e   ", 50));
+            lore.addAll(TextUtil.wrapText(report.getReason(), "§7• §fReason: §e", "§e   ", 50));
             lore.add("§7• §fCreated at: §e" + formatEpochTime(
                 report.getCreatedAt(),
                 Config.get().getTimeFormat()
