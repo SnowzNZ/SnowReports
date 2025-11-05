@@ -8,13 +8,18 @@ public final class TextUtil {
     /**
      * Wraps text to multiple lines if it exceeds the specified width
      *
-     * @param text     The text to wrap
-     * @param prefix   The prefix to add to each line (e.g., "§7• §fReason: ")
+     * @param text               The text to wrap
+     * @param prefix             The prefix to add to each line (e.g., "§7• §fReason: ")
      * @param continuationPrefix The prefix for continuation lines (e.g., "§7  ")
-     * @param maxWidth The maximum width before wrapping
+     * @param maxWidth           The maximum width before wrapping
      * @return List of wrapped lines with the prefix
      */
-    public static List<String> wrapText(final String text, final String prefix, final String continuationPrefix, final int maxWidth) {
+    public static List<String> wrapText(
+        final String text,
+        final String prefix,
+        final String continuationPrefix,
+        final int maxWidth
+    ) {
         final List<String> lines = new ArrayList<>();
         if (text.length() <= maxWidth) {
             lines.add(prefix + text);

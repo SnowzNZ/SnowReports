@@ -93,7 +93,7 @@ public final class SnowReports extends JavaPlugin {
         // Remove old lib folder
         try {
             FileUtils.deleteDirectory(getDataFolder().toPath().resolve("lib").toFile());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             getLogger().warning("Failed to delete old lib folder: " + e.getMessage());
         }
     }
