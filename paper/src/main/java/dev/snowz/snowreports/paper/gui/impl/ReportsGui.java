@@ -8,6 +8,7 @@ import dev.snowz.snowreports.paper.gui.item.NextPageItem;
 import dev.snowz.snowreports.paper.gui.item.PreviousPageItem;
 import dev.snowz.snowreports.paper.gui.item.ReportItem;
 import dev.snowz.snowreports.paper.gui.item.SortItem;
+import dev.snowz.snowreports.paper.manager.HeadManager;
 import dev.snowz.snowreports.paper.util.TextUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,6 @@ import xyz.xenondevs.invui.window.Window;
 
 import java.util.*;
 
-import static dev.snowz.snowreports.paper.util.PlayerUtil.getPlayerHead;
 import static dev.snowz.snowreports.paper.util.TimeUtil.formatEpochTime;
 
 public final class ReportsGui implements BaseGui<PagedGui<Item>> {
@@ -86,7 +86,7 @@ public final class ReportsGui implements BaseGui<PagedGui<Item>> {
         for (final Report report : reportList) {
             final User reported = report.getReported();
             final int id = report.getId();
-            final ItemStack playerHead = getPlayerHead(UUID.fromString(reported.getUuid()));
+            final ItemStack playerHead = HeadManager.getPlayerHead(UUID.fromString(reported.getUuid()));
 
             // Check if the reported player is online
             boolean isOnline = false;

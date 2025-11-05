@@ -8,6 +8,7 @@ import dev.snowz.snowreports.paper.gui.item.NextPageItem;
 import dev.snowz.snowreports.paper.gui.item.PreviousPageItem;
 import dev.snowz.snowreports.paper.gui.item.SortItem;
 import dev.snowz.snowreports.paper.gui.item.ViewReportItem;
+import dev.snowz.snowreports.paper.manager.HeadManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
@@ -18,7 +19,6 @@ import xyz.xenondevs.invui.window.Window;
 
 import java.util.*;
 
-import static dev.snowz.snowreports.paper.util.PlayerUtil.getPlayerHead;
 import static dev.snowz.snowreports.paper.util.TimeUtil.formatEpochTime;
 
 public final class MyReportsGui implements BaseGui<PagedGui<Item>> {
@@ -79,7 +79,7 @@ public final class MyReportsGui implements BaseGui<PagedGui<Item>> {
         for (final Report report : reportList) {
             final User reported = report.getReported();
             final int id = report.getId();
-            final ItemStack playerHead = getPlayerHead(UUID.fromString(reported.getUuid()));
+            final ItemStack playerHead = HeadManager.getPlayerHead(UUID.fromString(reported.getUuid()));
             final List<String> lore = List.of(
                 "§8§m                                                            ",
                 "§7• §fReported: §e" + reported.getName(),
