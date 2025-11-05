@@ -83,6 +83,7 @@ public final class AlertManager {
             .hoverEvent(HoverEvent.showText(
                 getMessages(
                     "report.notify_hover",
+                    report.getId(),
                     report.getReported().getName(),
                     report.getReporter().getName(),
                     report.getReason(),
