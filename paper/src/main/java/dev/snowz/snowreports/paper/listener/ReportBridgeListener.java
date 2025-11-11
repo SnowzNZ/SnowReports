@@ -37,12 +37,12 @@ public final class ReportBridgeListener implements PluginMessageListener {
                             final String chatHistoryStr = json.getAsString();
                             try {
                                 final ChatMessage message1 = new Gson().fromJson(chatHistoryStr, ChatMessage.class);
-                                return new ChatMessage[]{ message1 };
+                                return new ChatMessage[]{message1};
                             } catch (final JsonSyntaxException e) {
-                                return new ChatMessage[]{ new ChatMessage(
+                                return new ChatMessage[]{new ChatMessage(
                                     chatHistoryStr,
                                     Instant.now().getEpochSecond()
-                                ) };
+                                )};
                             }
                         }
                     }

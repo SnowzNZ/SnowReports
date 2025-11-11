@@ -18,7 +18,7 @@ import java.util.logging.Logger;
     name = "SnowReports",
     version = "1.1.0",
     description = "Lightweight, customizable player reporting plugin.",
-    authors = { "Snowz" }
+    authors = {"Snowz"}
 )
 public final class SnowReportsVelocity {
     private final ProxyServer server;

@@ -156,7 +156,7 @@ public final class Config {
             private boolean customAllowed = true;
             @Comment("The maximum number of characters a custom reason can be. Set to -1 for no limit.")
             private int characterLimit = -1;
-            private String[] presets = { "Cheating", "Spamming", "Griefing", "Toxicity" };
+            private String[] presets = {"Cheating", "Spamming", "Griefing", "Toxicity"};
         }
 
         @Getter
