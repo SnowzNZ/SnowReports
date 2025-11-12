@@ -3,10 +3,10 @@ plugins {
     `java-library`
 }
 
-val snapshot = true
+val snapshot = false
 
 group = "dev.snowz.snowreports"
-version = "1.1.1" + if (snapshot) "-SNAPSHOT" else ""
+version = "1.2.0" + if (snapshot) "-SNAPSHOT" else ""
 
 subprojects {
     apply(plugin = "java")
