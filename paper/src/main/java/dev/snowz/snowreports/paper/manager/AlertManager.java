@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -96,7 +97,7 @@ public final class AlertManager {
         for (final Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("snowreports.alerts") && !alertDisabled.contains(player.getUniqueId())) {
                 player.sendMessage(message);
-                player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
             }
         }
 

@@ -1,6 +1,9 @@
 package dev.snowz.snowreports.paper.gui.item;
 
+import dev.snowz.snowreports.api.model.ReportStatus;
 import dev.snowz.snowreports.common.database.entity.User;
+import dev.snowz.snowreports.paper.SnowReports;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -11,6 +14,8 @@ import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
 
 import java.util.List;
+
+import static dev.snowz.snowreports.paper.manager.MessageManager.getMessage;
 
 public final class ViewReportItem extends AbstractItem {
 
@@ -40,6 +45,12 @@ public final class ViewReportItem extends AbstractItem {
         @NonNull final Player player,
         @NonNull final InventoryClickEvent event
     ) {
+        if (clickType.isLeftClick()) {
+            SnowReports.getReportManager().updateReportStatus(id, ReportStatus.RESOLVED, player);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+            player.closeInventory();
+            player.sendMessage(getMessage("report.resolved"));
+        }
     }
 
     @Override

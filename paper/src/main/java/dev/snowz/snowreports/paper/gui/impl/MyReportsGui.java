@@ -9,6 +9,8 @@ import dev.snowz.snowreports.paper.gui.item.PreviousPageItem;
 import dev.snowz.snowreports.paper.gui.item.SortItem;
 import dev.snowz.snowreports.paper.gui.item.ViewReportItem;
 import dev.snowz.snowreports.paper.manager.HeadManager;
+import dev.snowz.snowreports.paper.util.TextUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
@@ -80,23 +82,32 @@ public final class MyReportsGui implements BaseGui<PagedGui<Item>> {
             final User reported = report.getReported();
             final int id = report.getId();
             final ItemStack playerHead = HeadManager.getPlayerHead(UUID.fromString(reported.getUuid()));
-            final List<String> lore = List.of(
-                "§8§m                                                            ",
-                "§7• §fReported: §e" + reported.getName(),
-                "§7• §fReporter: §e" + report.getReporter().getName(),
-                "§7• §fReason: §e" + report.getReason(),
-                "§7• §fCreated at: §e" + formatEpochTime(
-                    report.getCreatedAt(),
-                    Config.get().getTimeFormat()
-                ),
-                "§7• §fStatus: §e" + report.getStatus().getDisplayName(),
-                "§7• §fUpdated at: §e" + formatEpochTime(
-                    report.getLastUpdated(),
-                    Config.get().getTimeFormat()
-                ),
-                "§7• §fUpdated by: §e" + report.getUpdatedBy().getName(),
-                "§7• §fServer: §e" + report.getServer()
-            );
+
+            boolean isOnline = false;
+            final Player reportedPlayer = Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
+            if (reportedPlayer != null && reportedPlayer.isOnline()) {
+                isOnline = true;
+            }
+
+            final List<String> lore = new ArrayList<>();
+            lore.add("§8§m                                                            ");
+            lore.add("§7• §fReported: §e" + reported.getName() + " " + (isOnline ? "§a⏺" : "§7⏺"));
+            lore.add("§7• §fReporter: §e" + report.getReporter().getName());
+            lore.addAll(TextUtil.wrapText(report.getReason(), "§7• §fReason: §e", "§e   ", 50));
+            lore.add("§7• §fCreated at: §e" + formatEpochTime(
+                report.getCreatedAt(),
+                Config.get().getTimeFormat()
+            ));
+            lore.add("§7• §fStatus: §e" + report.getStatus().getDisplayName());
+            lore.add("§7• §fUpdated at: §e" + formatEpochTime(
+                report.getLastUpdated(),
+                Config.get().getTimeFormat()
+            ));
+            lore.add("§7• §fUpdated by: §e" + (report.getUpdatedBy() != null ? report.getUpdatedBy().getName() : "N/A"));
+            lore.add("§7• §fServer: §e" + report.getServer());
+            lore.add("");
+            lore.add("§6Left-click §fto resolve.");
+
             reportItems.add(new ViewReportItem(playerHead, "§6Report #" + id, lore, reported, id));
         }
         return reportItems;
