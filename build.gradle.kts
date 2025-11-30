@@ -3,7 +3,7 @@ plugins {
     `java-library`
 }
 
-val snapshot = false
+val snapshot = true
 
 group = "dev.snowz.snowreports"
 version = "1.2.0" + if (snapshot) "-SNAPSHOT" else ""
