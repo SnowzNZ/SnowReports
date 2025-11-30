@@ -46,10 +46,14 @@ public final class ViewReportItem extends AbstractItem {
         @NonNull final InventoryClickEvent event
     ) {
         if (clickType.isLeftClick()) {
-            SnowReports.getReportManager().updateReportStatus(id, ReportStatus.RESOLVED, player);
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
-            player.closeInventory();
-            player.sendMessage(getMessage("report.resolved"));
+            if (player.hasPermission("snowreports.teleport")) {
+                SnowReports.getReportManager().updateReportStatus(id, ReportStatus.RESOLVED, player);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+                player.closeInventory();
+                player.sendMessage(getMessage("report.resolved"));
+            } else {
+                player.sendMessage(getMessage("no_permission"));
+            }
         }
     }
 
