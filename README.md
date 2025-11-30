@@ -33,15 +33,16 @@ Lightweight, customizable player reporting plugin.
 
 ### Permissions
 
-| Permission                                   | Description                                         |
-|----------------------------------------------|-----------------------------------------------------|
-| `snowreports.command.<command>`              | Give permission to a certain command                |
-| `snowreports.command.<command>.<subcommand>` | Give permission to a certain subcommand             |
-| `snowreports.alerts`                         | Receive an alert when a player is reported          |
-| `snowreports.bypass.cooldown`                | Bypass the report cooldown                          |
-| `snowreports.bypass.limit`                   | Bypass the active report limit                      |
-| `snowreports.bypass.report`                  | Makes a player immune to reports                    |
-| `snowreports.update`                         | Get notified if an update is available when joining |
+| Permission                                   | Description                                               |
+|----------------------------------------------|-----------------------------------------------------------|
+| `snowreports.command.<command>`              | Give permission to a certain command                      |
+| `snowreports.command.<command>.<subcommand>` | Give permission to a certain subcommand                   |
+| `snowreports.alerts`                         | Receive an alert when a player is reported                |
+| `snowreports.bypass.cooldown`                | Bypass the report cooldown                                |
+| `snowreports.bypass.limit`                   | Bypass the active report limit                            |
+| `snowreports.bypass.report`                  | Makes a player immune to reports                          |
+| `snowreports.update`                         | Get notified if an update is available when joining       |
+| `snowreports.rightclick`                     | Allows running the right-click command on the report item |
 
 ### Placeholders
 

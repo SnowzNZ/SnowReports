@@ -50,11 +50,17 @@ public final class ReportItem extends AbstractItem {
             GuiHistoryManager.pushCurrentWindow(player, getWindows());
             new ManageGui(this, id).open(player);
         } else if (clickType.isRightClick()) {
+            if (!player.hasPermission("snowreports.rightclick")) {
+                player.sendMessage(getMessage("no_permission"));
+                return;
+            }
+
             final Player target = Bukkit.getPlayer(UUID.fromString(reported.getUuid()));
             if (target == null) {
                 player.sendMessage(getMessage("player.not_online", reported.getName()));
                 return;
             }
+
             player.teleport(target);
             player.sendMessage(getMessage("player.teleported_to", reported.getName()));
         }
