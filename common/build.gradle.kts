@@ -6,7 +6,7 @@ repositories {
 dependencies {
     api(project(":api"))
 
-    api("de.exlll:configlib-yaml:4.6.4")
+    api("de.exlll:configlib-yaml:4.8.0")
     api("com.j256.ormlite:ormlite-core:6.1")
     api("com.j256.ormlite:ormlite-jdbc:6.1")
 
