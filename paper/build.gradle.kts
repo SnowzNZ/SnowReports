@@ -21,7 +21,7 @@ dependencies {
     compileOnly("xyz.xenondevs.invui:invui:1.47")
 
     implementation("dev.jorel:commandapi-paper-shade:11.1.0")
-    implementation("org.bstats:bstats-bukkit:3.1.0")
+    implementation("org.bstats:bstats-bukkit:3.2.1")
 }
 
 tasks {
