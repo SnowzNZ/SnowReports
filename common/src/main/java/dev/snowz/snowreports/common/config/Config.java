@@ -145,6 +145,7 @@ public final class Config {
         private boolean notifyConsole = true;
         private Reason reason = new Reason();
         private ChatHistory chatHistory = new ChatHistory();
+        private AutoDelete autoDelete = new AutoDelete();
 
         @Getter
         @Setter
@@ -172,6 +173,17 @@ public final class Config {
                 "If a report is created after this time, the message will not be included in the report's chat history."
             })
             private int maxAgeSeconds = 1800;
+        }
+
+        @Getter
+        @Setter
+        @Configuration
+        @NoArgsConstructor
+        public static class AutoDelete {
+            @Comment("If enabled, reports that have had no activity for the specified number of days will be automatically deleted.")
+            private boolean enabled = false;
+            @Comment("The number of days of inactivity before a report is automatically deleted. Inactivity is measured from the last time the report was updated.")
+            private int inactivityDays = 30;
         }
     }
 

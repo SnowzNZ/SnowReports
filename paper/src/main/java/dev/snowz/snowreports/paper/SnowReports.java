@@ -142,6 +142,17 @@ public final class SnowReports extends JavaPlugin {
             Config.get().getReports().getChatHistory().getMaxAgeSeconds()
         );
 
+        // Auto-delete inactive reports
+        if (Config.get().getReports().getAutoDelete().isEnabled()) {
+            final int inactivityDays = Config.get().getReports().getAutoDelete().getInactivityDays();
+            getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+                final int deleted = reportManager.deleteInactiveReports(inactivityDays);
+                if (deleted > 0) {
+                    getLogger().info("Auto-deleted " + deleted + " inactive report(s) (inactive for " + inactivityDays + "+ days).");
+                }
+            }, 6000L, 72000L); // Delay: 5 min, Period: 1 hour
+        }
+
         // Messages
         MessageManager.loadMessages();
 
