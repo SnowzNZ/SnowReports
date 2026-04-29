@@ -231,6 +231,18 @@ public final class ReportManager {
         }
     }
 
+    public int deleteInactiveReports(final int inactivityDays) {
+        try {
+            final long cutoff = Instant.now().getEpochSecond() - (long) inactivityDays * 86400L;
+            final DeleteBuilder<Report, Integer> deleteBuilder = SnowReports.getReportDao().deleteBuilder();
+            deleteBuilder.where().lt("last_updated", cutoff);
+            return deleteBuilder.delete();
+        } catch (final SQLException e) {
+            SnowReports.getInstance().getLogger().warning("Failed to delete inactive reports: " + e.getMessage());
+            return 0;
+        }
+    }
+
     public boolean processReport(
         final Player reporter,
         final Player reported,
