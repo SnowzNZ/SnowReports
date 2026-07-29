@@ -20,7 +20,7 @@ subprojects {
     }
 
     dependencies {
-        api("org.jspecify:jspecify:1.0.0")
+        api("org.jspecify:jspecify:1.0.1")
 
         compileOnly("org.projectlombok:lombok:1.18.46")
         annotationProcessor("org.projectlombok:lombok:1.18.46")
